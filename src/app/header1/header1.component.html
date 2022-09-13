@@ -1,0 +1,42 @@
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+
+
+   <div class="mobile-menu">
+    <a class="tab-bar" routerLink="home" routerLinkActive="active"><img src="./../../assets/home.svg" alt="Home"> Home </a>
+    <a routerLink="login" routerLinkActive="active"><img id="icons" src="./../../assets/login.svg" alt="Sign In"> Sign In </a>
+    <a routerLink="contact" routerLinkActive="active"><img id="icons" src="./../../assets/contact.svg" alt="Contact Us"> Contact Us </a>
+  </div>
+
+
+   <nav class="navbar navbar-dark bg-dark navbar-expand-lg hide-sm">
+
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="home" routerLinkActive="active">
+            <img src="./../../assets/home.svg" alt="Home"> Home </a>
+          </li>
+        </ul>
+
+      <div class="side-menu">
+        <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="login" routerLinkActive="active">
+          <img id="icons" src="./../../assets/login.svg" alt="Sign In"> Sign In </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link " routerLink="contact" routerLinkActive="active">
+          <img id="icons" src="./../../assets/contact.svg" alt="Contact Us"> Contact Us </a>
+        </li>
+       </ul>
+      </div>
+
+      </div>
+
+  </nav>
+
+<router-outlet></router-outlet>

@@ -1,0 +1,250 @@
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+  </head>
+
+  <div>
+    <div class="top-bar">
+      <img src="./../../assets/arrow-left-solid.svg" alt="Back-button" class="back-img" (click)="createRoute()">
+    </div>
+
+    <div class="top-bar open-modal">
+      <button class="btn btn-primary"
+      (click)="open(content)" (click)="resetForm()"> Create New Executive </button>
+    </div>
+  </div>
+
+
+    <ng-template #content let-modal>
+      <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <h1>
+        Executives
+      </h1>
+          <form>
+      <div class="main-table-box">
+        <table >
+            <tr [formGroup]="intplusFloatGroup">
+                 <td> <label for=""> Name </label></td>
+                 <td> <input [class.is-invalid]="intPlusFloat.invalid && intPlusFloat.touched" class="form-control" type="text" required  name="name" [(ngModel)]="mexecutive.name" formControlName="intplusFloatControl"/></td>
+            </tr>
+            <tr [formGroup]="userEmail">
+                <td> <label for=""> E-mail Id </label></td>
+                <td> <input [class.is-invalid]="primEmail.invalid && primEmail.touched" type="text" class="form-control" name="emailId" [(ngModel)]="mexecutive.emailId" formControlName="primaryEmail"/></td>
+            </tr>
+            <tr>
+                <td> <label for=""> Code </label></td>
+                <td> <input type="text" required  name="code"  class="form-control" [(ngModel)]="mexecutive.code"></td>
+            </tr>
+            <tr [formGroup]="onlyIntGroup3">
+                <td> <label for=""> Phone Number </label></td>
+                <td> <input [class.is-invalid]="onlyInt3.invalid && onlyInt3.touched"  class="form-control" type="text" required  name="phonenumber" [(ngModel)]="mexecutive.phoneNumber" formControlName="onlyIntControl3"/></td>
+           </tr>
+
+           <div class="use-down"></div>
+
+            <tr>
+                <td></td>
+                <td>
+                    <button type="reset" class="btn btn-danger clear-button"> Clear </button>
+                    <button type="submit" class="btn btn-success" (click)="onSubmit()"> Save </button>
+                </td>
+            </tr>
+         </table>
+      </div>
+      </form>
+    </ng-template>
+
+
+
+
+
+
+
+
+  <!-- Product executive List -->
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h2> Executives List</h2>
+      </div>
+      <input class="form-control test-check" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" placeholder="Search">
+      <div class="panel-body">
+        <table class="table table-striped executive-list">
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Name</th>
+              <th>E-Mail Id</th>
+              <th>Code</th>
+              <th>Phone Number</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let i = index; let mexecutive of mexecutives | async | filter:searchText">
+              <td style="width: 10%;">{{i+1}}</td>
+              <td style="width: 18%;">{{mexecutive.name}}</td>
+              <td style="width: 26%;">{{mexecutive.emailId}}</td>
+              <td style="width: 12%;">{{mexecutive.code}}</td>
+              <td style="width: 14%;">{{mexecutive.phoneNumber}}</td>
+              <td style="width: 16%;">
+                <img src="./../../assets/edit.svg" (click)="updateMexecutive(mexecutive.id)" (click)="bring(updateModal)" alt="Edit-icon">
+                <img src="./../../assets/Delete.svg" (click)="deleteMexecutive(mexecutive.id)" style="margin-left: 10px" alt="Delete-icon">
+                </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+
+
+    <!-- Update -->
+    <ng-template #updateModal let-modal>
+    <div class="modal-header">
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+
+    <h1>
+      Update Executive
+    </h1>
+    <form>
+        <div class="main-table-box">
+          <table style="width: 100%">
+            <tr [formGroup]="intplusFloatGroup">
+              <td> <label for=""> Name </label></td>
+              <td> <input [class.is-invalid]="intPlusFloat.invalid && intPlusFloat.touched" class="form-control" type="text" required  name="name" [(ngModel)]="mexecutive.name" formControlName="intplusFloatControl"/></td>
+         </tr>
+         <tr [formGroup]="userEmail">
+             <td> <label for=""> E-mail Id </label></td>
+             <td> <input [class.is-invalid]="primEmail.invalid && primEmail.touched" type="text" class="form-control" name="emailId" [(ngModel)]="mexecutive.emailId" formControlName="primaryEmail"/></td>
+         </tr>
+         <tr>
+             <td> <label for=""> Code </label></td>
+             <td> <input type="text" required  name="code"  class="form-control" [(ngModel)]="mexecutive.code"></td>
+         </tr>
+         <tr [formGroup]="onlyIntGroup3">
+             <td> <label for=""> Phone Number </label></td>
+             <td> <input [class.is-invalid]="onlyInt3.invalid && onlyInt3.touched"  class="form-control" type="text" required  name="phonenumber" [(ngModel)]="mexecutive.phoneNumber" formControlName="onlyIntControl3"/></td>
+        </tr>
+
+             <div class="use-down"></div>
+
+              <tr>
+                  <td></td>
+                  <td>
+                      <button type="reset" class="btn btn-danger clear-button"> Clear </button>
+                      <button type="submit" class="btn btn-success" (click)="checkExecutiveUpdate()"> Save </button>
+                  </td>
+              </tr>
+           </table>
+        </div>
+        </form>
+    </ng-template>
+
+
+    <!-- User Profile Pop Up Starting -->
+
+
+<ng-template #usercontent let-modal>
+  <div class="modal-header">
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+   <form>
+
+<div class="customer-form">
+<h1>Create User Profile</h1>
+<div class="form-data customer-left">
+
+  <div class="form-input" [formGroup]="intplusFloatGroup">
+    <label for="name">Username</label>
+    <input [class.is-invalid]="intPlusFloat.invalid && intPlusFloat.touched" type="text" class="form-control" [(ngModel)]="user.username" name="username" formControlName="intplusFloatControl"/>
+  </div>
+
+  <div class="form-input" [formGroup]="userEmail">
+    <label for="name">Login ID</label>
+    <input [class.is-invalid]="primEmail.invalid && primEmail.touched" class="form-control" type="email" id="loginId" [(ngModel)]="user.loginId" name="loginId" formControlName="primaryEmail"/>
+  </div>
+
+  <div class="form-input small-gap">
+    <label for="name">Password</label>
+    <input type="password" id="password" class="form-control" required [(ngModel)]="user.password" name="password">
+  </div>
+
+
+<div class="form-input">
+  <mat-form-field appearance="fill">
+    <mat-label for="access rights">Access Rights</mat-label>
+    <mat-select [(ngModel)]="user.accessRights" name="accessRights" id="accessRights" readonly>
+      <mat-option value="Sales Team" >Sales Team/Executive</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<div class="form-input">
+  <ng-container *ngIf="showCustomer">
+    <input type="text" placeholder="Company Name" class="form-control" name="customerName" id="customerName" [(ngModel)]="user.customerName" readonly>
+  </ng-container>
+</div>
+
+<div class="form-input">
+  <mat-form-field appearance="fill" class="form-type">
+    <mat-label>Trim Types</mat-label>
+    <mat-select [(ngModel)]="user.trimTypes"  name="trimtypes" id="trimTypes" multiple>
+      <mat-option value="Print">Print</mat-option>
+      <mat-option value="Tag">Tag</mat-option>
+      <mat-option value="Woven">Woven</mat-option>
+      <mat-option value="Sticker">Sticker</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+</div>
+<div class="customer-btn-box">
+<button ngbAutofocus type="submit" class="btn btn-success" (click)="onUserSubmit()">Submit</button>
+</div>
+<br>
+</div>
+</form>
+</ng-template>
+
+
+<!-- User Profile Pop Up Ending -->
+
+
+
+
+<!-- User Profile Confirmation -->
+
+<ng-template #test let-modal>
+  <div class="modal-header">
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+   <form>
+
+<div class="customer-form">
+<h1>Do you want to Create a User Profile</h1>
+<div class="form-data customer-left">
+
+</div>
+<div class="customer-btn-box">
+<button class="btn btn-success" id="closeModal" (click)="modal.dismiss('Cross click')" (click)="bigOpen(usercontent)" (click)="useAdmin()" (click)="testFunction()">Yes</button> &nbsp;&nbsp;
+<button class="btn btn-success" id="closeModal" (click)= "useNo()" >No</button>
+</div>
+<br>
+</div>
+</form>
+</ng-template>
+
+    <router-outlet></router-outlet>

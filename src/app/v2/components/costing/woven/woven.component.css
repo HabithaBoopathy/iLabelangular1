@@ -1,0 +1,74 @@
+.main-container {
+  padding: 20px;
+  padding-top: 20px;
+  /* background-color: #f1f1f1; */
+}
+
+.form-group label {
+  font-family: "Source Sans Pro";
+  font-weight: 600;
+}
+
+#inputGroupHeading {
+  text-align: center;
+  width: 100%;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: "Source Sans Pro";
+}
+
+.custom-section {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 25px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+}
+
+.custom-section h2 {
+  font-family: "Source Sans Pro";
+}
+
+.custom-section .form-control {
+  border: none;
+  border-radius: 0px;
+  border-bottom: 2px solid #333;
+  height: 25px;
+  padding-left: 0px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.custom-section .form-control:focus {
+  outline-style: none;
+  box-shadow: none;
+  border-color: #2c9a42;
+  color: #2c9a42;
+}
+
+.custom-section input:read-only {
+  background-color: white;
+}
+
+.custom-section input:read-only.form-control:focus {
+  color: grey;
+  font-weight: 600;
+}
+
+.custom-section .row hr {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.custom-section > .row > .col-lg-6 {
+  margin-top: 10px;
+}
+
+.custom-section > .row > .col-lg-5 {
+  margin-top: 10px;
+}
+
+.custom-section > .row > .col-lg-4 {
+  margin-top: 10px;
+}

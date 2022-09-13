@@ -1,0 +1,102 @@
+.form-input {
+  margin: 0px auto 5px 40px;
+}
+.form-data label {
+  display: block;
+}
+.small-gap {
+  margin-bottom: 20px;
+}
+.form-input input {
+  width: 200px;
+}
+.form-input select {
+  width: 200px;
+}
+h1 {
+  color: rgb(66, 187, 66);
+  text-align: center;
+  font-weight: 500;
+  display: block;
+}
+.top-bar {
+  display: inline-block;
+}
+.back-img {
+  width: 25px;
+  height: 25px;
+  margin-left: 18px;
+  cursor: pointer;
+}
+.open-modal {
+  margin: 20px auto 10px auto;
+  margin-left: 80%;
+}
+
+.customer-btn-box {
+  display: block;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+img {
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+}
+.profile-list th {
+  font-weight: 550;
+}
+input,
+textarea,
+select {
+  outline: none;
+  box-shadow: none !important;
+  border: 1px solid #ccc !important;
+}
+
+.form-box input {
+  max-width: 155px !important;
+  border-radius: 5px;
+}
+.customer-form input.form-control {
+  height: 25px;
+  width: 200px;
+}
+
+#userProfileHeader {
+  background-color: #333;
+  color: white;
+}
+
+#userProfileHeader h3 {
+  font-weight: 500;
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 0px !important;
+  /* margin: auto; */
+}
+
+#userProfileHeader #close-userProfile {
+  margin-left: 0px !important;
+  color: white;
+}
+
+.show-pwd {
+  padding: 8px 12px;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0;
+  font-size: 16px;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.25;
+  color: #495057;
+  text-align: center;
+  background-color: #e9ecef;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+  white-space: nowrap;
+  vertical-align: middle;
+  width: fit-content;
+  display: inline-block;
+}

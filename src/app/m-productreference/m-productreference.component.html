@@ -1,0 +1,102 @@
+   <head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+  </head>
+
+    <!-- <ng-template #content let-modal>
+      <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <h1>
+        Product Reference
+      </h1>
+          <form>
+      <div class="main-table-box">
+        <table style="width: 100%">
+            <tr>
+              <td>
+                <mat-form-field appearance="fill">
+                  <mat-label> Product Reference </mat-label>
+                    <mat-select [(ngModel)]="samplename"  name="colorname" [(value)]="selected">
+                      <mat-option value="Printed"> Printed </mat-option>
+                      <mat-option value="Tag"> Tag </mat-option>
+                      <mat-option value="Sticker"> Sticker </mat-option>
+                      <mat-option value="Woven"> Woven </mat-option>
+                    </mat-select>
+                </mat-form-field>
+               </td>
+                <td>
+                    <button type="reset" class="clear-button"> Clear </button>
+                    <button type="submit" (click)="postAgainData()" (click)="modal.dismiss('Cross click')"> Save </button>
+                </td>
+            </tr>
+         </table>
+      </div>
+      </form>
+    </ng-template>
+
+    <div class="open-modal">
+      <button class="btn btn-primary"
+      (click)="open(content)" (click)="resetForm()"> Create Product Reference </button>
+    </div> -->
+
+
+    <div class="top-bar">
+      <img src="./../../assets/arrow-left-solid.svg" alt="Back-button" class="back-img" (click)="createRoute()">
+    </div>
+
+  <!-- Product Reference List -->
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h2>Product Reference List</h2>
+      </div>
+      <div class="panel-body">
+        <table class="table table-striped productref-list">
+          <thead>
+            <tr>
+              <th> S.No</th>
+              <th> Product Reference </th>
+              <th> Reference Number </th>
+              <th> Next Reference Number </th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- <tr *ngFor="let productRef of productReferenceObservable | async">           -->
+            <tr>
+              <!-- Print-->
+              <td>1</td>
+              <td>{{printcolorname}}</td>
+              <td>{{printreferencenumber}}</td>
+              <td>{{printnext}}</td>
+            </tr>
+            <tr>
+              <!-- Tag -->
+              <td>2</td>
+              <td>{{tagcolorname}}</td>
+              <td>{{tagreferencenumber}}</td>
+              <td>{{tagnext}}</td>
+            </tr>
+            <tr>
+              <!-- Sticker -->
+              <td>3</td>
+              <td>{{stickercolorname}}</td>
+              <td>{{stickerreferencenumber}}</td>
+              <td>{{stickernext}}</td>
+            </tr>
+            <tr>
+              <!--  Woven -->
+              <td>4</td>
+              <td>{{wovencolorname}}</td>
+              <td>{{wovenreferencenumber}}</td>
+              <td>{{wovennext}}</td>
+            </tr>
+            <tr>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+
+    <router-outlet></router-outlet>

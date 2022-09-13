@@ -1,0 +1,167 @@
+<head>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap"
+    rel="stylesheet"
+  />
+</head>
+
+<div id="top"></div>
+
+<!-- Quotation Form - Main container starts -->
+<div class="col-lg-12 main-container">
+  <!-- panel-primary starts -->
+  <div class="panel panel-primary">
+    <!-- Panel heading with Create New Button -->
+    <div
+      class="panel-heading custom-section"
+      style="padding-top: 15px; padding-bottom: 10px"
+    >
+      <!-- Row - title and buttons starts -->
+      <div class="row">
+        <!-- Container title starts -->
+        <div class="col-lg-7" style="margin-top: 0px">
+          <h2>Direct Quotation Form</h2>
+          <!-- Container title ends -->
+        </div>
+
+        <!-- Create new button starts -->
+        <div class="col-lg-3">
+          <button class="btn btn-block btn-success" (click)="createRoute()">
+            Create New Quotation
+          </button>
+          <!-- Create new ends -->
+        </div>
+
+        <!-- back button starts -->
+        <div class="col-lg-2">
+          <button
+            class="btn btn-block"
+            style="background-color: #333; color: white"
+            (click)="back()"
+          >
+            <i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Back
+          </button>
+          <!-- back button ends -->
+        </div>
+
+        <!-- Row - title and buttons ends -->
+      </div>
+
+      <!-- Panel heading ends -->
+    </div>
+
+    <!-- costingList section starts -->
+    <div class="custom-section" style="padding: 15px">
+      <table class="table table-striped">
+        <thead>
+          <tr style="font-weight: 500">
+            <th width="5%">S.No</th>
+            <th width="20%">Date</th>
+            <th width="20%">Ref No</th>
+            <th width="25%">Company</th>
+            <th width="20%">Trim Type</th>
+            <th width="10%" colspan="2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="
+              let quotation of quotationObservable
+                | async
+                | filter: searchText
+                | paginate: { itemsPerPage: 10, currentPage: p };
+              let i = index
+            "
+          >
+            <td>{{ (p - 1) * 10 + (i + 1) }}</td>
+            <td>{{ quotation.date }}</td>
+            <td>{{ quotation.quotationReferenceNumber }}</td>
+            <td>{{ quotation.customerName }}</td>
+            <td>{{ quotation.trimType }}</td>
+
+            <td class="icon-class">
+              <img
+                src="../../../../../assets/edit.svg"
+                (click)="updateQuotationRoute(quotation.id)"
+                routerLink="/home/forms"
+                routerLinkActive="active"
+                alt="Edit-icon"
+              />
+            </td>
+            <td class="icon-class">
+              <img
+                src="../../../../../assets/Delete.svg"
+                (click)="deleteQuotation(quotation.id)"
+                alt="delete-icon"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div id="pagination">
+        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+      </div>
+      <!-- costing list section ends -->
+    </div>
+
+    <!-- panel-primary ends -->
+  </div>
+  <!-- Quotation Form - Main container ends -->
+</div>
+
+<!-- <div class="bg">
+
+  <div class="panel panel-primary">
+    <div class="panel-body">
+      <table class="table table-striped order-list">
+        <thead>
+          <tr>
+            <th>S.No</th>
+            <th>Company Name</th>
+            <th>Trim Type</th>
+            <th>Date</th>
+            <th>Reference Number</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr
+            *ngFor="
+              let i = index;
+              let quotation;
+              of: quotationObservable | async
+            "
+            class="content"
+          >
+            <td>{{ i + 1 }}</td>
+            <td>{{ quotation.name }}</td>
+            <td>{{ quotation.trimType }}</td>
+            <td>{{ quotation.date | date: "dd-MM-yyyy" }}</td>
+            <td>{{ quotation.quotationReferenceNumber }}</td>
+
+            <td>
+              <img
+                src="./../../assets/edit.svg"
+                (click)="updateQuotationRoute(quotation.id)"
+                routerLink="/home/forms"
+                class="edit-img"
+                routerLinkActive="active"
+                alt="Edit-icon"
+              />
+              <img
+                src="./../../assets/Delete.svg"
+                (click)="deleteQuotation(quotation.id)"
+                style="margin-left: 10px"
+                class="delete-img"
+                alt="Delete-icon"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div> -->
+
+<router-outlet></router-outlet>

@@ -1,0 +1,224 @@
+.executivePush {
+  margin-left: 20px;
+}
+.sainmarks-text {
+  color: black;
+}
+img {
+  height: 17px;
+  width: 17px;
+}
+.normalise {
+  text-decoration: none;
+  color: white;
+}
+.active {
+  color:red;
+  font-weight:bool;
+}
+a {
+  font-family: "Source Sans Pro", sans-serif;
+}
+.top-bar {
+  display: flex;
+  /* background-color: red; */
+  width: 100%;
+}
+.null-top {
+  flex: 7;
+}
+.name-top {
+  flex: 1;
+}
+.admin-top {
+  flex: 1;
+  font-weight: 600;
+}
+.adm-font {
+  font-size: large;
+}
+.log-font {
+  font-size: large;
+}
+.logout {
+  flex: 1;
+  /* padding-right: 20px; */
+}
+@media only screen and (max-width: 1400px) {
+  .home {
+    flex: 5;
+  }
+}
+
+@media only screen and (max-width: 1300px) {
+  .home {
+    flex: 5;
+  }
+}
+@media only screen and (max-width: 1100px) {
+  .home {
+    flex: 4;
+  }
+}
+@media only screen and (max-width: 900px) {
+  .home {
+    flex: 3;
+  }
+}
+@media only screen and (max-width: 1000px) {
+  .home {
+    flex: 2;
+  }
+}
+@media only screen and (max-width: 700px) {
+  .home {
+    flex: 2;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .null-top {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 780px) {
+  .home {
+    flex: 1;
+  }
+  .logout {
+    font-size: 20px;
+  }
+}
+
+.mini-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 150%;
+}
+
+.dash {
+  padding-bottom: 15%;
+  padding-left: 8%;
+}
+.order {
+  padding-bottom: 15%;
+  padding-left: 8%;
+}
+.master {
+  padding-bottom: 15%;
+  padding-left: 8%;
+  cursor: pointer;
+}
+
+.admin {
+  padding-bottom: 15%;
+  padding-left: 8%;
+}
+
+.sidebar-icons {
+  width: 15px;
+  height: 15px;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+  
+
+}
+
+.main-container {
+  height: 89.7vh;
+}
+
+.mat-toolbar {
+  background-color: #fff;
+  width: 100% !important;
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px inset;
+}
+
+.master-drop {
+  font-size: 17px;
+  padding-left: 10%;
+  padding-top: 0%;
+}
+.drop-icon-eight {
+  padding-bottom: 15%;
+}
+.img-icon {
+  padding-top: 2%;
+  height: 20px;
+  width: 20px;
+}
+
+.logo {
+  margin-left: 20px;
+  width: auto;
+  height: 45px;
+}
+
+.drawbox {
+  width: 35vh;
+  overflow-x: hidden !important;
+}
+
+.left-menu {
+  background-color:rgb(1 8 14);
+  color: white;
+  height: 100vh;
+}
+
+.left-menu ul {
+  background-color: black;
+  display: block;
+  list-style-type: none;
+  padding-inline-start: 16px;
+}
+
+.left-menu > ul {
+  padding-block-start: 15px;
+}
+.left-menu > ul > .menu-item {
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.left-menu ul li {
+  display: list-item;
+  text-align: -webkit-match-parent;
+}
+
+.left-menu ul .menu-item .link-item {
+  padding: 5px 5px 5px 5px;
+  display: flex;
+  border-radius: 4px;
+  white-space: nowrap;
+  align-items: center;
+  position: relative;
+  line-height: 25px;
+  font-size: 14px;
+  opacity: 0.6;
+  color: #fff;
+}
+
+.left-menu ul .menu-item .link-item:hover {
+  opacity: 1;
+}
+
+.left-menu ul .menu-item span {
+  color: black !important;
+  font-size: 15px;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}

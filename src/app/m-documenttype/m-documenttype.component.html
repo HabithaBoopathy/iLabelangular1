@@ -1,0 +1,171 @@
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+
+<div class="top-bar">
+  <img src="./../../assets/arrow-left-solid.svg" alt="Back-button" class="back-img" (click)="createRoute()">
+</div>
+
+<div class="top-bar open-modal">
+  <button class="btn btn-primary"
+  (click)="open(content)" (click)="resetForm()"> Create Document Type</button>
+</div>
+
+
+    <ng-template #content let-modal>
+      <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <h1>
+        Product Document Type
+      </h1>
+          <form>
+      <div class="main-table-box">
+        <table style="width: 100%">
+            <tr>
+                 <td> <label for=""> Document </label></td>
+                 <td> <input type="text" [(ngModel)]="mdocumenttype.doctype" (change)="getCurrentDocumentType()" name="doctype"></td>
+               <td>
+                <label for="printed">
+                    <input type="checkbox" id="printed" [(ngModel)]="mdocumenttype.printed" name="printed" value="printed"> Printed
+                </label>
+               </td>
+               <td>
+                <label for="sticker">
+                    <input type="checkbox" id="sticker" [(ngModel)]="mdocumenttype.sticker" name="sticker" value="sticker"> Sticker
+                </label>
+                </td>
+            </tr>
+
+            <div class="use-down"></div>
+
+            <tr>
+                <td></td>
+                <td>
+                    <button type="reset" class="btn btn-danger clear-button"> Clear </button>
+                    <button type="submit" class="btn btn-success" (click)="checkDocument()" > Save </button>
+                </td>
+                <td>
+                    <label for="tag">
+                        <input type="checkbox" id="tag" [(ngModel)]="mdocumenttype.tag" name="tag" value="taged"> Tag
+                    </label>
+                </td>
+                <td>
+                    <label for="woven">
+                        <input type="checkbox" id="woven" [(ngModel)]="mdocumenttype.woven" name="woven" value="woven"> Woven
+                    </label>
+                </td>
+            </tr>
+         </table>
+      </div>
+      </form>
+    </ng-template>
+
+
+
+
+
+
+
+  <!-- Product Document Type List -->
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h2>Product Document Type List</h2>
+      </div>
+    <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" placeholder="Search">
+      <div class="panel-body">
+        <table class="table table-striped document-list">
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Document Type</th>
+              <th>Printed</th>
+              <th>Sticker</th>
+              <th>Tag</th>
+              <th>Woven</th>
+              <th>Actions</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let i = index; let mdocumenttype of mdocumenttypes | async | filter:searchText">
+              <td>{{i+1}}</td>
+              <td>{{mdocumenttype.doctype}}</td>
+              <td>{{mdocumenttype.printed}}</td>
+              <td>{{mdocumenttype.sticker}}</td>
+              <td>{{mdocumenttype.tag}}</td>
+              <td>{{mdocumenttype.woven}}</td>
+              <td>
+                <img src="./../../assets/edit.svg" (click)="updateMdocumenttype(mdocumenttype.id)" (click)="bring(updateModal)" alt="Edit-icon">
+                <img src="./../../assets/Delete.svg" (click)="deleteMdocumenttype(mdocumenttype.id)" style="margin-left: 10px" alt="Delete-icon">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+
+
+
+
+
+
+    <!-- Update -->
+    <ng-template #updateModal let-modal>
+    <div class="modal-header">
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+
+    <h1>
+      Product Document Type
+    </h1>
+        <form>
+    <div class="main-table-box">
+      <table style="width: 100%">
+          <tr>
+               <td> <label for=""> Document</label></td>
+               <td> <input type="text" [(ngModel)]="mdocumenttype.doctype" name="doctype"></td>
+          <td>
+
+              <label for="printed">
+                  <input type="checkbox" id="printed" [(ngModel)]="mdocumenttype.printed" name="printed" value="printed"> Printed
+              </label>
+             </td>
+             <td>
+              <label for="sticker">
+                  <input type="checkbox" id="sticker" [(ngModel)]="mdocumenttype.sticker" name="sticker"> Sticker
+              </label>
+              </td>
+          </tr>
+
+          <div class="use-down"></div>
+
+          <tr>
+              <td></td>
+              <td>
+                <button type="reset" class="btn btn-danger clear-button"> Clear </button>
+                <button type="submit" class="btn btn-success" (click)="checkDocumentUpdate()"> Save </button>
+            </td>
+              <td>
+                  <label for="tag">
+                      <input type="checkbox" id="tag" [(ngModel)]="mdocumenttype.tag" name="tag"> Tag
+                  </label>
+              </td>
+              <td>
+                  <label for="woven">
+                      <input type="checkbox" id="woven" [(ngModel)]="mdocumenttype.woven" name="woven"> Woven
+                  </label>
+              </td>
+          </tr>
+       </table>
+    </div>
+    </form>
+    </ng-template>
+
+    <router-outlet></router-outlet>

@@ -1,0 +1,475 @@
+<div class="everybtn">
+    <div class="btn1">
+      <button (click)="togglebarchart()" class="btn btn-info">Bar Chart</button> &nbsp;
+      <button (click)="togglepolarchart()" class="btn btn-info">Polar Chart</button> &nbsp;
+      <button (click)="toggledoughchart()" class="btn btn-info">Dough Chart</button>
+   </div>
+</div>
+
+<!-- Bar Chart -->
+<ng-container *ngIf="barchart">
+  <h1> BAR CHARTS </h1>
+
+  <div class="filter-cent">
+    <mat-form-field appearance="fill" class="filter" >
+      <mat-label> Filter Charts: </mat-label>
+   <mat-select name="charts" id="charts" class="filter" [(ngModel)]="trimTypeBarChart">
+     <mat-option value="overall" (click)="toggleOverall()"> Overall </mat-option>
+     <mat-option value="woven" (click)="toggleBarWoven()"> Woven </mat-option>
+     <mat-option value="sticker" (click)="toggleBarSticker()"> Sticker </mat-option>
+     <mat-option value="tag" (click)="toggleBarTag()"> Tag </mat-option>
+     <mat-option value="printed" (click)="toggleBarPrinted()"> Printed </mat-option>
+
+   </mat-select>
+ </mat-form-field>
+  </div>
+
+  <ng-container *ngIf="showNormalBarChart">
+    <!-- Bar Sample Count (Main) -->
+    <div id="chartWrapper" class="bar-chart">
+      <canvas baseChart
+            [datasets]="barChartData"
+            [labels]="barChartLabels"
+            [options]="barChartOptions"
+            [colors]="barChartColors"
+            [plugins]="barChartPlugins"
+            [legend]="barChartLegend"
+            [chartType]="barChartType">
+      </canvas>
+    </div>
+
+<!-- Bar Transacation Status (Main) -->
+    <div id="chartWrapper" class="bar-chart">
+      <canvas baseChart
+            [datasets]="barChartData1"
+            [labels]="barChartLabels1"
+            [options]="barChartOptions1"
+            [colors]="barChartColors1"
+            [plugins]="barChartPlugins1"
+            [legend]="barChartLegend1"
+            [chartType]="barChartType1">
+      </canvas>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="showPrintedBarChart">
+  <!-- Printed Sample Count-->
+    <div id="chartWrapper" class="bar-chart">
+      <canvas baseChart
+            [datasets]="barChartDataPrinted"
+            [labels]="barChartLabelsPrinted"
+            [options]="barChartOptionsPrinted"
+            [colors]="barChartColorsPrinted"
+            [plugins]="barChartPluginsPrinted"
+            [legend]="barChartLegendPrinted"
+            [chartType]="barChartTypePrinted">
+      </canvas>
+    </div>
+
+    <!-- Printed Transaction Status-->
+    <div id="chartWrapper" class="bar-chart">
+      <canvas baseChart
+            [datasets]="barChartDataPrintedTransaction"
+            [labels]="barChartLabelsPrintedTransaction"
+            [options]="barChartOptionsPrintedTransaction"
+            [colors]="barChartColorsPrintedTransaction"
+            [plugins]="barChartPluginsPrintedTransaction"
+            [legend]="barChartLegendPrintedTransaction"
+            [chartType]="barChartTypePrintedTransaction">
+      </canvas>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="showTagBarChart">
+
+    <!-- Tag Sample Count-->
+    <div id="chartWrapper" class="bar-chart">
+      <canvas baseChart
+            [datasets]="barChartDataTag"
+            [labels]="barChartLabelsTag"
+            [options]="barChartOptionsTag"
+            [colors]="barChartColorsTag"
+            [plugins]="barChartPluginsTag"
+            [legend]="barChartLegendTag"
+            [chartType]="barChartTypeTag">
+      </canvas>
+    </div>
+
+    <!-- Tag Transaction Status-->
+    <div id="chartWrapper" class="bar-chart">
+      <canvas baseChart
+            [datasets]="barChartDataTagTransaction"
+            [labels]="barChartLabelsTagTransaction"
+            [options]="barChartOptionsTagTransaction"
+            [colors]="barChartColorsTagTransaction"
+            [plugins]="barChartPluginsTagTransaction"
+            [legend]="barChartLegendTagTransaction"
+            [chartType]="barChartTypeTagTransaction">
+      </canvas>
+    </div>
+  </ng-container>
+
+
+
+
+  <ng-container *ngIf="showStickerBarChart">
+
+    <!-- Sticker Sample Count-->
+    <div id="chartWrapper" class="bar-chart">
+      <canvas baseChart
+            [datasets]="barChartDataSticker"
+            [labels]="barChartLabelsSticker"
+            [options]="barChartOptionsSticker"
+            [colors]="barChartColorsSticker"
+            [plugins]="barChartPluginsSticker"
+            [legend]="barChartLegendSticker"
+            [chartType]="barChartTypeSticker">
+      </canvas>
+    </div>
+
+    <!-- Sticker Transaction Status-->
+    <div id="chartWrapper" class="bar-chart">
+      <canvas baseChart
+            [datasets]="barChartDataStickerTransaction"
+            [labels]="barChartLabelsStickerTransaction"
+            [options]="barChartOptionsStickerTransaction"
+            [colors]="barChartColorsStickerTransaction"
+            [plugins]="barChartPluginsStickerTransaction"
+            [legend]="barChartLegendStickerTransaction"
+            [chartType]="barChartTypeStickerTransaction">
+      </canvas>
+    </div>
+  </ng-container>
+
+
+  <ng-container *ngIf="showWovenBarChart">
+
+    <!-- Woven Sample Count-->
+    <div id="chartWrapper" class="bar-chart">
+      <canvas baseChart
+            [datasets]="barChartDataWoven"
+            [labels]="barChartLabelsWoven"
+            [options]="barChartOptionsWoven"
+            [colors]="barChartColorsWoven"
+            [plugins]="barChartPluginsWoven"
+            [legend]="barChartLegendWoven"
+            [chartType]="barChartTypeWoven">
+      </canvas>
+    </div>
+
+    <!-- Woven Transaction Status-->
+    <div id="chartWrapper" class="bar-chart">
+      <canvas baseChart
+            [datasets]="barChartDataWovenTransaction"
+            [labels]="barChartLabelsWovenTransaction"
+            [options]="barChartOptionsWovenTransaction"
+            [colors]="barChartColorsWovenTransaction"
+            [plugins]="barChartPluginsWovenTransaction"
+            [legend]="barChartLegendWovenTransaction"
+            [chartType]="barChartTypeWovenTransaction">
+      </canvas>
+    </div>
+  </ng-container>
+
+
+</ng-container>
+
+
+<!-- Polar Chart -->
+  <ng-container *ngIf="polarchart">
+      <h1> POLAR CHARTS </h1>
+
+      <div class="filter-cent">
+        <mat-form-field appearance="fill" class="filter" >
+          <mat-label> Filter Charts: </mat-label>
+       <mat-select name="charts" id="charts" class="filter" [(ngModel)]="trimTypePolarChart">
+         <mat-option value="overall" (click)="togglePolarOverall()"> Overall </mat-option>
+         <mat-option value="woven" (click)="togglePolarWoven()"> Woven </mat-option>
+         <mat-option value="sticker" (click)="togglePolarSticker()"> Sticker </mat-option>
+         <mat-option value="tag" (click)="togglePolarTag()"> Tag </mat-option>
+         <mat-option value="printed" (click)="togglePolarPrinted()"> Printed </mat-option>
+       </mat-select>
+     </mat-form-field>
+      </div>
+
+  <ng-container *ngIf="showNormalPolarChart">
+    <!-- Polar Sample Count (Main) -->
+    <div class="polar-chart">
+      <canvas baseChart
+      [data]="polarAreaChartData"
+      [labels]="polarAreaChartLabels"
+
+      [legend]="polarAreaLegend"
+      [colors]="polarAreaChartColors"
+      [chartType]="polarAreaChartType">
+      </canvas>
+  </div>
+
+  <!-- Polar Transaction Status (Main) -->
+    <div class="polar-chart">
+        <canvas baseChart
+        [data]="polarAreaChartData1"
+        [labels]="polarAreaChartLabels1"
+
+        [legend]="polarAreaLegend1"
+        [colors]="polarAreaChartColors1"
+        [chartType]="polarAreaChartType1">
+        </canvas>
+      </div>
+    </ng-container>
+
+    <ng-container  *ngIf="showPrintedPolarChart">
+  <!-- Printed Polar Chart -->
+      <div class="polar-chart">
+        <canvas baseChart
+        [data]="polarAreaChartDataPrinted"
+        [labels]="polarAreaChartLabelsPrinted"
+
+        [legend]="polarAreaLegendPrinted"
+        [colors]="polarAreaChartColorsPrinted"
+        [chartType]="polarAreaChartTypePrinted">
+        </canvas>
+      </div>
+
+       <!-- Printed Transaction Polar Chart -->
+       <div class="polar-chart">
+        <canvas baseChart
+        [data]="polarAreaChartDataPrintedTransaction"
+        [labels]="polarAreaChartLabelsPrintedTransaction"
+
+        [legend]="polarAreaLegendPrintedTransaction"
+        [colors]="polarAreaChartColorsPrintedTransaction"
+        [chartType]="polarAreaChartTypePrintedTransaction">
+        </canvas>
+      </div>
+
+    </ng-container>
+
+    <ng-container  *ngIf="showTagPolarChart">
+      <!-- Tag Polar Chart -->
+      <div class="polar-chart">
+        <canvas baseChart
+        [data]="polarAreaChartDataTag"
+        [labels]="polarAreaChartLabelsTag"
+
+        [legend]="polarAreaLegendTag"
+        [colors]="polarAreaChartColorsTag"
+        [chartType]="polarAreaChartTypeTag">
+        </canvas>
+      </div>
+
+
+       <!-- Tag Transaction Polar Chart -->
+       <div class="polar-chart">
+        <canvas baseChart
+        [data]="polarAreaChartDataTagTransaction"
+        [labels]="polarAreaChartLabelsTagTransaction"
+
+        [legend]="polarAreaLegendTagTransaction"
+        [colors]="polarAreaChartColorsTagTransaction"
+        [chartType]="polarAreaChartTypeTagTransaction">
+        </canvas>
+      </div>
+    </ng-container>
+
+    <ng-container  *ngIf="showStickerPolarChart">
+     <!-- Sticker Polar Chart -->
+      <div class="polar-chart">
+        <canvas baseChart
+        [data]="polarAreaChartDataSticker"
+        [labels]="polarAreaChartLabelsSticker"
+
+        [legend]="polarAreaLegendSticker"
+        [colors]="polarAreaChartColorsSticker"
+        [chartType]="polarAreaChartTypeSticker">
+        </canvas>
+      </div>
+
+
+      <!-- Sticker Transaction Polar Chart -->
+      <div class="polar-chart">
+        <canvas baseChart
+        [data]="polarAreaChartDataStickerTransaction"
+        [labels]="polarAreaChartLabelsStickerTransaction"
+
+        [legend]="polarAreaLegendStickerTransaction"
+        [colors]="polarAreaChartColorsStickerTransaction"
+        [chartType]="polarAreaChartTypeStickerTransaction">
+        </canvas>
+      </div>
+    </ng-container>
+
+
+      <!-- Woven Polar Chart -->
+      <ng-container  *ngIf="showWovenPolarChart">
+      <div class="polar-chart">
+        <canvas baseChart
+        [data]="polarAreaChartDataWoven"
+        [labels]="polarAreaChartLabelsWoven"
+
+        [legend]="polarAreaLegendWoven"
+        [colors]="polarAreaChartColorsWoven"
+        [chartType]="polarAreaChartTypeWoven">
+        </canvas>
+      </div>
+
+
+       <!-- Woven Transaction Polar Chart -->
+       <div class="polar-chart">
+        <canvas baseChart
+        [data]="polarAreaChartDataWovenTransaction"
+        [labels]="polarAreaChartLabelsWovenTransaction"
+
+        [legend]="polarAreaLegendWovenTransaction"
+        [colors]="polarAreaChartColorsWovenTransaction"
+        [chartType]="polarAreaChartTypeWovenTransaction">
+        </canvas>
+      </div>
+    </ng-container>
+
+
+  </ng-container>
+
+
+<!-- Dough Chart -->
+
+    <ng-container *ngIf="doughchart">
+      <h1> DOUGH CHARTS </h1>
+
+
+      <div class="filter-cent">
+        <mat-form-field appearance="fill" class="filter" >
+          <mat-label> Filter Charts: </mat-label>
+       <mat-select name="charts" id="charts" class="filter" [(ngModel)]="trimTypeDoughChart">
+         <mat-option value="overall" (click)="toggleDoughOverall()"> Overall </mat-option>
+         <mat-option value="woven" (click)="toggleDoughWoven()"> Woven </mat-option>
+         <mat-option value="sticker" (click)="toggleDoughSticker()"> Sticker </mat-option>
+         <mat-option value="tag" (click)="toggleDoughTag()"> Tag </mat-option>
+         <mat-option value="printed" (click)="toggleDoughPrinted()"> Printed </mat-option>
+
+       </mat-select>
+     </mat-form-field>
+      </div>
+
+      <ng-container *ngIf="showNormalDoughChart">
+        <!-- Dough Sample Count -->
+        <div class="dough-chart">
+          <canvas baseChart
+          [data]="doughnutChartData"
+          [labels]="doughnutChartLabels"
+          [colors]="doughnutChartColors"
+          [chartType]="doughnutChartType">
+        </canvas>
+        </div>
+
+
+        <!-- Dough Transaction Status -->
+        <div class="dough-chart">
+          <canvas baseChart
+          [data]="doughnutChartData1"
+          [labels]="doughnutChartLabels1"
+          [colors]="doughnutChartColors1"
+          [chartType]="doughnutChartType1">
+        </canvas>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="showPrintedDoughChart">
+         <!-- Dough Printed Count -->
+         <div class="dough-chart">
+          <canvas baseChart
+          [data]="doughnutChartDataPrinted"
+          [labels]="doughnutChartLabelsPrinted"
+          [colors]="doughnutChartColorsPrinted"
+          [chartType]="doughnutChartTypePrinted">
+        </canvas>
+        </div>
+
+        <!-- Dough Printed Transaction Status -->
+        <div class="dough-chart">
+          <canvas baseChart
+          [data]="doughnutChartDataPrintedTransaction"
+          [labels]="doughnutChartLabelsPrintedTransaction"
+          [colors]="doughnutChartColorsPrintedTransaction"
+          [chartType]="doughnutChartTypePrintedTransaction">
+        </canvas>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="showTagDoughChart">
+        <!-- Dough Tag Count -->
+        <div class="dough-chart">
+         <canvas baseChart
+         [data]="doughnutChartDataTag"
+         [labels]="doughnutChartLabelsTag"
+         [colors]="doughnutChartColorsTag"
+         [chartType]="doughnutChartTypeTag">
+       </canvas>
+       </div>
+
+       <!-- Dough Tag Transaction Status -->
+       <div class="dough-chart">
+        <canvas baseChart
+        [data]="doughnutChartDataTagTransaction"
+        [labels]="doughnutChartLabelsTagTransaction"
+        [colors]="doughnutChartColorsTagTransaction"
+        [chartType]="doughnutChartTypeTagTransaction">
+      </canvas>
+      </div>
+     </ng-container>
+
+     <ng-container *ngIf="showStickerDoughChart">
+      <!-- Dough Sticker Count -->
+      <div class="dough-chart">
+       <canvas baseChart
+       [data]="doughnutChartDataSticker"
+       [labels]="doughnutChartLabelsSticker"
+       [colors]="doughnutChartColorsSticker"
+       [chartType]="doughnutChartTypeSticker">
+     </canvas>
+     </div>
+
+      <!-- Dough Sticker Transaction Status -->
+      <div class="dough-chart">
+        <canvas baseChart
+        [data]="doughnutChartDataStickerTransaction"
+        [labels]="doughnutChartLabelsStickerTransaction"
+        [colors]="doughnutChartColorsStickerTransaction"
+        [chartType]="doughnutChartTypeStickerTransaction">
+      </canvas>
+      </div>
+   </ng-container>
+
+   <ng-container *ngIf="showWovenDoughChart">
+    <!-- Dough Woven Count -->
+    <div class="dough-chart">
+     <canvas baseChart
+     [data]="doughnutChartDataWoven"
+     [labels]="doughnutChartLabelsWoven"
+     [colors]="doughnutChartColorsWoven"
+     [chartType]="doughnutChartTypeWoven">
+   </canvas>
+   </div>
+
+   <!-- Dough Woven Transaction Status -->
+   <div class="dough-chart">
+    <canvas baseChart
+    [data]="doughnutChartDataWovenTransaction"
+    [labels]="doughnutChartLabelsWovenTransaction"
+    [colors]="doughnutChartColorsWovenTransaction"
+    [chartType]="doughnutChartTypeWovenTransaction">
+  </canvas>
+  </div>
+ </ng-container>
+
+    </ng-container>
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,446 @@
+<!-- Company - Main container starts -->
+<div class="col-lg-12 main-container">
+  <!-- panel-primary starts -->
+  <div class="panel panel-primary">
+    <!-- Panel heading with Create New Button -->
+    <div class="panel-heading">
+      <h2>
+        Company List
+        <div style="float: right">
+          <button
+            class="btn btn-primary"
+            (click)="initializeCreate()"
+            (click)="open(companyModal)"
+          >
+            Create New Company
+          </button>
+        </div>
+      </h2>
+      <!-- Panel heading ends -->
+    </div>
+
+    <!-- Search box starts -->
+    <input
+      class="form-control"
+      type="text"
+      name="search"
+      autocomplete="off"
+      placeholder="Search"
+      [(ngModel)]="searchText"
+    />
+    <!-- Search box ends -->
+    <br />
+
+    <!-- Panel body starts -->
+    <div class="panel-body">
+      <!-- Company List table starts -->
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>S No</th>
+            <th>Company Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>City</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="
+              let company of companies | filter: searchText;
+              let i = index
+            "
+          >
+            <td>{{ i + 1 }}</td>
+            <td>{{ company.name }}</td>
+            <td>{{ company.email }}</td>
+            <td>{{ company.phone }}</td>
+            <td>{{ company.city }}</td>
+            <td style="padding-top: 0.45rem; padding-bottom: 0.35rem">
+              <button
+                class="btn btn-sm btn-outline-primary smallBtn"
+                (click)="initializeEdit(company.id)"
+                (click)="open(companyModal)"
+              >
+                Edit
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <!-- Company List table ends -->
+      </table>
+      <!-- Panel body ends -->
+    </div>
+
+    <!-- panel-primary ends -->
+  </div>
+  <!-- Company - Main container ends -->
+</div>
+
+<!-- companyModal template starts -->
+<ng-template #companyModal let-modal>
+  <!-- modal header starts -->
+  <div class="modal-header">
+    <h3 class="modal-title" id="modal-basic-title">
+      {{ this.updateFlag ? "Update" : "Create" }} Company
+    </h3>
+    <button
+      type="button"
+      class="close close-modal"
+      aria-label="Close"
+      id="modalCloseBtn"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <!-- modal header ends -->
+  </div>
+
+  <!-- modal-body starts -->
+  <div class="modal-body">
+    <!-- modal-col-lg-12 starts -->
+    <div class="col-lg-12">
+      <!-- modal-row starts -->
+      <div class="row">
+        <!-- companyName starts -->
+        <div class="form-group col-lg-4">
+          <label for="companyName">Company Name *</label>
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              name="companyName"
+              id="companyName"
+              [(ngModel)]="this.company.name"
+            />
+          </div>
+          <!-- companyName ends -->
+        </div>
+
+        <!-- email starts -->
+        <div class="form-group col-lg-4">
+          <label for="email">Email Id *</label>
+          <div class="input-group">
+            <input
+              type="email"
+              class="form-control"
+              name="email"
+              [(ngModel)]="this.company.email"
+            />
+          </div>
+          <!-- email ends -->
+        </div>
+
+        <!-- phone starts -->
+        <div class="form-group col-lg-4">
+          <label for="phone">Phone *</label>
+          <div class="input-group">
+            <input
+              type="number"
+              class="form-control"
+              name="phone"
+              [(ngModel)]="this.company.phone"
+            />
+          </div>
+          <!-- phone ends -->
+        </div>
+
+        <!-- GST starts -->
+        <div class="form-group col-lg-4">
+          <label for="gst">GSTIN Number</label>
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              name="gst"
+              [(ngModel)]="this.company.gstin"
+            />
+          </div>
+          <!-- GST ends -->
+        </div>
+
+        <!-- Alternate email starts -->
+        <!-- <div class="form-group col-lg-4">
+          <label for="alternateEmail">Alternate Email Id</label>
+          <div class="input-group">
+            <input
+              type="email"
+              class="form-control"
+              name="alternateEmail"
+              [(ngModel)]="this.company.alternateEmail"
+            />
+          </div> -->
+        <!-- Alternate email ends -->
+        <!-- </div> -->
+
+        <!-- Website starts -->
+        <div class="form-group col-lg-4">
+          <label for="website">Website </label>
+          <div class="input-group">
+            <input
+              type="text"
+              id="website"
+              name="website"
+              class="form-control"
+              [(ngModel)]="this.company.website"
+            />
+          </div>
+          <!-- Website ends -->
+        </div>
+
+        <!-- Street1 starts -->
+        <div class="form-group col-lg-4">
+          <label for="street1">Street1 *</label>
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              name="street1"
+              [(ngModel)]="this.company.street1"
+            />
+          </div>
+          <!-- Street1 ends -->
+        </div>
+
+        <!-- Street2 starts -->
+        <div class="form-group col-lg-4">
+          <label for="street2">Street2 *</label>
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              name="street2"
+              [(ngModel)]="this.company.street2"
+            />
+          </div>
+          <!-- Street2 ends -->
+        </div>
+
+        <!-- City starts -->
+        <div class="form-group col-lg-4">
+          <label for="city">City *</label>
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              name="city"
+              [(ngModel)]="this.company.city"
+            />
+          </div>
+          <!-- City ends -->
+        </div>
+
+        <!-- Zip code starts -->
+        <div class="form-group col-lg-4">
+          <label for="zipCode">Zip Code *</label>
+          <div class="input-group">
+            <input
+              type="number"
+              class="form-control"
+              name="zipCode"
+              [(ngModel)]="this.company.zipCode"
+            />
+          </div>
+          <!-- Zip code ends -->
+        </div>
+
+        <!-- State starts -->
+        <div class="form-group col-lg-4">
+          <label for="state">State *</label>
+          <div class="input-group">
+            <input
+              type="text"
+              id="state"
+              name="state"
+              class="form-control"
+              [(ngModel)]="this.company.state"
+            />
+          </div>
+          <!-- State ends -->
+        </div>
+
+        <!-- Country starts -->
+        <div class="form-group col-lg-4">
+          <label for="country">Country *</label>
+          <div class="input-group">
+            <input
+              type="text"
+              id="country"
+              name="country"
+              class="form-control"
+              [(ngModel)]="this.company.country"
+            />
+          </div>
+          <!-- Country ends -->
+        </div>
+
+        <!-- Payment Terms starts -->
+        <div class="form-group col-lg-4">
+          <label for="paymentTerms">Payment Terms * </label>
+          <select
+            [(ngModel)]="this.company.paymentTerms"
+            class="form-control"
+            name="paymentTerms"
+            id="paymentTerms"
+          >
+            <option value="7 Days">7 Days</option>
+            <option value="10 Days">10 Days</option>
+            <option value="14 Days">14 Days</option>
+            <option value="21 Days">21 Days</option>
+            <option value="30 Days">30 Days</option>
+            <option value="45 Days">45 Days</option>
+            <option value="60 Days">60 Days</option>
+            <option value="90 Days">90 Days</option>
+            <option value="Advance Payment">Advance Payment</option>
+            <option value="Cash on Delivery">Cash on Delivery</option>
+          </select>
+          <!-- Payment terms end -->
+        </div>
+
+        <!-- shipmentTerms starts -->
+        <div class="form-group col-lg-4">
+          <label for="shipmentTerms"
+            >Shipment Terms <span class="text-danger">*</span>
+          </label>
+          <select
+            [(ngModel)]="this.company.shipmentTerms"
+            class="form-control"
+            name="shipmentTerms"
+            id="shipmentTerms"
+          >
+            <option value="Cost and Freight">Cost and Freight</option>
+            <option value="Cost Insurance and Freight">
+              Cost Insurance and Freight
+            </option>
+            <option value="Carriage and Insurance Paid">
+              Carriage and Insurance Paid
+            </option>
+            <option value="Carriage Paid To">Carriage Paid To</option>
+            <option value="Delivered at Frontier">Delivered at Frontier</option>
+            <option value="Delivered Duty Paid">Delivered Duty Paid</option>
+            <option value="Delivered Duty Unpaid">Delivered Duty Unpaid</option>
+            <option value="Delivery">Delivery</option>
+            <option value="Delivered Ex Quay">Delivered Ex Quay</option>
+            <option value="Delivered Ex Ship">Delivered Ex Ship</option>
+            <option value="Ex Warehouse">Ex Warehouse</option>
+            <option value="Free Alongside Ship">Free Alongside Ship</option>
+            <option value="Free Carrier">Free Carrier</option>
+            <option value="Free On Board">Free On Board</option>
+            <option value="Pickup at Location">Pickup at Location</option>
+          </select>
+        </div>
+        <!-- shipmentTerms end -->
+
+        <!-- territory starts -->
+        <div class="form-group col-lg-4">
+          <label for="territory">Default Territory *</label>
+          <div class="input-group">
+            <select
+              [(ngModel)]="this.company.territoryId"
+              class="form-control"
+              name="territory"
+              id="territory"
+              (change)="onTerritoryChange()"
+            >
+              <option
+                *ngFor="let territory of territories"
+                value="{{ territory.id }}"
+              >
+                {{ territory.name }}
+              </option>
+            </select>
+          </div>
+          <!-- territory ends -->
+        </div>
+
+        <!-- executiveId starts -->
+        <div class="form-group col-lg-4">
+          <label for="executiveId">Default Executive *</label>
+          <div class="input-group">
+            <select
+              class="form-control"
+              name="executiveId"
+              id="executiveId"
+              [(ngModel)]="this.company.executiveId"
+              [disabled]="
+                this.company.territoryId == '' ||
+                this.company.territoryId == null ||
+                this.company.territoryId == undefined
+              "
+            >
+              <option value="" disabled selected></option>
+              <option
+                *ngFor="let executive of executives"
+                value="{{ executive.id }}"
+              >
+                {{ executive.name }}-({{ executive.code }})
+              </option>
+            </select>
+          </div>
+          <!-- executiveId ends -->
+        </div>
+
+        <!-- create button -->
+        <div class="col-lg-12" id="btnContainer" *ngIf="!this.updateFlag">
+          <button class="btn btn-block btn-primary" (click)="onCreate()">
+            Create
+          </button>
+          <!-- create button ends -->
+        </div>
+
+        <!-- update button -->
+        <div class="col-lg-12" id="btnContainer" *ngIf="this.updateFlag">
+          <button class="btn btn-block btn-primary" (click)="onUpdate()">
+            Update
+          </button>
+          <!-- update button ends -->
+        </div>
+
+        <!-- <div class="col-lg-12" style="margin-top: 15px"></div>
+
+        <div class="col-lg-10 modal-sub-heading" *ngIf="this.updateFlag">
+          Merchandiser Details
+        </div>
+        <div class="col-lg-2" *ngIf="this.updateFlag">
+          <button
+            class="btn btn-success btn-block"
+            (click)="addNewMerchandiser()"
+          >
+            Add New
+          </button>
+        </div>
+
+        <div class="col-lg-12" style="margin-top: 20px"></div>
+
+        <div class="col-lg-12 table-responsive" *ngIf="this.updateFlag">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>S No</th>
+                <th>Merchandiser Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let merchandiser of this.merchandisers; let i = index"
+              >
+                <td>{{ i + 1 }}</td>
+                <td>{{ merchandiser.name }}</td>
+                <td>{{ merchandiser.email }}</td>
+                <td>{{ merchandiser.phone }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div> -->
+
+        <!-- row ends -->
+      </div>
+      <!-- col-lg-12 ends -->
+    </div>
+    <!-- modal body ends -->
+  </div>
+  <!-- companyModal template ends -->
+</ng-template>

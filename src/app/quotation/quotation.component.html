@@ -1,0 +1,1356 @@
+<div id="top"></div>
+
+<!-- Quotation Form - Main container starts -->
+<div class="col-lg-12 main-container">
+  <!-- panel-primary starts -->
+  <div class="panel panel-primary">
+    <!-- Panel heading with Create New Button -->
+    <div
+      class="panel-heading custom-section"
+      style="padding-top: 15px; padding-bottom: 10px"
+    >
+      <!-- Row - title and buttons starts -->
+      <div class="row">
+        <!-- Container title starts -->
+        <div class="col-lg-10" style="margin-top: 0px">
+          <h2>
+            Direct Quotation Form
+            <span class="refNo" *ngIf="quotation2.quotationReferenceNumber">{{
+              quotation2.quotationReferenceNumber
+            }}</span>
+          </h2>
+          <!-- Container title ends -->
+        </div>
+
+        <!-- back button starts -->
+        <div class="col-lg-2">
+          <button
+            class="btn btn-block"
+            style="background-color: #333; color: white"
+            (click)="back()"
+          >
+            <i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Back
+          </button>
+          <!-- back button ends -->
+        </div>
+
+        <!-- Row - title and buttons ends -->
+      </div>
+
+      <!-- Panel heading ends -->
+    </div>
+
+    <!-- commonDetails section starts -->
+    <div class="custom-section" style="padding: 15px">
+      <!-- <h2 style="margin-bottom: 0px">Common Details</h2>
+      <hr /> -->
+
+      <!-- row starts -->
+      <div class="row">
+        <!-- Customer Id starts -->
+        <div class="form-group col-lg-4 col-md-6">
+          <div class="row">
+            <label for="customerId" class="col-lg-5">Customer</label>
+            <div class="input-group col-lg-6">
+              <select
+                name="customerId"
+                id="customerId"
+                type="text"
+                class="form-control"
+                [(ngModel)]="quotation2.customerID"
+                (change)="getCustomerDetails()"
+                style="padding: 0px"
+              >
+                <option value="" disabled selected>Select the customer</option>
+                <option
+                  *ngFor="let customer of customers"
+                  [value]="customer.id"
+                >
+                  {{ customer.companyname }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <!-- Customer Id ends -->
+        </div>
+
+        <!-- Checkboxes Start -->
+        <div class="col-lg-8 check-boxes">
+          <mat-radio-group
+            aria-label="Select an option"
+            [(ngModel)]="quotation2.trimType"
+            (ngModelChange)="setRefNoAndHsn()"
+            name="trimType"
+          >
+            <mat-radio-button
+              class="d-item"
+              value="WOVEN"
+              [disabled]="quotation2.lineitem.length > 0"
+              >Woven</mat-radio-button
+            >
+            <mat-radio-button
+              class="d-item"
+              value="TAG"
+              [disabled]="quotation2.lineitem.length > 0"
+            >
+              Tag</mat-radio-button
+            >
+            <mat-radio-button
+              class="d-item"
+              value="STICKER"
+              [disabled]="quotation2.lineitem.length > 0"
+              >Sticker</mat-radio-button
+            >
+            <mat-radio-button
+              class="d-item"
+              value="PRINTED"
+              [disabled]="quotation2.lineitem.length > 0"
+              >Printed</mat-radio-button
+            >
+          </mat-radio-group>
+          <!-- Checkboxes End -->
+        </div>
+
+        <!-- row ends -->
+      </div>
+
+      <!-- commonDetails section ends -->
+    </div>
+
+    <div class="custom-section">
+      <h2 style="margin-bottom: 0px">Quotation Details</h2>
+      <hr style="margin-top: 0px" />
+
+      <!-- row starts -->
+      <div class="row">
+        <!-- itemDescription starts -->
+        <div class="form-group col-lg-4 col-md-6">
+          <div class="row">
+            <label for="itemDescription" class="col-lg-5"
+              >Item Description</label
+            >
+            <div class="input-group col-lg-6">
+              <input
+                name="itemDescription"
+                id="itemDescription"
+                type="text"
+                class="form-control"
+                [(ngModel)]="this.quotationFormBatch.itemAndDescription"
+              />
+            </div>
+          </div>
+
+          <!-- itemDescription ends -->
+        </div>
+
+        <!-- Quantity starts -->
+        <div class="form-group col-lg-4 col-md-6">
+          <div class="row">
+            <label for="quantity" class="col-lg-5">Quantity</label>
+            <div class="input-group col-lg-6">
+              <select
+                [(ngModel)]="this.quotationFormBatch.quantity"
+                name="quantity"
+                id="quantity"
+                class="form-control"
+                style="padding: 0px"
+              >
+                <option value="1-1000">1-1000</option>
+                <option value="1000-10000">1000-10000</option>
+                <option value="10000-25000">10000-25000</option>
+                <option value="25000-Above">25000-Above</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Quantity ends -->
+        </div>
+
+        <!-- rate starts -->
+        <div class="form-group col-lg-4 col-md-6">
+          <div class="row">
+            <label for="rate" class="col-lg-5">Rate</label>
+            <div class="input-group col-lg-6">
+              <input
+                name="rate"
+                id="rate"
+                type="number"
+                step="any"
+                class="form-control"
+                [(ngModel)]="this.quotationFormBatch.rate"
+              />
+            </div>
+          </div>
+
+          <!-- rate ends -->
+        </div>
+
+        <!-- hsn starts -->
+        <div class="form-group col-lg-4 col-md-6">
+          <div class="row">
+            <label for="hsn" class="col-lg-5">HSN</label>
+            <div class="input-group col-lg-6">
+              <input
+                name="hsn"
+                id="hsn"
+                type="number"
+                step="any"
+                class="form-control"
+                [value]="this.hsn"
+                readonly
+              />
+            </div>
+          </div>
+
+          <!-- hsn ends -->
+        </div>
+
+        <div class="form-group col-lg-2 col-md-4" style="padding: 10px">
+          <div class="row">
+            <button
+              class="btn btn-success btn-block btn-sm"
+              style="width: 75%; margin-left: 15px"
+              (click)="addLineItem()"
+            >
+              Add
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group col-lg-2 col-md-4" style="padding: 10px">
+          <div class="row">
+            <button
+              class="btn btn-primary btn-block btn-sm"
+              (click)="openPdfPreview(checkpdf)"
+            >
+              PDF Preview
+            </button>
+          </div>
+        </div>
+
+        <!-- row ends -->
+      </div>
+
+      <!-- Custom section - quotation details ends -->
+    </div>
+
+    <div class="custom-section">
+      <table class="table table-striped" style="border: none">
+        <thead>
+          <tr style="font-weight: 500">
+            <th width="5%">S.No</th>
+            <th width="20%">Item Description</th>
+            <th width="20%">HSN</th>
+            <th width="25%">Quantity</th>
+            <th width="20%">Rate</th>
+            <th width="10%" colspan="2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let lineItem of quotation2.lineitem; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ lineItem.itemAndDescription }}</td>
+            <td>{{ lineItem.hsn }}</td>
+            <td>{{ lineItem.quantity }}</td>
+            <td>{{ lineItem.rate }}</td>
+            <td class="icon-class">
+              <img
+                src="./../../assets/edit.svg"
+                (click)="editLineItem(i, content)"
+                alt="Edit-icon"
+              />
+            </td>
+            <td class="icon-class">
+              <img
+                src="./../../assets/Delete.svg"
+                (click)="deleteLineItem(i)"
+                alt="Delete-icon"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- <hr /> -->
+      <div class="row justify-content-center">
+        <div class="form-group col-lg-2 col-md-4">
+          <div class="row">
+            <button
+              class="btn btn-success btn-block"
+              style="width: 75%; margin-left: 15px"
+              (click)="onSubmitEverything()"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group col-lg-3 col-md-6">
+          <div class="row">
+            <button
+              class="btn btn-primary btn-block"
+              (click)="saveSendForCustomerAcceptanceMasterFunction()"
+            >
+              Send to customer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- panel-primary ends -->
+  </div>
+  <!-- Quotation Form - Main container ends -->
+</div>
+
+<!-- loadingModalTemplate Start -->
+<ng-template #loadingModalTemplate let-modal>
+  <!-- loading gif -->
+  <app-loading-gif
+    [progressValue]="this.progressValue"
+    [showProgress]="true"
+  ></app-loading-gif>
+
+  <!-- Close Button Hidden -->
+  <button
+    id="closeLoadingModal"
+    style="display: none"
+    type="button"
+    (click)="modal.dismiss('Cross click')"
+  ></button>
+</ng-template>
+<!-- loadingModalTemplate End -->
+
+<!-- <div [style.display]="spinnerDisplay">
+  <!-- progress bar
+  <mat-progress-bar mode="determinate" [value]="progressValue"></mat-progress-bar>
+  <!-- loading gif
+  <app-spinner ></app-spinner>
+</div> -->
+
+<div [style.display]="'none'">
+  <!-- Back Button -->
+  <div class="top-bar">
+    <img
+      src="./../../assets/arrow-left-solid.svg"
+      alt="Back-button"
+      class="back-img"
+      (click)="back()"
+    />
+  </div>
+
+  <!-- Mini Banner Start -->
+  <!-- <div class="gap"></div> -->
+  <div class="mini-banner">
+    <p>COMMON DETAILS</p>
+  </div>
+  <!-- Mini Banner Ending -->
+
+  <div class="form-box">
+    <!-- Checkboxes Start -->
+    <!-- <div class="check-boxes">
+      <mat-radio-group
+        aria-label="Select an option"
+        [(ngModel)]="quotation2.trimType"
+        (change)="setRefNoAndHsn()"
+        name="trimType"
+      >
+        <ng-container *ngIf="!showQuotationFormDisplay">
+          <mat-radio-button
+            class="d-item"
+            value="WOVEN"
+            [disabled]="setToReadOnly"
+            >Woven</mat-radio-button
+          >
+          <mat-radio-button
+            class="d-item"
+            value="TAG"
+            [disabled]="setToReadOnly"
+          >
+            Tag</mat-radio-button
+          >
+          <mat-radio-button
+            class="d-item"
+            value="STICKER"
+            [disabled]="setToReadOnly"
+            >Sticker</mat-radio-button
+          >
+          <mat-radio-button
+            class="d-item"
+            value="PRINTED"
+            [disabled]="setToReadOnly"
+            >Printed</mat-radio-button
+          >
+        </ng-container>
+
+        <ng-container *ngIf="showQuotationFormDisplay">
+          <mat-radio-button
+            class="d-item"
+            value="WOVEN"
+            [disabled]="makeFieldsReadOnly"
+            [checked]="quotation2.trimType == 'WOVEN'"
+            >Woven</mat-radio-button
+          >
+          <mat-radio-button
+            class="d-item"
+            value="TAG"
+            [disabled]="makeFieldsReadOnly"
+            [checked]="quotation2.trimType == 'TAG'"
+            >Tag</mat-radio-button
+          >
+          <mat-radio-button
+            class="d-item"
+            value="STICKER"
+            [disabled]="makeFieldsReadOnly"
+            [checked]="quotation2.trimType == 'STICKER'"
+            >Sticker</mat-radio-button
+          >
+          <mat-radio-button
+            class="d-item"
+            value="PRINTED"
+            [disabled]="makeFieldsReadOnly"
+            [checked]="quotation2.trimType == 'PRINTED'"
+            >Printed</mat-radio-button
+          >
+        </ng-container>
+      </mat-radio-group>
+    </div> -->
+    <!-- Checkboxes End -->
+
+    <div class="row container-fluid">
+      <div class="col-md-6 col-lg-4">
+        <div class="form-group row">
+          <label for="quotationReferenceNumber" class="col-sm-4 col-form-label"
+            >Reference Number <span class="text-danger">*</span>
+          </label>
+          <div class="col-sm-8">
+            <input
+              type="text"
+              [(ngModel)]="quotation2.quotationReferenceNumber"
+              name="quotationReferenceNumber"
+              class="form-control"
+              readonly
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4"></div>
+
+      <ng-container *ngIf="showBeforeSave">
+        <div class="col-md-6 col-lg-4">
+          <div class="form-group row">
+            <mat-label class="col-sm-4 col-form-label"
+              >Company Name<span class="text-danger">*</span></mat-label
+            >
+            <div class="col-sm-8">
+              <select
+                [(ngModel)]="quotation2.customerReferenceNumber"
+                (change)="getBillingDetails()"
+                name="name"
+                class="form-control"
+              >
+                <option
+                  *ngFor="let employee of employees | async"
+                  value="{{ employee.customerreference }}"
+                >
+                  {{ employee.customername }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <input type="text" [(ngModel)]="quotation2.customerEmail" hidden />
+
+      <ng-container *ngIf="showAfterSave">
+        <div class="col-md-6 col-lg-4">
+          <div class="form-group row">
+            <mat-label class="col-sm-4 col-form-label"
+              >Company Name<span class="text-danger">*</span></mat-label
+            >
+            <div class="col-sm-8">
+              <input
+                [(ngModel)]="quotation2.name"
+                name="customerReferenceNumber"
+                class="form-control"
+                readonly
+              />
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Quotation Form Starts (Woven) -->
+
+  <!-- Mini Banner Start -->
+  <div class="gap"></div>
+  <div class="mini-banner">
+    <p>QUOTATION FORM</p>
+  </div>
+  <!-- Mini Banner Ending -->
+  <div class="form-box">
+    <form>
+      <div class="row container-fluid">
+        <div class="col-md-6 col-lg-3">
+          <div class="form-group row">
+            <label for="itemDescription" class="col-sm-4 col-form-label"
+              >Item & Desciption <span class="text-danger">*</span>
+            </label>
+            <div class="col-sm-8">
+              <input
+                type="text"
+                class="form-control"
+                name="itemDescription"
+                [(ngModel)]="this.quotationFormBatch.itemAndDescription"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <div class="form-group row">
+            <label for="hsn" class="col-sm-4 col-form-label"
+              >HSN<span class="text-danger">*</span>
+            </label>
+            <div class="col-sm-8">
+              <input
+                type="text"
+                class="form-control"
+                name="hsn"
+                [value]="this.hsn"
+                readonly
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <div class="form-group row">
+            <label for="quantityRange" class="col-sm-4 col-form-label"
+              >Quantity<span class="text-danger">*</span>
+            </label>
+            <div class="col-sm-8">
+              <select
+                [(ngModel)]="this.quotationFormBatch.quantity"
+                name="quantity"
+                id="quantity"
+                class="form-control"
+              >
+                <option value="1-1000">1-1000</option>
+                <option value="1000-10000">1000-10000</option>
+                <option value="10000-25000">10000-25000</option>
+                <option value="25000-Above">25000-Above</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <div class="form-group row">
+            <label for="rate" class="col-sm-4 col-form-label"
+              >Rate<span class="text-danger">*</span>
+            </label>
+            <div class="col-sm-8">
+              <input
+                type="number"
+                class="form-control"
+                name="rate"
+                [(ngModel)]="this.quotationFormBatch.rate"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="col-md-6 col-lg-3">
+              <div class="form-group row">
+                <label for="termsAndConditions" class="col-sm-4 col-form-label">Terms and Conditions<span class="text-danger">*</span> </label>
+                <div class="col-sm-8">
+                  <textarea id="" rows="4" cols="50" class="form-control"  name="termsAndConditions" [(ngModel)] = "quotation.termsAndConditions" readonly>
+                  </textarea>
+                </div>
+              </div>
+            </div> -->
+      </div>
+      <!--
+      <div class="row-use">
+        <button class="btn btn-success" (click)="onAdd()">Add</button> &nbsp;
+        <button
+          type="submit"
+          (click)="design(checkpdf)"
+          class="btn btn-primary"
+        >
+          Preview Quotation PDF
+        </button>
+        &nbsp;
+      </div> -->
+    </form>
+  </div>
+  <!-- Quotation Form Ends -->
+
+  <!-- Line Item View Starts -->
+
+  <div class="panel panel-primary custom-list">
+    <div class="panel-heading">
+      <h2>Quotation Form List</h2>
+    </div>
+
+    <ng-container>
+      <div class="panel-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Item and Description</th>
+              <th>HSN</th>
+              <th>Quantity</th>
+              <th>Rate</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="this.quotation2.lineitem.length > 0">
+            <tr *ngFor="let lineItem of quotation2.lineitem; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ lineItem.itemAndDescription }}</td>
+              <td>{{ lineItem.hsn }}</td>
+              <td>{{ lineItem.quantity }}</td>
+              <td>{{ lineItem.rate }}</td>
+              <td class="icon-class">
+                <img
+                  src="./../../assets/edit.svg"
+                  (click)="editLineItem2(i, content)"
+                  alt="Edit-icon"
+                />
+                <img
+                  src="./../../assets/Delete.svg"
+                  (click)="deleteLineItem(i)"
+                  style="margin-left: 10px"
+                  alt="Delete-icon"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+
+    <!-- <div class="panel-body">
+          <table class="table table-striped status-list">
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th hidden>Quotation ID</th>
+                <th>Item and Description</th>
+                <th>HSN</th>
+                <th>Quantity</th>
+                <th>Rate</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let i = index; let batch of lineitem">
+                <td *ngIf="batch.itemAndDescription != ''">{{i+1}}</td>
+                <td hidden>{{batch.quotationId}}</td>
+                <td *ngIf="batch.itemAndDescription != ''">{{batch.itemAndDescription}}</td>
+                <td *ngIf="batch.itemAndDescription != ''">{{batch.hsn}}</td>
+                <td *ngIf="batch.itemAndDescription != ''">{{batch.quantity}}</td>
+                <td *ngIf="batch.itemAndDescription != ''">{{batch.rate}}</td>
+                <td *ngIf="batch.itemAndDescription != ''" class="icon-class">
+                  <img src="./../../assets/edit.svg" (click)="editLineItem(batch.quotationId)" (click)="lineitemupdate(content)" alt="Edit-icon">
+                  <img src="./../../assets/Delete.svg" (click)="deleteLineItem(batch.quotationId)" style="margin-left: 10px" alt="Delete-icon">
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div> -->
+  </div>
+
+  <!-- Line Item Update Modal -->
+
+  <div class="mid">
+    <button class="btn btn-success" (click)="onSubmitEverything()">Save</button>
+    &nbsp;&nbsp;
+    <button
+      class="btn btn-success"
+      (click)="saveSendForCustomerAcceptanceMasterFunction()"
+    >
+      Send For Customer Approval
+    </button>
+  </div>
+</div>
+
+<ng-template #content let-modal>
+  <div class="modal-header" id="lineItemHeader">
+    <h3 class="modal-title" id="modal-basic-title">Update Line Item</h3>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      id="close-lineItem"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <!-- itemDescription starts-->
+    <div class="form-group">
+      <label for="itemDescription" style="font-weight: 600; color: #333"
+        >Item Description *</label
+      >
+      <div class="input-group">
+        <input
+          [(ngModel)]="quotationFormBatch.itemAndDescription"
+          name="itemDescription"
+          id="itemDescription"
+          class="form-control"
+          type="text"
+        />
+      </div>
+      <!-- itemDescription ends -->
+    </div>
+
+    <!-- quantity starts-->
+    <div class="form-group">
+      <label for="quantity" style="font-weight: 600; color: #333"
+        >Quantity *</label
+      >
+      <div class="input-group">
+        <select
+          [(ngModel)]="quotationFormBatch.quantity"
+          name="quantity"
+          id="quantity"
+          class="form-control"
+        >
+          <option value="1-1000">1-1000</option>
+          <option value="1000-10000">1000-10000</option>
+          <option value="10000-25000">10000-25000</option>
+          <option value="25000-Above">25000-Above</option>
+        </select>
+      </div>
+      <!-- quantity ends -->
+    </div>
+
+    <!-- rate starts-->
+    <div class="form-group">
+      <label for="rate" style="font-weight: 600; color: #333">Rate *</label>
+      <div class="input-group">
+        <input
+          [(ngModel)]="quotationFormBatch.rate"
+          name="rate"
+          id="rate"
+          class="form-control"
+          type="number"
+          step="any"
+        />
+      </div>
+      <!-- rate ends -->
+    </div>
+
+    <!-- hsn starts-->
+    <div class="form-group">
+      <label for="hsn" style="font-weight: 600; color: #333">HSN *</label>
+      <div class="input-group">
+        <input
+          [(ngModel)]="quotationFormBatch.hsn"
+          name="hsn"
+          id="hsn"
+          class="form-control"
+          type="number"
+          step="any"
+          readonly
+        />
+      </div>
+      <!-- hsn ends -->
+    </div>
+
+    <!-- Update Button -->
+    <div class="form-group">
+      <button
+        type="button"
+        class="btn btn-block btn-primary"
+        (click)="updateLineItem()"
+        (click)="modal.dismiss('Cross click')"
+      >
+        Update
+      </button>
+    </div>
+    <!-- Update Button Ends -->
+  </div>
+</ng-template>
+
+<ng-template #checkpdf let-modal>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div id="quoteModal">
+    <br />
+    <h2 class="text-center">Quotation</h2>
+
+    <style type="text/css">
+      .container {
+        max-width: 1140px;
+      }
+
+      @page {
+        size: 21cm 29.7cm;
+        margin: 30mm 45mm 30mm 45mm;
+      }
+
+      table {
+        border: 1px solid black;
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 15px;
+        text-align: left;
+        /* border: 1px solid black; */
+        border-collapse: collapse;
+      }
+
+      .quote-pdf td {
+        font-size: medium;
+      }
+
+      .quote-pdf th {
+        font-size: large;
+      }
+    </style>
+
+    <div id="woven-pdf" class="container">
+      <div class="content">
+        <table>
+          <table class="quote-pdf">
+            <tbody>
+              <tr>
+                <td
+                  style="
+                    vertical-align: middle;
+                    border-right: 1px solid black;
+                    width: 34%;
+                  "
+                >
+                  <p class="text-center">
+                    <img
+                      style="height: 100px"
+                      src="./../../assets/newlogo-2.png"
+                    />
+                  </p>
+                </td>
+                <td style="border-right: transparent; margin-left: 20px">
+                  <h3 style="font-weight: bold">
+                    Sainmarks Industries India Private Ltd
+                  </h3>
+                  <p>
+                    476/1B1A, “Label Arcade”<br />
+                    Jothi Nagar, Palavanjipalayam<br />
+                    Dharapuram Road<br />
+                    Tiruppur – 641 608<br />
+                    INDIA<br />
+                  </p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="quote-pdf" style="border-top: transparent">
+            <tbody>
+              <tr>
+                <td style="border-right: 1px solid black; width: 34%">
+                  <p style="font-weight: bold">Estimate Date</p>
+                  {{ this.quotation2.date | date: "dd-MM-yyyy" }}
+                </td>
+                <td style="border-right: 1px solid black">
+                  <p style="font-weight: bold">Reference No:</p>
+                  {{ this.quotation2.quotationReferenceNumber }}
+                </td>
+                <td>
+                  <p style="font-weight: bold">Place of Supply :</p>
+                  Tamil Nadu
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="quote-pdf" style="border-top: transparent">
+            <tbody>
+              <tr>
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                    font-weight: bold;
+                  "
+                >
+                  <b>Bill to</b>
+                </td>
+                <td style="border-bottom: 1px solid black; font-weight: bold">
+                  <b>Ship to</b>
+                </td>
+              </tr>
+              <tr>
+                <td style="border-right: 1px solid black">
+                  <b>{{ this.quotation2.name }}</b
+                  ><br />
+                  {{ this.quotation2.customerStreet1 }}<br />
+                  {{ this.quotation2.customerStreet2 }}<br />
+                  {{ this.quotation2.customerCity }}<br />
+                  {{ this.quotation2.customerState }}<br />
+                  {{ this.quotation2.customerGst }}
+                </td>
+                <td>
+                  {{ this.quotation2.name }}<br />
+                  {{ this.quotation2.customerStreet1 }}<br />
+                  {{ this.quotation2.customerStreet2 }}<br />
+                  {{ this.quotation2.customerCity }}<br />
+                  {{ this.quotation2.customerState }}<br />
+                  {{ this.quotation2.customerGst }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table
+            class="quote-pdf"
+            style="border-top: transparent; border-bottom: transparent"
+          >
+            <tbody>
+              <tr>
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                    font-weight: bold;
+                  "
+                >
+                  S.No
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                    font-weight: bold;
+                  "
+                >
+                  Item and Description
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                    font-weight: bold;
+                  "
+                >
+                  HSN
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                    font-weight: bold;
+                  "
+                >
+                  Quantity
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                    font-weight: bold;
+                  "
+                >
+                  Rate
+                </td>
+                <!-- <td style="border-bottom: 1px solid black;">Terms and Conditions</td> -->
+              </tr>
+            </tbody>
+            <tbody *ngIf="quotation2.lineitem.length > 0">
+              <tr *ngFor="let i = index; let lineItem; of: quotation2.lineitem">
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                  "
+                >
+                  {{ i + 1 }}
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                  "
+                >
+                  {{ lineItem.itemAndDescription }}
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                  "
+                >
+                  {{ lineItem.hsn }}
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                  "
+                >
+                  {{ lineItem.quantity }}
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                  "
+                >
+                  {{ lineItem.rate }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="quote-pdf" style="border-top: transparent">
+            <tbody>
+              <tr>
+                <td style="font-weight: bold">Terms and Conditions</td>
+              </tr>
+            </tbody>
+            <tbody>
+              <tr>
+                <td>
+                  1. GOODS ONCE SOLD WILL NOT BE TAKEN BACK OR REFUNDED <br />
+                  2. IF PAYMENT NOT MADE WITHIN 15 DAYS INTEREST @24% P.A WILL
+                  BE CHARGED EXTRA <br />
+                  3. ALL DISPUTES ARE SUBJECTS TO TIRUPPUR JURISDICTATION
+                </td>
+                <!-- <td style="border-right: 1px solid black;" *ngIf="batch.description != ''">{{batch.termsAndConditions}}</td> -->
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="quote-pdf" style="border-top: none">
+            <tbody>
+              <tr>
+                <!-- <td style="width: 50%;border-right: none;">
+              <textarea id="" name="" rows="6" style="width: 100%">
+              </textarea>
+            </td> -->
+                <td
+                  style="
+                    height: 200px;
+                    vertical-align: bottom;
+                    text-align: right;
+                    border-left: none;
+                  "
+                >
+                  Authorized Signature
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div style="text-align: center">
+    <button
+      type="submit"
+      (click)="quotationPDF()"
+      class="btn btn-success pad-it"
+    >
+      Download as PDF
+    </button>
+  </div>
+</ng-template>
+
+<!-- PDF for Mail to Customer -->
+<div style="position: absolute; opacity: 0">
+  <div id="quote">
+    <br />
+    <h2 class="text-center">Quotation</h2>
+
+    <style type="text/css">
+      .container {
+        max-width: 1140px;
+      }
+
+      @page {
+        size: 21cm 29.7cm;
+        margin: 30mm 45mm 30mm 45mm;
+      }
+
+      table {
+        border: 1px solid black;
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 15px;
+        text-align: left;
+        /* border: 1px solid black; */
+        border-collapse: collapse;
+      }
+
+      .quote-pdf td {
+        font-size: medium;
+      }
+
+      .quote-pdf th {
+        font-size: large;
+      }
+    </style>
+
+    <div id="woven-pdf" class="container">
+      <div class="content">
+        <table>
+          <table class="quote-pdf">
+            <tbody>
+              <tr>
+                <td
+                  style="
+                    vertical-align: middle;
+                    border-right: 1px solid black;
+                    width: 34%;
+                  "
+                >
+                  <p class="text-center">
+                    <img
+                      style="height: 100px"
+                      src="./../../assets/newlogo-2.png"
+                    />
+                  </p>
+                </td>
+                <td style="border-right: transparent; margin-left: 20px">
+                  <h3 style="font-weight: bold">
+                    Sainmarks Industries India Private Ltd
+                  </h3>
+                  <p>
+                    476/1B1A, “Label Arcade”<br />
+                    Jothi Nagar, Palavanjipalayam<br />
+                    Dharapuram Road<br />
+                    Tiruppur – 641 608<br />
+                    INDIA<br />
+                  </p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="quote-pdf" style="border-top: transparent">
+            <tbody>
+              <tr>
+                <td style="border-right: 1px solid black; width: 34%">
+                  <p style="font-weight: bold">Estimate Date</p>
+                  {{ this.quotation2.date | date: "dd-MM-yyyy" }}
+                </td>
+                <td style="border-right: 1px solid black">
+                  <p style="font-weight: bold">Reference No:</p>
+                  {{ this.quotation2.quotationReferenceNumber }}
+                </td>
+                <td>
+                  <p style="font-weight: bold">Place of Supply :</p>
+                  Tamil Nadu
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="quote-pdf" style="border-top: transparent">
+            <tbody>
+              <tr>
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                    font-weight: bold;
+                  "
+                >
+                  <b>Bill to</b>
+                </td>
+                <td style="border-bottom: 1px solid black; font-weight: bold">
+                  <b>Ship to</b>
+                </td>
+              </tr>
+              <tr>
+                <td style="border-right: 1px solid black">
+                  <b>{{ this.quotation2.customerName }}</b
+                  ><br />
+                  {{ this.quotation2.customerStreet1 }}<br />
+                  {{ this.quotation2.customerStreet2 }}<br />
+                  {{ this.quotation2.customerCity }}<br />
+                  {{ this.quotation2.customerState }}<br />
+                  {{ this.quotation2.customerGst }}
+                </td>
+                <td>
+                  {{ this.quotation2.customerName }}<br />
+                  {{ this.quotation2.customerStreet1 }}<br />
+                  {{ this.quotation2.customerStreet2 }}<br />
+                  {{ this.quotation2.customerCity }}<br />
+                  {{ this.quotation2.customerState }}<br />
+                  {{ this.quotation2.customerGst }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table
+            class="quote-pdf"
+            style="border-top: transparent; border-bottom: transparent"
+          >
+            <tbody>
+              <tr>
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                    font-weight: bold;
+                  "
+                >
+                  S.No
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                    font-weight: bold;
+                  "
+                >
+                  Item and Description
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                    font-weight: bold;
+                  "
+                >
+                  HSN
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                    font-weight: bold;
+                  "
+                >
+                  Quantity
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                    font-weight: bold;
+                  "
+                >
+                  Rate
+                </td>
+                <!-- <td style="border-bottom: 1px solid black;">Terms and Conditions</td> -->
+              </tr>
+            </tbody>
+            <tbody *ngIf="quotation2.lineitem.length > 0">
+              <tr *ngFor="let i = index; let lineItem; of: quotation2.lineitem">
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                  "
+                >
+                  {{ i + 1 }}
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                  "
+                >
+                  {{ lineItem.itemAndDescription }}
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                  "
+                >
+                  {{ lineItem.hsn }}
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                  "
+                >
+                  {{ lineItem.quantity }}
+                </td>
+                <td
+                  style="
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                  "
+                >
+                  {{ lineItem.rate }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="quote-pdf" style="border-top: transparent">
+            <tbody>
+              <tr>
+                <td style="font-weight: bold">Terms and Conditions</td>
+              </tr>
+            </tbody>
+            <tbody>
+              <tr>
+                <td>
+                  1. GOODS ONCE SOLD WILL NOT BE TAKEN BACK OR REFUNDED <br />
+                  2. IF PAYMENT NOT MADE WITHIN 15 DAYS INTEREST @24% P.A WILL
+                  BE CHARGED EXTRA <br />
+                  3. ALL DISPUTES ARE SUBJECTS TO TIRUPPUR JURISDICTATION
+                </td>
+                <!-- <td style="border-right: 1px solid black;" *ngIf="batch.description != ''">{{batch.termsAndConditions}}</td> -->
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="quote-pdf" style="border-top: none">
+            <tbody>
+              <tr>
+                <!-- <td style="width: 50%;border-right: none;">
+            <textarea id="" name="" rows="6" style="width: 100%">
+            </textarea>
+          </td> -->
+                <td
+                  style="
+                    height: 200px;
+                    vertical-align: bottom;
+                    text-align: right;
+                    border-left: none;
+                  "
+                >
+                  Authorized Signature
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

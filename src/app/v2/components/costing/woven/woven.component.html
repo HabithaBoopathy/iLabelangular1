@@ -1,0 +1,546 @@
+<div id="top"></div>
+
+<!-- Company - Main container starts -->
+<div class="col-lg-12 main-container">
+  <!-- panel-primary starts -->
+  <div class="panel panel-primary">
+    <!-- Panel heading with Create New Button -->
+    <div
+      class="panel-heading custom-section"
+      style="padding-top: 15px; padding-bottom: 10px"
+    >
+      <div class="row">
+        <div class="col-lg-8">
+          <h2 style="margin-bottom: 0px; color: #2c9a42">Woven Costing</h2>
+        </div>
+        <div class="col-lg-2">
+          <button
+            class="btn btn-block"
+            style="background-color: #333; color: white"
+            (click)="back()"
+          >
+            <i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp; Back
+          </button>
+        </div>
+        <div class="col-lg-2" *ngIf="this.isNew">
+          <button
+            class="btn btn-block"
+            style="background-color: #2c9a42; color: white"
+            (click)="save()"
+          >
+            Save&nbsp;&nbsp;<i class="fas fa-save"></i>
+          </button>
+        </div>
+        <div class="col-lg-2" *ngIf="!this.isNew">
+          <button class="btn btn-block btn-primary" (click)="update()">
+            Update&nbsp;&nbsp;<i class="fas fa-save"></i>
+          </button>
+        </div>
+      </div>
+      <!-- Panel heading ends -->
+    </div>
+
+    <!-- Panel body starts -->
+    <div class="panel-body">
+      <!-- Custom section - General Details starts -->
+      <div class="col-lg-12 custom-section">
+        <!-- <p id="inputGroupHeading">General Details</p>
+        <hr /> -->
+        <!-- row - General Details starts -->
+        <div class="row">
+          <!-- quotationNo starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="quotationNo" class="col-lg-5">Quotation No</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="quotationNo"
+                  id="quotationNo"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="costing.quotationNo"
+                  readonly
+                />
+              </div>
+            </div>
+
+            <!-- quotationNo ends -->
+          </div>
+
+          <!-- Customer Name starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="customerName" class="col-lg-5">Customer Name</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="customerName"
+                  id="customerName"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="costing.customerName"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- Customer Name ends -->
+          </div>
+
+          <!-- estimatedQuantity starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="estimatedQuantity" class="col-lg-5"
+                >Estimated Quantity</label
+              >
+              <div class="input-group col-lg-6">
+                <input
+                  name="estimatedQuantity"
+                  id="estimatedQuantity"
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="costing.estimatedQuantity"
+                  readonly
+                />
+              </div>
+            </div>
+
+            <!-- estimatedQuantity ends -->
+          </div>
+
+          <!-- labelName starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="labelName" class="col-lg-5">Label Name</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="labelName"
+                  id="labelName"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="costing.labelName"
+                  readonly
+                />
+              </div>
+            </div>
+
+            <!-- labelName ends -->
+          </div>
+
+          <!-- labelWidthCM starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="labelWidthCM" class="col-lg-5"
+                >Label Width (CM)</label
+              >
+              <div class="input-group col-lg-6">
+                <input
+                  name="labelWidthCM"
+                  id="labelWidthCM"
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="costing.labelWidth"
+                  readonly
+                />
+              </div>
+            </div>
+
+            <!-- labelWidthCM ends -->
+          </div>
+
+          <!-- Label Length CM starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="labelLengthCM" class="col-lg-5"
+                >Label Length (CM)</label
+              >
+              <div class="input-group col-lg-6">
+                <input
+                  name="labelLengthCM"
+                  id="labelLengthCM"
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="costing.labelLength"
+                  readonly
+                />
+              </div>
+            </div>
+
+            <!-- Label Length CM ends -->
+          </div>
+
+          <!-- No of Colors starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="noOfColors" class="col-lg-5">No of Colors</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="noOfColors"
+                  id="noOfColors"
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="costing.noOfColors"
+                  style="border-color: #2c9a42"
+                />
+              </div>
+            </div>
+
+            <!-- No of Colors ends -->
+          </div>
+
+          <!-- Total Picks starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="totalPicks" class="col-lg-5">Total Picks</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="totalPicks"
+                  id="totalPicks"
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="costing.totalPicks"
+                  (ngModelChange)="calcLabelCost()"
+                  style="border-color: #2c9a42"
+                />
+              </div>
+            </div>
+
+            <!-- Total Picks ends -->
+          </div>
+
+          <!-- No of Repeats starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="noOfRepeats" class="col-lg-5">No of Repeats</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="noOfRepeats"
+                  id="noOfRepeats"
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="costing.noOfRepeats"
+                  readonly
+                />
+              </div>
+            </div>
+
+            <!-- No of Repeats ends -->
+          </div>
+
+          <!-- row - General Details ends-->
+        </div>
+        <!-- Custom section - General Details ends -->
+      </div>
+
+      <!-- <hr /> -->
+      <!-- Custom section - costing starts -->
+      <div class="col-lg-12 custom-section">
+        <!-- row - costing starts -->
+        <div class="row">
+          <!-- Machine / RPM / Raiper starts -->
+          <div
+            class="form-group col-lg-5 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="rpmRaiper" class="col-lg-6"
+                >Machine / RPM / Raiper</label
+              >
+              <div class="input-group col-lg-6">
+                <input
+                  name="rpmRaiper"
+                  id="rpmRaiper"
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="costing.rpmRaiper"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- Machine / RPM / Raiper ends -->
+          </div>
+
+          <!-- Machine / RPM / Airjet starts -->
+          <div
+            class="form-group col-lg-5 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="rpmAirjet" class="col-lg-6"
+                >Machine / RPM / Airjet</label
+              >
+              <div class="input-group col-lg-6">
+                <input
+                  name="rpmAirjet"
+                  id="rpmAirjet"
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="costing.rpmAirjet"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- Machine / RPM / Airjet ends -->
+          </div>
+
+          <!-- Label / HR / Raiper starts -->
+          <div
+            class="form-group col-lg-5 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="hrRaiper" class="col-lg-6">Label / HR / Raiper</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="hrRaiper"
+                  id="hrRaiper"
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="costing.hrRaiper"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- Label / HR / Raiper ends -->
+          </div>
+
+          <!-- Label / HR / Airjet starts -->
+          <div
+            class="form-group col-lg-5 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="hrAirjet" class="col-lg-6">Label / HR / Airjet</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="hrAirjet"
+                  id="hrAirjet"
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="costing.hrAirjet"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- Label / HR / Airjet ends -->
+          </div>
+
+          <!-- Label cost / Raiper starts -->
+          <div
+            class="form-group col-lg-5 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="labelCostRaiper" class="col-lg-6"
+                >Label cost / Raiper</label
+              >
+              <div class="input-group col-lg-6">
+                <input
+                  name="labelCostRaiper"
+                  id="labelCostRaiper"
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="costing.labelCostRaiper"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- Label cost / Raiper ends -->
+          </div>
+
+          <!-- Label cost / Airjet starts -->
+          <div
+            class="form-group col-lg-5 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="labelCostAirjet" class="col-lg-6"
+                >Label cost / Airjet</label
+              >
+              <div class="input-group col-lg-6">
+                <input
+                  name="labelCostAirjet"
+                  id="labelCostAirjet"
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="costing.labelCostAirjet"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- Label cost / Airjet ends -->
+          </div>
+
+          <!-- row costing ends -->
+        </div>
+        <!-- custom section costing ends -->
+      </div>
+
+      <!-- custom section - final costing starts -->
+      <div class="col-lg-12 custom-section">
+        <!-- row - additional costing starts -->
+        <div class="row">
+          <!-- Additional Work starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="additionalWork" class="col-lg-5"
+                >Additional Work</label
+              >
+              <div class="input-group col-lg-6">
+                <input
+                  name="additionalWork"
+                  id="additionalWork"
+                  type="number"
+                  class="form-control"
+                  style="border-color: #2c9a42"
+                  [(ngModel)]="costing.additionalWork"
+                  (ngModelChange)="calcEstimateCost()"
+                />
+              </div>
+            </div>
+            <!-- Additional Work ends -->
+          </div>
+
+          <!-- Production Cost starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="productionCost" class="col-lg-5"
+                >Production Cost</label
+              >
+              <div class="input-group col-lg-6">
+                <input
+                  name="productionCost"
+                  id="productionCost"
+                  type="number"
+                  class="form-control"
+                  style="border-color: #2c9a42"
+                  [(ngModel)]="costing.productionCost"
+                  (ngModelChange)="calcEstimateCost()"
+                />
+              </div>
+            </div>
+            <!-- Production Cost ends -->
+          </div>
+
+          <!-- QC & Packing Cost starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="qcAndPackingCost" class="col-lg-5"
+                >QC & Packing Cost</label
+              >
+              <div class="input-group col-lg-6">
+                <input
+                  name="qcAndPackingCost"
+                  id="qcAndPackingCost"
+                  type="number"
+                  class="form-control"
+                  style="border-color: #2c9a42"
+                  [(ngModel)]="costing.qcAndPackingCost"
+                  (ngModelChange)="calcEstimateCost()"
+                />
+              </div>
+            </div>
+            <!-- QC & Packing Cost ends -->
+          </div>
+
+          <!-- Admin Cost starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="adminCost" class="col-lg-5">Admin Cost</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="adminCost"
+                  id="adminCost"
+                  type="number"
+                  class="form-control"
+                  style="border-color: #2c9a42"
+                  [(ngModel)]="costing.adminCost"
+                  (ngModelChange)="calcEstimateCost()"
+                />
+              </div>
+            </div>
+            <!-- Admin Cost ends -->
+          </div>
+
+          <!-- Profit starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="profit" class="col-lg-5">Profit</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="profit"
+                  id="profit"
+                  type="number"
+                  class="form-control"
+                  style="border-color: #2c9a42"
+                  [(ngModel)]="costing.profit"
+                  (ngModelChange)="calcEstimateCost()"
+                />
+              </div>
+            </div>
+            <!-- Profit ends -->
+          </div>
+
+          <!-- row - additional costing ends -->
+        </div>
+
+        <hr />
+
+        <!-- last row -->
+        <div class="row">
+          <!-- estimateCostRaiper starts -->
+          <div
+            class="form-group col-lg-5 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="estimateCostRaiper" class="col-lg-6"
+                >Estimate Cost Raiper</label
+              >
+              <div class="input-group col-lg-6">
+                <input
+                  name="estimateCostRaiper"
+                  id="estimateCostRaiper"
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="costing.estimateCostRaiper"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- estimateCostRaiper ends -->
+          </div>
+
+          <!-- estimateCostAirjet starts -->
+          <div
+            class="form-group col-lg-5 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="estimateCostAirjet" class="col-lg-6"
+                >Estimate Cost Airjet</label
+              >
+              <div class="input-group col-lg-6">
+                <input
+                  name="estimateCostAirjet"
+                  id="estimateCostAirjet"
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="costing.estimateCostAirjet"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- estimateCostAirjet ends -->
+          </div>
+          <!-- last row ends -->
+        </div>
+
+        <!-- custom section - final costing starts -->
+      </div>
+
+      <!-- Panel body ends -->
+    </div>
+
+    <!-- panel-primary ends -->
+  </div>
+  <!-- Company - Main container ends -->
+</div>

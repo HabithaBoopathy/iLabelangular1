@@ -1,0 +1,1966 @@
+<div id="top"></div>
+
+<!-- WovenCosting - Main container starts -->
+<div class="col-lg-12 main-container">
+  <!-- panel-primary starts -->
+  <div class="panel panel-primary">
+    <!-- Panel header starts -->
+    <div
+      class="panel-heading custom-section"
+      style="padding-top: 15px; padding-bottom: 10px"
+    >
+      <!-- Row - title and buttons starts -->
+      <div class="row">
+        <!-- Container title starts -->
+        <div class="col-lg-10" style="margin-top: 0px">
+          <h2 style="margin-bottom: 0px; color: #2c9a42">
+            Woven Costing
+            <span class="refNo" *ngIf="costing.refNo">{{ costing.refNo }}</span>
+            <button
+              class="btn btn-md btn-primary"
+              style="margin-left: 20px"
+              *ngIf="costing.status == 2"
+              (click)="sendForCustomerApproval()"
+              [disabled]="disableSendForCustomerApprovalBtn"
+            >
+              Send for Customer Approval
+            </button>
+
+            <span
+              class="refNo"
+              *ngIf="costing.status == 4 && this.accessType != 'Customer'"
+              style="font-weight: 500; font-size: 18px"
+            >
+              Waiting for Customer Approval
+            </span>
+
+            <span
+              class="refNo"
+              *ngIf="costing.status == 5"
+              style="font-weight: 500; font-size: 18px; color: darkgreen"
+            >
+              Customer Approved
+            </span>
+
+            <span
+              class="refNo"
+              *ngIf="costing.status == 6"
+              style="font-weight: 500; font-size: 18px; color: darkred"
+            >
+              Customer Rejected
+            </span>
+
+            <span
+              *ngIf="
+                this.costing.customerRejectedReason != '' &&
+                this.costing.status == 6
+              "
+              style="color: #333; font-size: 14px; margin-left: 5px"
+            >
+              <b style="font-weight: 600 !important">Reason: </b
+              >{{ this.costing.customerRejectedReason }}
+            </span>
+          </h2>
+          <!-- Container title ends -->
+        </div>
+
+        <!-- back button starts -->
+        <div class="col-lg-2">
+          <button
+            class="btn btn-block"
+            style="background-color: #333; color: white"
+            (click)="back()"
+          >
+            <i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Back
+          </button>
+          <!-- back button ends -->
+        </div>
+
+        <!-- Row - title and buttons ends -->
+      </div>
+
+      <hr style="margin-top: 10px" />
+
+      <!-- Row - state transition starts -->
+      <div class="row">
+        <!-- display save/update and send for approval button only for the first state -->
+        <ng-container *ngIf="this.costing.status == 0">
+          <!-- Save button starts -->
+          <div class="col-lg-2" *ngIf="this.isNew">
+            <button
+              class="btn btn-block"
+              style="background-color: #2c9a42; color: white"
+              (click)="saveCostingInputByExecutive()"
+              [disabled]="this.disableSaveBtn"
+              *ngIf="
+                this.accessType == 'Sales Team' || this.accessType == 'TManager'
+              "
+            >
+              Save&nbsp;&nbsp;<i class="fas fa-save"></i>
+            </button>
+            <!-- Save button ends -->
+          </div>
+
+          <!-- Update button starts -->
+          <div
+            class="col-lg-2"
+            *ngIf="!this.isNew && this.accessType != 'Administrator'"
+          >
+            <button
+              class="btn btn-block"
+              style="background-color: #2c9a42; color: white"
+              (click)="updateCostingInputBySampleHead()"
+              *ngIf="this.accessType == 'Sample Head'"
+            >
+              Update&nbsp;&nbsp;<i class="fas fa-save"></i>
+            </button>
+
+            <button
+              class="btn btn-block"
+              style="background-color: #2c9a42; color: white"
+              (click)="updateCostingInputByExecutive()"
+              *ngIf="
+                this.accessType == 'Sales Team' || this.accessType == 'TManager'
+              "
+            >
+              Update&nbsp;&nbsp;<i class="fas fa-save"></i>
+            </button>
+            <!-- Update button ends -->
+          </div>
+
+          <div class="col-lg-3" *ngIf="this.accessType == 'Sample Head'">
+            <button
+              class="btn btn-block btn-primary"
+              (click)="sendForApprovalBySampleHead()"
+            >
+              Send for Approval&nbsp;&nbsp;<i class="fas fa-check-circle"></i>
+            </button>
+            <!-- Send for approval button ends -->
+          </div>
+        </ng-container>
+
+        <!-- Display Approve/Reject buttons only for super users on waiting for approval state -->
+        <ng-container
+          *ngIf="
+            (costing.status < 2 || costing.status == 6) &&
+            this.isSuperUser &&
+            this.accessType == 'Administrator'
+          "
+        >
+          <!-- Approve button starts -->
+          <div class="col-lg-2">
+            <button
+              class="btn btn-block btn-success"
+              (click)="approve()"
+              [disabled]="disableAdminApprovalBtn"
+            >
+              Approve
+            </button>
+            <!-- Approve button ends -->
+          </div>
+
+          <!-- Reject button starts -->
+          <div class="col-lg-2">
+            <button class="btn btn-block btn-danger" (click)="reject()">
+              Reject
+            </button>
+            <!-- Reject button ends -->
+          </div>
+        </ng-container>
+
+        <!-- Display Approve/Reject buttons only for the mapped customer on waiting for approval state -->
+        <ng-container
+          *ngIf="
+            costing.status == 4 &&
+            (this.accessType == 'Customer' ||
+              this.accessType == 'Administrator')
+          "
+        >
+          <!-- Approve button starts -->
+          <div class="col-lg-2">
+            <button
+              class="btn btn-block btn-success"
+              (click)="approveByCustomer()"
+            >
+              Approve
+            </button>
+            <!-- Approve button ends -->
+          </div>
+
+          <!-- Reject button starts -->
+          <div class="col-lg-2">
+            <button
+              class="btn btn-block btn-danger"
+              (click)="rejectByCustomer()"
+            >
+              Reject
+            </button>
+            <!-- Reject button ends -->
+          </div>
+        </ng-container>
+
+        <div
+          class="col-lg-2"
+          *ngIf="this.costing.status == 2 || this.costing.status > 3"
+        >
+          <button class="btn btn-block btn-success" (click)="downloadPdf()">
+            Download PDF
+          </button>
+        </div>
+
+        <div class="col-lg-3" *ngIf="this.costing.status == 5">
+          <button
+            class="btn btn-primary"
+            (click)="createDraftOrder()"
+            [disabled]="disableDraftOrderBtn"
+            *ngIf="this.accessType != 'Customer'"
+          >
+            Create draft order
+          </button>
+        </div>
+
+        <div
+          class="col-lg-5 col-md-8"
+          style="margin-top: 0px; margin-left: auto; margin-right: 15px"
+          *ngIf="this.accessType != 'Customer'"
+        >
+          <ul class="breadCrumbs" style="float: right">
+            <li [ngClass]="{ activePage: costing.status == 0 }">
+              <a href="" title="New" class="animation">New</a>
+            </li>
+            <li [ngClass]="{ activePage: costing.status == 1 }">
+              <a href="" title="Waiting For Approval" class="animation"
+                >Waiting For Approval</a
+              >
+            </li>
+            <li *ngIf="costing.status < 2">
+              <a href="" title="Approved / Rejected" class="animation"
+                >Approved</a
+              >
+            </li>
+            <li
+              *ngIf="costing.status > 1"
+              [ngClass]="{
+                activePage: costing.status == 2 || this.costing.status > 3,
+                activePageRed: costing.status == 3
+              }"
+            >
+              <a href="" title="Approved / Rejected" class="animation">{{
+                costing.status == 2 || this.costing.status > 3
+                  ? "Approved"
+                  : "Rejected"
+              }}</a>
+            </li>
+            <!-- <li class="activePage">
+              <p href="" title="HPU internet services" class="animation">
+                HPU internet services
+              </p>
+            </li> -->
+            <div class="clear"></div>
+          </ul>
+        </div>
+
+        <!-- Row - state transition ends -->
+      </div>
+      <!-- Panel heading ends -->
+    </div>
+
+    <!-- Panel body starts -->
+    <div class="panel-body">
+      <!-- custom section - Artwork / label image starts -->
+      <div class="col-lg-12 custom-section">
+        <h2>Artwork / Label Image</h2>
+        <hr />
+        <div
+          class="col-lg-6"
+          style="
+            margin: auto;
+            padding: 15px;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+          "
+          *ngIf="this.attachmentSrc"
+        >
+          <img
+            style="
+              width: 100%;
+              height: 100%;
+              object-fit: contain;
+              max-height: 150px;
+              cursor: pointer;
+            "
+            class="mx-auto d-block"
+            [src]="_d.bypassSecurityTrustUrl(attachmentSrc)"
+            (click)="openImage()"
+            *ngIf="this.costing.attachmentExtension != 'pdf'"
+          />
+          <h3
+            *ngIf="this.costing.attachmentExtension == 'pdf'"
+            (click)="openImage()"
+            style="
+              cursor: pointer;
+              margin-bottom: 0px;
+              font-weight: 500;
+              text-align: center;
+            "
+          >
+            Open PDF Attachment <i class="fas fa-link"></i>
+          </h3>
+        </div>
+
+        <br />
+
+        <div
+          class="col-lg-6"
+          style="margin: auto"
+          *ngIf="
+            this.costing.status == 0 &&
+            (this.accessType == 'Sales Team' || this.accessType == 'TManager')
+          "
+        >
+          <input
+            type="file"
+            (change)="onFileChange($event)"
+            accept="image/png,  image/jpeg, image/jpg, .pdf, application/pdf"
+          />
+        </div>
+        <!-- custom section - Artwork / label image ends -->
+      </div>
+
+      <!-- Custom section - General Details starts -->
+      <div class="col-lg-12 custom-section" id="generalDetails">
+        <h2>Sample Details</h2>
+        <hr />
+        <!-- row - General Details starts -->
+        <div class="row">
+          <!-- entryDate starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="entryDate" class="col-lg-5">Entry Date</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="entryDate"
+                  id="entryDate"
+                  type="text"
+                  class="form-control"
+                  value="{{ this.displayDate }}"
+                  readonly
+                />
+              </div>
+            </div>
+
+            <!-- entryDate ends -->
+          </div>
+
+          <!-- Customer Id starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="customerId" class="col-lg-5">Customer</label>
+              <div
+                class="input-group col-lg-6"
+                *ngIf="
+                  (this.accessType == 'Sales Team' ||
+                    this.accessType == 'TManager') &&
+                  this.costing.status == 0
+                "
+              >
+                <select
+                  name="customerId"
+                  id="customerId"
+                  type="text"
+                  class="form-control"
+                  [ngStyle]="{
+                    padding: '0px',
+                    'pointer-events':
+                      generalDetailsReadOnly 
+                        ? 'none'
+                        : 'auto'
+                  }"
+                  [(ngModel)]="everything.customerId"
+                  (ngModelChange)="fetchCustomerName()"
+                >
+                  <option value="" disabled selected>
+                    Select the customer
+                  </option>
+                  <option
+                    *ngFor="let customer of customers"
+                    [value]="customer.id"
+                  >
+                    {{ customer.id}}
+                  </option>
+                </select>
+              </div>
+
+              <div
+                class="input-group col-lg-6"
+                *ngIf="
+                  this.costing.status > 0 ||
+                  (this.accessType != 'Sales Team' &&
+                    this.accessType != 'TManager')
+                "
+              >
+                <input
+                  name="customerId"
+                  id="customerId"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="costing.customerName"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- Customer Id ends -->
+          </div>
+
+          <!-- estimatedQuantity starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="estimatedQuantity" class="col-lg-5"
+                >Estimated Quantity</label
+              >
+              <div class="input-group col-lg-6">
+                <input
+                  name="estimatedQuantity"
+                  id="estimatedQuantity"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.estimatedQuantity"
+                  [readonly]="generalDetailsReadOnly"
+                />
+              </div>
+            </div>
+
+            <!-- estimatedQuantity ends -->
+          </div>
+
+          <!-- labelName starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="labelName" class="col-lg-5">Label Name</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="labelName"
+                  id="labelName"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="costing.labelName"
+                  [readonly]="generalDetailsReadOnly"
+                />
+              </div>
+            </div>
+
+            <!-- labelName ends -->
+          </div>
+
+          <!-- labelWidthCM starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="labelWidthCM" class="col-lg-5"
+                >Label Width (CM)</label
+              >
+              <div class="input-group col-lg-6">
+                <input
+                  name="labelWidthCM"
+                  id="labelWidthCM"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.labelWidth"
+                  [readonly]="generalDetailsReadOnly"
+                />
+              </div>
+            </div>
+
+            <!-- labelWidthCM ends -->
+          </div>
+
+          <!-- Label Length CM starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="labelLengthCM" class="col-lg-5"
+                >Label Length (CM)</label
+              >
+              <div class="input-group col-lg-6">
+                <input
+                  name="labelLengthCM"
+                  id="labelLengthCM"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.labelLength"
+                  [readonly]="generalDetailsReadOnly"
+                />
+              </div>
+            </div>
+
+            <!-- Label Length CM ends -->
+          </div>
+
+          <!-- No of Colors starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="noOfColors" class="col-lg-5">No of Colors</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="noOfColors"
+                  id="noOfColors"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.noOfColors"
+                  [readonly]="generalDetailsReadOnly"
+                />
+              </div>
+            </div>
+
+            <!-- No of Colors ends -->
+          </div>
+
+          <!-- Payment Terms -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="paymentTerms" class="col-lg-5">Payment Terms </label>
+              <div class="input-group col-lg-6">
+                <select
+                  class="form-control"
+                  [ngStyle]="{
+                    padding: '0px',
+                    'pointer-events': generalDetailsReadOnly ? 'none' : 'auto'
+                  }"
+                  name="paymentTerms"
+                  id="paymentTerms"
+                  [(ngModel)]="costing.paymentTerms"
+                  (ngModelChange)="calcFinancialCharge()"
+                >
+                  <option value="7 Days">7 Days</option>
+                  <option value="10 Days">10 Days</option>
+                  <option value="14 Days">14 Days</option>
+                  <option value="21 Days">21 Days</option>
+                  <option value="30 Days">30 Days</option>
+                  <option value="45 Days">45 Days</option>
+                  <option value="60 Days">60 Days</option>
+                  <option value="90 Days">90 Days</option>
+                  <option value="Advance Payment">Advance Payment</option>
+                  <option value="Cash on Delivery">Cash on Delivery</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Payment terms end -->
+          </div>
+
+          <!-- Remarks starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="remarks" class="col-lg-5">Remarks</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="remarks"
+                  id="remarks"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="costing.remarks"
+                  [readonly]="generalDetailsReadOnly"
+                />
+              </div>
+            </div>
+
+            <!-- Remarks ends -->
+          </div>
+
+          <!-- Additional Work Details starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="additionalWorkDetails" class="col-lg-5"
+                >Additional Work Details</label
+              >
+              <div class="input-group col-lg-6">
+                <mat-form-field
+                  appearance="fill"
+                  [ngStyle]="{
+                    padding: '0px',
+                    'max-width': '100%',
+                    'pointer-events': generalDetailsReadOnly ? 'none' : 'auto'
+                  }"
+                >
+                  <mat-label>Additional Work</mat-label>
+                  <mat-select
+                    multiple
+                    [(ngModel)]="costing.additionalWorkDetails"
+                  >
+                    <mat-option
+                      *ngFor="let additionalWork of mOtherDetails"
+                      [value]="additionalWork.name"
+                      >{{ additionalWork.name }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <!-- Additional Work Details ends -->
+          </div>
+
+          <!-- additional work items starts -->
+          <div class="col-lg-8" style="padding-top: 10px">
+            <div
+              *ngFor="let item of costing.additionalWorkDetails"
+              class="additionalWorkItem"
+            >
+              {{ item }}
+            </div>
+
+            <!-- additional work items starts -->
+          </div>
+
+          <!-- row - General Details ends-->
+        </div>
+        <!-- Custom section - General Details ends -->
+      </div>
+
+      <!-- <hr /> -->
+      <!-- Custom section - costing starts -->
+      <div
+        class="col-lg-12 custom-section"
+        *ngIf="
+          this.accessType == 'Administrator' || this.accessType == 'Sample Head'
+        "
+      >
+        <h2>Technical Details</h2>
+        <hr />
+
+        <!-- row - costing starts -->
+        <div class="row">
+          <!-- Total Picks starts -->
+          <div
+            class="form-group col-lg-5 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="totalPicks" class="col-lg-6">Total Picks</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="totalPicks"
+                  id="totalPicks"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.totalPicks"
+                  (ngModelChange)="calcLabelCost()"
+                  [readonly]="totalPicksAndNosRepeatsReadOnly"
+                />
+              </div>
+            </div>
+
+            <!-- Total Picks ends -->
+          </div>
+
+          <!-- No of Repeats starts -->
+          <div
+            class="form-group col-lg-5 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="noOfRepeats" class="col-lg-6">No of Repeats</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="noOfRepeats"
+                  id="noOfRepeats"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.noOfRepeats"
+                  (ngModelChange)="calcLabelCost()"
+                  [readonly]="totalPicksAndNosRepeatsReadOnly"
+                />
+              </div>
+            </div>
+
+            <!-- No of Repeats ends -->
+          </div>
+
+          <!-- Machine / RPM / Raiper starts -->
+          <div
+            class="form-group col-lg-5 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="rpmRaiper" class="col-lg-6"
+                >Machine / RPM / Rapier</label
+              >
+              <div class="input-group col-lg-6">
+                <input
+                  name="rpmRaiper"
+                  id="rpmRaiper"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.rpmRaiper"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- Machine / RPM / Raiper ends -->
+          </div>
+
+          <!-- Machine / RPM / Airjet starts -->
+          <div
+            class="form-group col-lg-5 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="rpmAirjet" class="col-lg-6"
+                >Machine / RPM / Airjet</label
+              >
+              <div class="input-group col-lg-6">
+                <input
+                  name="rpmAirjet"
+                  id="rpmAirjet"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.rpmAirjet"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- Machine / RPM / Airjet ends -->
+          </div>
+
+          <!-- Label / HR / Raiper starts -->
+          <div
+            class="form-group col-lg-5 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="hrRaiper" class="col-lg-6">Label / HR / Rapier</label>
+              <div
+                class="input-group col-lg-6"
+                title="{{
+                  '( ' +
+                    costing.rpmRaiper +
+                    ' / ' +
+                    costing.totalPicks +
+                    ' )' +
+                    ' x ' +
+                    costing.noOfRepeats +
+                    ' x 60'
+                }}"
+              >
+                <input
+                  name="hrRaiper"
+                  id="hrRaiper"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.hrRaiper"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- Label / HR / Raiper ends -->
+          </div>
+
+          <!-- Label / HR / Airjet starts -->
+          <div
+            class="form-group col-lg-5 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="hrAirjet" class="col-lg-6">Label / HR / Airjet</label>
+              <div
+                class="input-group col-lg-6"
+                title="{{
+                  '( ' +
+                    costing.rpmAirjet +
+                    ' / ' +
+                    costing.totalPicks +
+                    ' )' +
+                    ' x ' +
+                    costing.noOfRepeats +
+                    ' x 60'
+                }}"
+              >
+                <input
+                  name="hrAirjet"
+                  id="hrAirjet"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.hrAirjet"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- Label / HR / Airjet ends -->
+          </div>
+
+          <!-- Label cost / Raiper starts -->
+          <div
+            class="form-group col-lg-5 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="labelCostRaiper" class="col-lg-6"
+                >Label cost / Rapier</label
+              >
+              <div
+                class="input-group col-lg-6"
+                title="{{
+                  (costing.entryDate <= '2022-02-17' ? '1350' : '1500') +
+                    ' / ' +
+                    costing.hrRaiper
+                }}"
+              >
+                <input
+                  name="labelCostRaiper"
+                  id="labelCostRaiper"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.labelCostRaiper"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- Label cost / Raiper ends -->
+          </div>
+
+          <!-- Label cost / Airjet starts -->
+          <div
+            class="form-group col-lg-5 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="labelCostAirjet" class="col-lg-6"
+                >Label cost / Airjet</label
+              >
+              <div
+                class="input-group col-lg-6"
+                title="{{
+                  (costing.entryDate <= '2022-02-17' ? '1900' : '2050') +
+                    ' / ' +
+                    costing.hrAirjet
+                }}"
+              >
+                <input
+                  name="labelCostAirjet"
+                  id="labelCostAirjet"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.labelCostAirjet"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- Label cost / Airjet ends -->
+          </div>
+
+          <!-- row costing ends -->
+        </div>
+        <!-- custom section costing ends -->
+      </div>
+
+      <!-- custom section - final costing starts -->
+      <div
+        class="col-lg-12 custom-section"
+        *ngIf="
+          this.accessType == 'Administrator' || this.accessType == 'Sample Head'
+        "
+      >
+        <h2>Costing Details</h2>
+        <!-- <hr /> -->
+
+        <!-- row - additional costing starts -->
+        <div class="row" style="display: none">
+          <!-- Additional Work starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="additionalWork" class="col-lg-5"
+                >Additional Work Cost</label
+              >
+              <div class="input-group col-lg-3">
+                <input
+                  name="additionalWork"
+                  id="noSpinner"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="variableCosts.additionalWork"
+                  (ngModelChange)="convertVariableCost()"
+                />
+                <b>%</b>
+              </div>
+              <div class="input-group col-lg-3">
+                <input
+                  name="additionalWork"
+                  id="additionalWork"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.additionalWork"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- Additional Work ends -->
+          </div>
+
+          <!-- Production Cost starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="productionCost" class="col-lg-5"
+                >Production Cost</label
+              >
+              <div class="input-group col-lg-3">
+                <input
+                  name="productionCost"
+                  id="noSpinner"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="variableCosts.productionCost"
+                  (ngModelChange)="convertVariableCost()"
+                />
+                <b>%</b>
+              </div>
+              <div class="input-group col-lg-3">
+                <input
+                  name="productionCost"
+                  id="productionCost"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.productionCost"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- Production Cost ends -->
+          </div>
+
+          <!-- QC & Packing Cost starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="qcAndPackingCost" class="col-lg-5"
+                >QC & Packing Cost</label
+              >
+              <div class="input-group col-lg-3">
+                <input
+                  name="qcAndPackingCost"
+                  id="noSpinner"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="variableCosts.qcAndPackingCost"
+                  (ngModelChange)="convertVariableCost()"
+                />
+                <b>%</b>
+              </div>
+              <div class="input-group col-lg-3">
+                <input
+                  name="qcAndPackingCost"
+                  id="qcAndPackingCost"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.qcAndPackingCost"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- QC & Packing Cost ends -->
+          </div>
+
+          <!-- Admin Cost starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="adminCost" class="col-lg-5">Admin Cost</label>
+              <div class="input-group col-lg-3">
+                <input
+                  name="qcAndPackingCost"
+                  id="noSpinner"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="variableCosts.adminCost"
+                  (ngModelChange)="convertVariableCost()"
+                />
+                <b>%</b>
+              </div>
+              <div class="input-group col-lg-3">
+                <input
+                  name="adminCost"
+                  id="adminCost"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.adminCost"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- Admin Cost ends -->
+          </div>
+
+          <!-- Profit starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="profit" class="col-lg-5">Profit</label>
+              <div class="input-group col-lg-3">
+                <input
+                  name="qcAndPackingCost"
+                  id="noSpinner"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="variableCosts.profitMargin"
+                  (ngModelChange)="convertVariableCost()"
+                />
+                <b>%</b>
+              </div>
+              <div class="input-group col-lg-3">
+                <input
+                  name="profit"
+                  id="profit"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.profit"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- Profit ends -->
+          </div>
+
+          <!-- row - additional costing ends -->
+        </div>
+
+        <!-- <hr /> -->
+
+        <div class="row">
+          <table
+            class="table table-striped"
+            style="
+              width: 97%;
+              margin: auto;
+              margin-top: 10px;
+              margin-bottom: 15px;
+            "
+          >
+            <thead>
+              <tr style="font-weight: 500">
+                <th width="30%">Costs</th>
+                <th width="10%">%</th>
+                <th width="20%">Value</th>
+                <th width="20%">Rapier</th>
+                <th width="20%">Airjet</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th style="font-weight: 500">Additional Work Cost</th>
+                <td>
+                  <input
+                    name="additionalWork"
+                    id="noSpinner"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="variableCosts.additionalWork"
+                    (ngModelChange)="convertVariableCost()"
+                  />
+                </td>
+                <td>{{ this.costing.additionalWork }}</td>
+                <td
+                  title="{{
+                    this.costing.additionalWork +
+                      ' x ' +
+                      this.costing.labelCostRaiper
+                  }}"
+                >
+                  {{
+                    this.roundToFour(
+                      this.costing.additionalWork * this.costing.labelCostRaiper
+                    )
+                  }}
+                </td>
+                <td
+                  title="{{
+                    this.costing.additionalWork +
+                      ' x ' +
+                      this.costing.labelCostAirjet
+                  }}"
+                >
+                  {{
+                    this.roundToFour(
+                      this.costing.additionalWork * this.costing.labelCostAirjet
+                    )
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <th style="font-weight: 500">Production Cost</th>
+                <td>
+                  <input
+                    name="productionCost"
+                    id="noSpinner"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="variableCosts.productionCost"
+                    (ngModelChange)="convertVariableCost()"
+                  />
+                </td>
+                <td>{{ this.costing.productionCost }}</td>
+                <td
+                  title="{{
+                    this.costing.productionCost +
+                      ' x ' +
+                      this.costing.labelCostRaiper
+                  }}"
+                >
+                  {{
+                    this.roundToFour(
+                      this.costing.productionCost * this.costing.labelCostRaiper
+                    )
+                  }}
+                </td>
+                <td
+                  title="{{
+                    this.costing.productionCost +
+                      ' x ' +
+                      this.costing.labelCostAirjet
+                  }}"
+                >
+                  {{
+                    this.roundToFour(
+                      this.costing.productionCost * this.costing.labelCostAirjet
+                    )
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <th style="font-weight: 500">QC & Packing Cost</th>
+                <td>
+                  <input
+                    name="qcAndPackingCost"
+                    id="noSpinner"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="variableCosts.qcAndPackingCost"
+                    (ngModelChange)="convertVariableCost()"
+                  />
+                </td>
+                <td>{{ this.costing.qcAndPackingCost }}</td>
+                <td
+                  title="{{
+                    this.costing.qcAndPackingCost +
+                      ' x ' +
+                      this.costing.labelCostRaiper
+                  }}"
+                >
+                  {{
+                    this.roundToFour(
+                      this.costing.qcAndPackingCost *
+                        this.costing.labelCostRaiper
+                    )
+                  }}
+                </td>
+                <td
+                  title="{{
+                    this.costing.qcAndPackingCost +
+                      ' x ' +
+                      this.costing.labelCostAirjet
+                  }}"
+                >
+                  {{
+                    this.roundToFour(
+                      this.costing.qcAndPackingCost *
+                        this.costing.labelCostAirjet
+                    )
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <th style="font-weight: 500">Admin Cost</th>
+                <td>
+                  <input
+                    name="adminCost"
+                    id="noSpinner"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="variableCosts.adminCost"
+                    (ngModelChange)="convertVariableCost()"
+                  />
+                </td>
+                <td>{{ this.costing.adminCost }}</td>
+                <td
+                  title="{{
+                    this.costing.adminCost +
+                      ' x ' +
+                      this.costing.labelCostRaiper
+                  }}"
+                >
+                  {{
+                    this.roundToFour(
+                      this.costing.adminCost * this.costing.labelCostRaiper
+                    )
+                  }}
+                </td>
+                <td
+                  title="{{
+                    this.costing.adminCost +
+                      ' x ' +
+                      this.costing.labelCostAirjet
+                  }}"
+                >
+                  {{
+                    this.roundToFour(
+                      this.costing.adminCost * this.costing.labelCostAirjet
+                    )
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <th style="font-weight: 500">Delivery Cost</th>
+                <td>
+                  <input
+                    name="deliveryCost"
+                    id="noSpinner"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="variableCosts.deliveryCost"
+                    (ngModelChange)="convertVariableCost()"
+                  />
+                </td>
+                <td>{{ this.costing.deliveryCost }}</td>
+                <td
+                  title="{{
+                    this.costing.deliveryCost +
+                      ' x ' +
+                      this.costing.labelCostRaiper
+                  }}"
+                >
+                  {{
+                    this.roundToFour(
+                      this.costing.deliveryCost * this.costing.labelCostRaiper
+                    )
+                  }}
+                </td>
+                <td
+                  title="{{
+                    this.costing.deliveryCost +
+                      ' x ' +
+                      this.costing.labelCostAirjet
+                  }}"
+                >
+                  {{
+                    this.roundToFour(
+                      this.costing.deliveryCost * this.costing.labelCostAirjet
+                    )
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <th style="font-weight: 500">Profit</th>
+                <td>
+                  <input
+                    name="profitMargin"
+                    id="noSpinner"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="variableCosts.profitMargin"
+                    (ngModelChange)="convertVariableCost()"
+                  />
+                </td>
+                <td>{{ this.costing.profit }}</td>
+                <td
+                  title="{{
+                    this.costing.profit + ' x ' + this.costing.labelCostRaiper
+                  }}"
+                >
+                  {{
+                    this.roundToFour(
+                      this.costing.profit * this.costing.labelCostRaiper
+                    )
+                  }}
+                </td>
+                <td
+                  title="{{
+                    this.costing.profit + ' x ' + this.costing.labelCostAirjet
+                  }}"
+                >
+                  {{
+                    this.roundToFour(
+                      this.costing.profit * this.costing.labelCostAirjet
+                    )
+                  }}
+                </td>
+              </tr>
+              <tr style="display: none">
+                <th style="font-weight: 500">Estimate Cost</th>
+                <td></td>
+                <td></td>
+                <td
+                  style="font-weight: 500"
+                  title="{{
+                    costing.labelCostRaiper +
+                      ' + ' +
+                      this.roundToFour(
+                        this.costing.additionalWork *
+                          this.costing.labelCostRaiper
+                      ) +
+                      ' + ' +
+                      this.roundToFour(
+                        this.costing.productionCost *
+                          this.costing.labelCostRaiper
+                      ) +
+                      ' + ' +
+                      this.roundToFour(
+                        this.costing.qcAndPackingCost *
+                          this.costing.labelCostRaiper
+                      ) +
+                      ' + ' +
+                      this.roundToFour(
+                        this.costing.adminCost * this.costing.labelCostRaiper
+                      ) +
+                      ' + ' +
+                      this.roundToFour(
+                        this.costing.deliveryCost * this.costing.labelCostRaiper
+                      ) +
+                      ' + ' +
+                      this.roundToFour(
+                        this.costing.profit * this.costing.labelCostRaiper
+                      )
+                  }}"
+                >
+                  {{ costing.estimateCostRaiper }}
+                </td>
+                <td
+                  style="font-weight: 500"
+                  title="{{
+                    costing.labelCostAirjet +
+                      ' + ' +
+                      this.roundToFour(
+                        this.costing.additionalWork *
+                          this.costing.labelCostAirjet
+                      ) +
+                      ' + ' +
+                      this.roundToFour(
+                        this.costing.productionCost *
+                          this.costing.labelCostAirjet
+                      ) +
+                      ' + ' +
+                      this.roundToFour(
+                        this.costing.qcAndPackingCost *
+                          this.costing.labelCostAirjet
+                      ) +
+                      ' + ' +
+                      this.roundToFour(
+                        this.costing.adminCost * this.costing.labelCostAirjet
+                      ) +
+                      ' + ' +
+                      this.roundToFour(
+                        this.costing.deliveryCost * this.costing.labelCostAirjet
+                      ) +
+                      ' + ' +
+                      this.roundToFour(
+                        this.costing.profit * this.costing.labelCostAirjet
+                      )
+                  }}"
+                >
+                  {{ costing.estimateCostAirjet }}
+                </td>
+              </tr>
+              <tr *ngIf="costing.financialChargeRaiper">
+                <th style="font-weight: 500">Financial Charge</th>
+                <td></td>
+                <td></td>
+                <td
+                  style="font-weight: 500"
+                  title="{{
+                    '( ( (' +
+                      costing.estimateCostRaiper +
+                      ' x ' +
+                      costing.estimatedQuantity +
+                      ' x ' +
+                      0.12 +
+                      ') / 365 ) x ' +
+                      (this.costing.paymentTerms == '45 Days'
+                        ? '15'
+                        : this.costing.paymentTerms == '60 Days'
+                        ? '30'
+                        : this.costing.paymentTerms == '90 Days'
+                        ? '60'
+                        : '0') +
+                      ' ) / ' +
+                      this.costing.estimatedQuantity
+                  }}"
+                >
+                  {{ costing.financialChargeRaiper }}
+                </td>
+                <td
+                  style="font-weight: 500"
+                  title="{{
+                    '( ( (' +
+                      costing.estimateCostAirjet +
+                      ' x ' +
+                      costing.estimatedQuantity +
+                      ' x ' +
+                      0.12 +
+                      ') / 365 ) x ' +
+                      (this.costing.paymentTerms == '45 Days'
+                        ? '15'
+                        : this.costing.paymentTerms == '60 Days'
+                        ? '30'
+                        : this.costing.paymentTerms == '90 Days'
+                        ? '60'
+                        : '0') +
+                      ' ) / ' +
+                      this.costing.estimatedQuantity
+                  }}"
+                >
+                  {{ costing.financialChargeAirjet }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr />
+
+        <!-- totalEstimateCost row -->
+        <div class="row">
+          <!-- totalEstimateCostRaiper starts -->
+          <div
+            class="form-group col-lg-5 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="totalEstimateCostRaiper" class="col-lg-6"
+                >Total Estimate Cost Rapier</label
+              >
+              <div
+                class="input-group col-lg-6"
+                title="{{
+                  costing.estimateCostRaiper +
+                    ' + ' +
+                    (costing.financialChargeRaiper
+                      ? costing.financialChargeRaiper
+                      : 0)
+                }}"
+              >
+                <input
+                  name="totalEstimateCostRaiper"
+                  id="totalEstimateCostRaiper"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.totalEstimateCostRaiper"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- totalEstimateCostRaiper ends -->
+          </div>
+
+          <!-- totalEstimateCostAirjet starts -->
+          <div
+            class="form-group col-lg-5 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="totalEstimateCostAirjet" class="col-lg-6"
+                >Total Estimate Cost Airjet</label
+              >
+              <div
+                class="input-group col-lg-6"
+                title="{{
+                  costing.estimateCostAirjet +
+                    ' + ' +
+                    (costing.financialChargeAirjet
+                      ? costing.financialChargeAirjet
+                      : 0)
+                }}"
+              >
+                <input
+                  name="totalEstimateCostAirjet"
+                  id="totalEstimateCostAirjet"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.totalEstimateCostAirjet"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- totalEstimateCostAirjet ends -->
+          </div>
+          <!-- totalEstimateCost row ends -->
+        </div>
+
+        <!-- custom section - final costing ends -->
+      </div>
+
+      <!-- custom section - Slab rates starts -->
+      <div
+        class="col-lg-12 custom-section"
+        *ngIf="
+          this.accessType == 'Administrator' || this.accessType == 'Customer'
+        "
+      >
+        <!-- row- Line Item Input Starts -->
+        <div class="row">
+          <div class="form-group col-lg-2">
+            <!-- section heading starts -->
+            <h2>Slab Rates</h2>
+            <!-- section heading ends -->
+          </div>
+
+          <ng-container
+            *ngIf="
+              (this.costing.status < 2 || this.costing.status == 6) &&
+              this.isSuperUser
+            "
+          >
+            <!-- Quantity Slab starts -->
+            <div
+              class="form-group col-lg-4 col-md-6"
+              style="margin-left: auto; margin-right: auto"
+            >
+              <!-- Row - Quantity Slab starts -->
+              <div class="row">
+                <label for="quantitySlab" class="col-lg-5">Quantity Slab</label>
+
+                <div class="input-group col-lg-6">
+                  <select
+                    name="quantitySlab"
+                    id="quantitySlab"
+                    class="form-control"
+                    style="padding: 0px"
+                    [(ngModel)]="slabRates.quantitySlab"
+                  >
+                    <option value="1-1000">1-1000</option>
+                    <option value="1000-10000">1000-10000</option>
+                    <option value="10000-25000">10000-25000</option>
+                    <option value="25000-50000">25000-50000</option>
+                    <option value="50000-100000">50000-100000</option>
+                    <option value="100000-Above">100000 & Above</option>
+                  </select>
+                </div>
+                <!-- Row  - Quantity Slab ends -->
+              </div>
+              <!-- Quantity Slab ends -->
+            </div>
+
+            <!-- Price starts -->
+            <div
+              class="form-group col-lg-4 col-md-6"
+              style="margin-left: auto; margin-right: auto"
+            >
+              <div class="row">
+                <label for="price" class="col-lg-3">Price</label>
+                <div class="input-group col-lg-6">
+                  <input
+                    name="price"
+                    id="price"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="slabRates.price"
+                  />
+                </div>
+              </div>
+              <!-- Price ends -->
+            </div>
+
+            <!-- add btn starts -->
+            <div
+              class="form-group col-lg-2 col-md-4"
+              style="margin-left: auto; margin-right: auto"
+            >
+              <button class="btn btn-success btn-block" (click)="addLineItem()">
+                Add
+              </button>
+              <!-- add btn ends -->
+            </div>
+          </ng-container>
+
+          <!-- row- Line Item Input ends -->
+        </div>
+
+        <br *ngIf="this.costing.status == 0" />
+
+        <table class="table table-striped">
+          <thead>
+            <tr style="font-weight: 500">
+              <th>S No</th>
+              <th>Quantity Slab</th>
+              <th>Price</th>
+              <th
+                *ngIf="
+                  (this.costing.status < 2 || this.costing.status == 6) &&
+                  this.isSuperUser
+                "
+              >
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tr *ngFor="let slabRate of costing.slabRates; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ slabRate.quantitySlab }}</td>
+            <td>{{ slabRate.price }}</td>
+            <td
+              *ngIf="
+                (this.costing.status < 2 || this.costing.status == 6) &&
+                this.isSuperUser
+              "
+              style="padding: 5px"
+            >
+              <button class="btn btn-danger btn-sm" (click)="deleteLineItem(i)">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </table>
+
+        <!-- custom section - Slab rates ends -->
+      </div>
+
+      <!-- custom section - last section starts -->
+      <div class="custom-section" *ngIf="this.accessType != 'Customer'">
+        <!-- custom-section row starts -->
+        <div class="row justify-content-center">
+          <!-- createdBy starts -->
+          <div class="form-group col-lg-5 col-md-6">
+            <div class="row">
+              <label for="createdBy" class="col-lg-4">Created By</label>
+              <div class="input-group col-lg-7">
+                <input
+                  name="createdBy"
+                  id="createdBy"
+                  type="text"
+                  class="form-control"
+                  [value]="
+                    this.costing.tManagerEmail
+                      ? this.costing.tManagerEmail
+                      : this.executiveEmail
+                  "
+                  readonly
+                />
+              </div>
+            </div>
+
+            <!-- createdBy ends -->
+          </div>
+
+          <!-- approvedBy starts -->
+          <div
+            class="form-group col-lg-5 col-md-6"
+            *ngIf="this.costing.status > 1"
+          >
+            <div class="row">
+              <label for="approvedBy" class="col-lg-4">{{
+                this.costing.status == 2 || this.costing.status > 3
+                  ? "Approved By"
+                  : "Rejected By"
+              }}</label>
+              <div class="input-group col-lg-7">
+                <input
+                  name="approvedBy"
+                  id="approvedBy"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="this.costing.approverId"
+                  readonly
+                />
+              </div>
+            </div>
+
+            <!-- approvedBy ends -->
+          </div>
+
+          <div class="col-lg-2" *ngIf="this.costing.status == 0">
+            <button
+              class="btn btn-block"
+              style="background-color: #2c9a42; color: white"
+              *ngIf="
+                this.isNew &&
+                (this.accessType == 'Sales Team' ||
+                  this.accessType == 'TManager')
+              "
+              (click)="saveCostingInputByExecutive()"
+              [disabled]="this.disableSaveBtn"
+            >
+              Save&nbsp;&nbsp;<i class="fas fa-save"></i>
+            </button>
+
+            <button
+              class="btn btn-block"
+              style="background-color: #2c9a42; color: white"
+              (click)="updateCostingInputByExecutive()"
+              *ngIf="
+                !this.isNew &&
+                (this.accessType == 'Sales Team' ||
+                  this.accessType == 'TManager')
+              "
+            >
+              Update&nbsp;&nbsp;<i class="fas fa-save"></i>
+            </button>
+
+            <button
+              class="btn btn-block"
+              style="background-color: #2c9a42; color: white"
+              (click)="updateCostingInputBySampleHead()"
+              *ngIf="!this.isNew && this.accessType == 'Sample Head'"
+            >
+              Update&nbsp;&nbsp;<i class="fas fa-save"></i>
+            </button>
+          </div>
+
+          <div
+            class="col-lg-3"
+            *ngIf="this.costing.status == 0 && this.accessType == 'Sample Head'"
+          >
+            <button
+              class="btn btn-block btn-primary"
+              (click)="sendForApprovalBySampleHead()"
+            >
+              Send for Approval&nbsp;&nbsp;<i class="fas fa-check-circle"></i>
+            </button>
+          </div>
+
+          <div
+            class="col-lg-2"
+            *ngIf="this.costing.status == 2 || this.costing.status > 3"
+          >
+            <button class="btn btn-block btn-success" (click)="downloadPdf()">
+              Download PDF
+            </button>
+          </div>
+
+          <ng-container
+            *ngIf="
+              this.accessType == 'Administrator' &&
+              this.isSuperUser &&
+              (costing.status < 2 || costing.status == 6)
+            "
+          >
+            <!-- Approve button starts -->
+            <div class="col-lg-2">
+              <button
+                class="btn btn-block btn-success"
+                (click)="approve()"
+                [disabled]="disableAdminApprovalBtn"
+              >
+                Approve
+              </button>
+              <!-- Approve button ends -->
+            </div>
+
+            <!-- Reject button starts -->
+            <div class="col-lg-2">
+              <button class="btn btn-block btn-danger" (click)="reject()">
+                Reject
+              </button>
+              <!-- Reject button ends -->
+            </div>
+          </ng-container>
+          <!-- custom-section row ends -->
+        </div>
+        <!-- custom section - last section ends -->
+      </div>
+
+      <!-- Panel body ends -->
+    </div>
+
+    <!-- panel-primary ends -->
+  </div>
+  <!-- WovenCosting - Main container ends -->
+</div>
+
+<style>
+  .pdf-container {
+    padding: 20px;
+    position: relative;
+  }
+
+  .pdf_logo {
+    max-height: 60px;
+    margin-bottom: 0px;
+    display: inline-block;
+  }
+
+  .address {
+    margin: 0px;
+    color: #888888;
+    display: inline-block;
+    margin: 12px 0px 20px 5px !important;
+  }
+
+  .costing-refNo {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 10px 10px;
+    font-family: sans-serif;
+    font-weight: bold;
+    border-radius: 6px;
+    position: absolute;
+    right: 30px !important;
+    top: 30px !important;
+    font-size: 20px;
+  }
+
+  .custom-section-pdf h2 {
+    text-align: center;
+    padding: 6px;
+    background-color: #049b2f;
+    color: white;
+    font-family: sans-serif;
+    font-size: 16px;
+    margin-top: 0px !important;
+    margin-bottom: 10px !important;
+    font-weight: 600 !important;
+  }
+
+  .custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+      "Segoe UI Symbol", "Noto Color Emoji";
+    margin-bottom: 15px;
+    margin-top: 0px !important;
+  }
+
+  .custom-table th,
+  td {
+    border: 1px solid #ddd !important;
+    padding: 10px !important;
+  }
+
+  .custom-table th {
+    background-color: #e8e8e8;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  #clear {
+    content: " ";
+    display: block;
+    clear: both;
+  }
+</style>
+
+<!--
+1 date
+2 Refno
+3 Label/tag name
+4 Customer Name
+5 length
+6 width
+7 slab rates
+8 Payment terms
+ -->
+
+<div style="opacity: 0">
+  <div class="pdf-container" id="pdf-container-woven">
+    <img class="pdf_logo" src="../../../../../assets/newlogo-2.png" />
+
+    <br />
+
+    <p class="address">
+      ‘LABEL ARCADE’, 476/1B1A, Jothi Nagar,<br />K Chettipalayam, Tiruppur,
+      Tamil Nadu 641605
+    </p>
+
+    <span class="costing-refNo">{{ costing.refNo }}</span>
+
+    <div class="custom-section-pdf">
+      <h2>Costing Details</h2>
+
+      <table class="custom-table" style="width: 48%; float: left" id="c-table1">
+        <tbody>
+          <tr>
+            <th style="width: 40%">Entry Date</th>
+            <td style="width: 60%">{{ costing.entryDate }}</td>
+          </tr>
+          <tr>
+            <th style="width: 40%">Ref No</th>
+            <td style="width: 60%">{{ costing.refNo }}</td>
+          </tr>
+          <tr>
+            <th style="width: 40%">Label Name</th>
+            <td style="width: 60%">{{ costing.labelName }}</td>
+          </tr>
+          <tr>
+            <th style="width: 40%">Customer Name</th>
+            <td style="width: 60%">{{ costing.customerName }}</td>
+          </tr>
+          <tr>
+            <th style="width: 40%">Length</th>
+            <td style="width: 60%">{{ costing.labelLength }}</td>
+          </tr>
+          <tr>
+            <th style="width: 40%">Width</th>
+            <td style="width: 60%">{{ costing.labelWidth }}</td>
+          </tr>
+          <tr>
+            <th style="width: 40%">Payment Terms</th>
+            <td style="width: 60%">{{ costing.paymentTerms }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="width: 2%; float: left">&nbsp;</div>
+
+      <table class="custom-table" style="width: 50%; float: left" id="c-table2">
+        <tr>
+          <th>S No</th>
+          <th>Quantity Slab</th>
+          <th>Price</th>
+        </tr>
+        <tr *ngFor="let item of costing.slabRates; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ item.quantitySlab }}</td>
+          <td>{{ item.price }}</td>
+        </tr>
+      </table>
+      <div id="clear" style="height: 5px">&nbsp;</div>
+    </div>
+
+    <div class="custom-section-pdf">
+      <h3 style="font-weight: 500">
+        Artwork / Label Image
+        <span *ngIf="this.costing.attachmentExtension == 'pdf'">
+          - PDF Attachment
+        </span>
+      </h3>
+      <div
+        class="col-lg-4"
+        style="margin: auto; padding: 15px"
+        *ngIf="this.attachmentSrc"
+      >
+        <img
+          style="
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            max-height: 200px;
+            cursor: pointer;
+          "
+          class="mx-auto d-block"
+          [src]="_d.bypassSecurityTrustUrl(attachmentSrc)"
+          *ngIf="this.costing.attachmentExtension != 'pdf'"
+        />
+      </div>
+    </div>
+  </div>
+</div>

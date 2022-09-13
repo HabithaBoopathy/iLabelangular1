@@ -1,0 +1,741 @@
+<head>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap"
+    rel="stylesheet"
+  />
+</head>
+
+<!-- Main SCREEN container -->
+<div class="containerMainScreen">
+  <!-- 1st row -->
+  <div class="col-lg-12" style="padding: 20px">
+    <div class="row">
+      <!-- back button -->
+      <div class="col-lg-1">
+        <img
+          src="./../../assets/arrow-left-solid.svg"
+          alt="Back-button"
+          class="back-img"
+          (click)="back()"
+        />
+      </div>
+
+      <!-- containers to toggle show archive / active orders -->
+      <ng-container *ngIf="accessType !== 'Customer'">
+        <!-- Show archived button container -->
+        <div
+          class="col-lg-2"
+          *ngIf="displayActiveOrArchivedOrders === 'active'"
+          style="padding-left: 0"
+          (click)="toggleActiveAndArchivedOrders()"
+        >
+          <button class="btn btn-info btn-block">Show Archived</button>
+        </div>
+
+        <!-- Show archived button container -->
+        <div
+          class="col-lg-2"
+          *ngIf="displayActiveOrArchivedOrders === 'disabled'"
+          style="padding-left: 0"
+          (click)="toggleActiveAndArchivedOrders()"
+        >
+          <button class="btn btn-info btn-block">Show Current Orders</button>
+        </div>
+      </ng-container>
+
+      <!-- dynamically sizing the search box container-->
+      <div
+        [ngClass]="{
+          'col-lg-8': accessType === 'Customer',
+          'col-lg-6': accessType === 'Sales Team',
+          'col-lg-9':
+            accessType === 'Administrator' ||
+            accessType === 'Sample Head' ||
+            accessType === 'TManager'
+        }"
+        style="padding: 0px"
+      >
+        <div class="row" style="margin-right: 0px">
+          <div
+            [ngClass]="{
+              'col-lg-12': this.globalSearchPlaceHolder === 'Search',
+              'col-lg-10': this.globalSearchPlaceHolder !== 'Search'
+            }"
+          >
+            <input
+              type="text"
+              class="form-control"
+              [ngClass]="{
+                chromeHighlight: this.globalSearchPlaceHolder !== 'Search'
+              }"
+              #searchBox
+              [placeholder]="globalSearchPlaceHolder"
+              aria-label="Search"
+              [matAutocomplete]="auto"
+              [(ngModel)]="globalSearch"
+              (ngModelChange)="copySearchString(searchBox.value)"
+            />
+            <mat-autocomplete #auto="matAutocomplete">
+              <ng-container *ngIf="this.globalSearch">
+                <mat-option
+                  *ngFor="let option of globalSearchList"
+                  [value]="option"
+                  style="height: 35px"
+                  (click)="globalSearchFn(option)"
+                >
+                  Search for
+                  <span style="font-weight: 500">{{ globalSearch }}</span> in
+                  <span style="font-weight: 500">{{ option }}</span>
+                </mat-option>
+              </ng-container>
+            </mat-autocomplete>
+          </div>
+
+          <div
+            class="col-lg-2"
+            *ngIf="this.globalSearchPlaceHolder !== 'Search'"
+            style="padding: 0px"
+          >
+            <div class="row" style="margin-right: 0px">
+              <div
+                class="col-lg-4"
+                style="cursor: pointer"
+                (click)="onGlobalSearchSort()"
+              >
+                <img
+                  [src]="
+                    this.paginationInput.sort === 'desc'
+                      ? '../../assets/sort-desc.png'
+                      : '../../assets/sort-asc.png'
+                  "
+                  alt=""
+                  style="height: 32px"
+                />
+              </div>
+              <div class="col-lg-8" style="padding-right: 0px">
+                <button
+                  class="btn btn-danger btn-block col-lg-10"
+                  (click)="closeGlobalSearch()"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Create new sample button container -->
+      <div
+        class="col-lg-3"
+        *ngIf="
+          this.accessType === 'Customer' || this.accessType === 'Sales Team'
+        "
+      >
+        <button
+          class="btn btn-primary btn-block createNewSampleBtn"
+          (click)="createRoute()"
+        >
+          Create New Sample
+        </button>
+      </div>
+    </div>
+    <!-- 1st row ends -->
+  </div>
+  <!-- 1st col-lg-12 ends -->
+
+  <!-- 2nd col-lg-12 starts -->
+  <div class="col-lg-12" style="padding: 20px; padding-top: 15px">
+    <!-- 2nd row starts -->
+    <div class="row">
+      <!-- Sample orders heading container starts -->
+      <div class="col-lg-3 d-flex align-items-center">
+        <!-- Active order heading -->
+        <ng-container *ngIf="displayActiveOrArchivedOrders === 'active'">
+          <p style="margin: auto" class="activeOrderHeading">
+            SAMPLE ORDERS LIST
+          </p>
+        </ng-container>
+
+        <!-- Archived order heading -->
+        <ng-container *ngIf="displayActiveOrArchivedOrders === 'disabled'">
+          <p class="archiveOrderHeading">Archived Sample Orders List</p>
+        </ng-container>
+      </div>
+      <!-- Sample orders heading container ends -->
+
+      <!-- filters container starts -->
+      <div class="col-lg-7">
+        <!-- filter container row starts -->
+        <div class="row">
+          <!-- Trimtype filter container starts -->
+          <div
+            class="col-lg-4"
+            *ngIf="showTrimTypeFilter && this.accessType != 'TManager'"
+          >
+            <mat-form-field appearance="fill">
+              <mat-label>Trim type filter</mat-label>
+              <mat-select multiple [(ngModel)]="this.paginationInput.trimType">
+                <mat-option
+                  *ngFor="let trimType of trimTypeList"
+                  [value]="trimType"
+                  >{{ trimType }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <!-- Trimtype filter container ends -->
+
+          <!-- Trimtype filter container (TManager) starts -->
+          <div
+            class="col-lg-4"
+            *ngIf="showTrimTypeFilter && this.accessType == 'TManager'"
+          >
+            <mat-form-field appearance="fill">
+              <mat-label>Trim type filter</mat-label>
+              <mat-select multiple [(ngModel)]="this.trimTypeTManager">
+                <mat-option
+                  *ngFor="let trimType of trimTypeList"
+                  [value]="trimType"
+                  >{{ trimType }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <!-- Trimtype filter container (TManager) ends -->
+
+          <!-- Transaction status filter container starts -->
+          <div class="col-lg-4" *ngIf="this.accessType !== 'Sample Head'">
+            <mat-form-field appearance="fill">
+              <mat-label>Transaction status filter</mat-label>
+              <mat-select
+                multiple
+                [(ngModel)]="this.paginationInput.transactionStatus"
+              >
+                <mat-option
+                  *ngFor="let transactionStatus of transactionStatusList"
+                  [value]="transactionStatus"
+                >
+                  {{ transactionStatus }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <!-- Transaction status filter container ends -->
+
+          <!-- Transaction status filter container for Sample Head starts -->
+          <div class="col-lg-6" *ngIf="this.accessType === 'Sample Head'">
+            <mat-form-field appearance="fill" style="width: 100%">
+              <mat-label>Transaction status filter</mat-label>
+              <mat-select
+                multiple
+                [(ngModel)]="this.transactionStatusSampleHead"
+              >
+                <mat-option
+                  *ngFor="let transactionStatus of transactionStatusList"
+                  [value]="transactionStatus"
+                >
+                  {{ transactionStatus }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <!-- Transaction status filter container for Sample Head ends -->
+
+          <!-- sort by date container starts -->
+          <div
+            [ngClass]="{
+              'col-lg-4': this.accessType !== 'Sample Head',
+              'col-lg-6': this.accessType === 'Sample Head'
+            }"
+          >
+            <mat-form-field appearance="fill" style="width: 100%">
+              <mat-label>Sort by Date</mat-label>
+              <mat-select [(ngModel)]="this.paginationInput.sort">
+                <mat-option value="desc">Newest First</mat-option>
+                <mat-option value="asc">Oldest First</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <!-- sort by date container ends -->
+        </div>
+        <!-- filter container row ends -->
+      </div>
+      <!-- filters container ends -->
+
+      <!-- Search btn container starts -->
+      <div class="col-lg-2">
+        <button class="btn btn-block btn-dark" (click)="onFilterSearch()">
+          Search
+        </button>
+      </div>
+      <!-- Search btn container ends -->
+    </div>
+    <!-- 2nd row ends -->
+  </div>
+  <!-- 2nd col-lg-12 ends -->
+
+  <!-- 3rd col-lg-12 starts -->
+  <div class="col-lg-12">
+    <table class="table table-striped" style="width: 100%">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Reference Number</th>
+          <th>Trim Type</th>
+          <th>Sample Name</th>
+          <th>Company Name</th>
+          <th>Category</th>
+          <th>Entry Date</th>
+          <th>Transaction Status</th>
+          <th>Actions</th>
+          <!-- for displaying duplicate icon -->
+          <th
+            *ngIf="accessType === 'Customer' || accessType === 'Sales Team'"
+          ></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="content"
+          *ngFor="let i = index; let everything; of: everythingObs"
+        >
+          <td>{{ i + 1 + this.paginationInput.page * 10 }}</td>
+          <td>
+            <img
+              src="../../assets/auto-icon.png"
+              style="position: relative; vertical-align: middle; height: 20px"
+              *ngIf="everything.costingRefNo"
+            />
+            {{ everything.refNo }}
+          </td>
+
+          <!-- can use this -->
+
+          <!-- <td
+              [class.woven-color] = "everything.sampleName === 'Woven'"
+              [class.tag-color] = "everything.sampleName === 'Tag'"
+              [class.sticker-color] = "everything.sampleName === 'Sticker'"
+              [class.printed-color] = "everything.sampleName === 'Printed'"
+              >{{everything.sampleName}}</td> -->
+
+          <!-- or this -->
+
+          <td
+            [ngClass]="{
+              'woven-color': everything.sampleName === 'Woven',
+              'tag-color': everything.sampleName === 'Tag',
+              'sticker-color': everything.sampleName === 'Sticker',
+              'printed-color': everything.sampleName === 'Printed'
+            }"
+          >
+            {{ everything.sampleName }}
+          </td>
+
+          <td>{{ everything.sampName }}</td>
+          <td>{{ everything.name }}</td>
+          <td>{{employee.customerCategory}}</td>
+          <td>{{ everything.date }}</td>
+          <td>{{ everything.transactionStatus }}</td>
+
+          <!-- display to customer and sales team only -->
+          <td
+            *ngIf="
+              (everything.transactionStatus === 'Sample Request Initiated' ||
+              everything.transactionStatus === 'Production'||
+                everything.transactionStatus ===
+                  'Customer / Executive Approval' ||
+                everything.transactionStatus === 'Quotation / Dispatch' ||
+                everything.transactionStatus === 'Sample Approved' ||
+                everything.transactionStatus === 'Sample Rejected') &&
+              (accessType === 'Customer' || accessType === 'Sales Team')
+            "
+          >
+            <!-- update order -->
+            <img
+              src="./../../assets/edit.svg"
+              (click)="updateEverythingRoute(everything.id)"
+              routerLink="/home/forms"
+              class="edit-img"
+              routerLinkActive="active"
+              alt="Edit-icon"
+            />
+           
+              <!-- customerid end -->
+            <!-- completely delete order (gets displayed in archived view)-->
+            <!-- <ng-container *ngIf="displayActiveOrArchivedOrders === 'disabled'">
+                <img
+                  src="./../../assets/Delete.svg"
+                  (click)="confirmPermanentDelete(permanentDelete, everything.id)"
+                  style="margin-left: 10px"
+                  class="delete-img"
+                  alt="Delete-icon"
+                />
+              </ng-container> -->
+
+            <!-- activate order (gets displayed in archived view) -->
+            <ng-container *ngIf="displayActiveOrArchivedOrders === 'disabled'">
+              <img
+                src="./../../assets/plus-circle-solid.svg"
+                (click)="fetchOrder(everything.id)"
+                (click)="show(active)"
+                style="margin-left: 10px"
+                class="delete-img"
+                alt="Delete-icon"
+              />
+            </ng-container>
+
+            <!-- disable order -->
+            <ng-container *ngIf="displayActiveOrArchivedOrders === 'active'">
+              <ng-container *ngIf="showDeleteButton">
+                <img
+                  src="./../../assets/logout.svg"
+                  (click)="fetchOrder(everything.id)"
+                  (click)="open(content)"
+                  style="margin-left: 10px"
+                  class="delete-img"
+                  alt="Deactivate"
+                />
+              </ng-container>
+            </ng-container>
+          </td>
+
+          <!-- show for all transaction status && special access type  -->
+          <td
+            *ngIf="
+              (everything.transactionStatus === 'Sample Request Initiated' ||
+                everything.transactionStatus ===
+                  'Customer / Executive Approval' ||
+                everything.transactionStatus === 'Sample Initiated' ||
+                everything.transactionStatus === 'Rejection (Production)' ||
+                everything.transactionStatus === 'Production' ||
+                everything.transactionStatus === 'Quotation / Dispatch' ||
+                everything.transactionStatus === 'Sample Approved' ||
+                everything.transactionStatus === 'Sample Rejected') &&
+              (accessType === 'Administrator' ||
+                accessType === 'Sample Head' ||
+                accessType === 'TManager')
+            "
+          >
+            <!-- update order -->
+            <img
+              src="./../../assets/edit.svg"
+              (click)="updateEverythingRoute(everything.id)"
+              routerLink="/home/forms"
+              class="edit-img"
+              routerLinkActive="active"
+              alt="Edit-icon"
+            />
+
+            <!-- completely delete order (gets displayed in archieved view)-->
+            <!-- <ng-container *ngIf="displayActiveOrArchivedOrders === 'disabled'">
+                <img
+                  src="./../../assets/Delete.svg"
+                  (click)="confirmPermanentDelete(permanentDelete, everything.id)"
+                  style="margin-left: 10px"
+                  class="delete-img"
+                  alt="Delete-icon"
+                />
+              </ng-container> -->
+
+            <!-- Retreive back the order -->
+            <ng-container *ngIf="displayActiveOrArchivedOrders === 'disabled'">
+              <img
+                src="./../../assets/plus-circle-solid.svg"
+                (click)="fetchOrder(everything.id)"
+                (click)="show(active)"
+                style="margin-left: 10px"
+                class="delete-img"
+                alt="Delete-icon"
+              />
+            </ng-container>
+
+            <!-- disable order -->
+            <ng-container *ngIf="displayActiveOrArchivedOrders === 'active'">
+              <ng-container *ngIf="showDeleteButton">
+                <img
+                  src="./../../assets/logout.svg"
+                  (click)="fetchOrder(everything.id)"
+                  (click)="open(content)"
+                  style="margin-left: 10px"
+                  class="delete-img"
+                  alt="Deactivate"
+                />
+              </ng-container>
+            </ng-container>
+          </td>
+
+          <!-- To display cells on other cases  -->
+          <td
+            *ngIf="
+              (everything.transactionStatus === 'Sample Initiated' ||
+                everything.transactionStatus === 'Rejection (Production)' ||
+                everything.transactionStatus === 'Production') &&
+              (accessType === 'Customer' || accessType === 'Sales Team')
+            "
+          ></td>
+
+          <ng-container
+            *ngIf="accessType === 'Customer' || accessType === 'Sales Team'"
+          >
+            <td>
+              <img
+                src="./../../assets/Duplicate.svg"
+                title="Create Duplicate"
+                class="edit-img"
+                (click)="getDuplicateId(everything.id)"
+                (click)="order(duplicate)"
+              />
+            </td>
+          </ng-container>
+        </tr>
+        <tr style="background-color: #ffffff; color: grey">
+          <td colspan="100">
+            <span style="color: grey"
+              >{{ this.pager.totalResults }} results returned &nbsp;&nbsp;</span
+            >
+            <select
+              name=""
+              id=""
+              (change)="setPaginationInputSize($event.target.value)"
+            >
+              <ng-container *ngIf="this.pager.totalResults <= 10">
+                <option value="{{ this.pager.totalResults }}">
+                  {{ this.pager.totalResults }}
+                </option>
+              </ng-container>
+              <!-- loop through if count > 10 -->
+              <ng-container *ngIf="this.pager.totalResults > 10">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option *ngIf="this.pager.totalResults > 20" value="50">
+                  50
+                </option>
+              </ng-container>
+            </select>
+            rows per page
+            <!-- pager -->
+            <ul class="pagination" style="float: right">
+              <li
+                [ngClass]="{ disabled: this.pager.activePage === 1 }"
+                class="pageNumber paginationBtn"
+                (click)="setPage(1)"
+              >
+                <a>First</a>
+              </li>
+              <li
+                [ngClass]="{ disabled: this.pager.activePage === 1 }"
+                class="pageNumber paginationBtn"
+                (click)="setPage(this.pager.activePage - 1)"
+              >
+                <a>Previous</a>
+              </li>
+              <li
+                *ngFor="let page of this.pager.pagesToDisplay"
+                [ngClass]="{ active: this.pager.activePage === page }"
+                class="pageNumber"
+                (click)="setPage(page)"
+              >
+                <a>{{ page }}</a>
+              </li>
+              <!-- if there is atleast 6 pages after the startPage -->
+              <li
+                *ngIf="this.pager.totalPages - this.pager.startPage > 5"
+                class="pageNumber"
+                (click)="setPage(this.pager.startPage + 5)"
+              >
+                <a>...</a>
+              </li>
+              <li
+                *ngIf="this.pager.totalPages - this.pager.startPage > 5"
+                class="pageNumber"
+                (click)="setPage(this.pager.totalPages)"
+              >
+                <a>{{ this.pager.totalPages }}</a>
+              </li>
+
+              <li
+                [ngClass]="{
+                  disabled:
+                    this.pager.activePage === this.pager.totalPages ||
+                    this.pager.totalPages === 0
+                }"
+                class="pageNumber paginationBtn"
+                style="margin-left: 5px"
+                (click)="setPage(this.pager.activePage + 1)"
+              >
+                <a>Next</a>
+              </li>
+              <li
+                [ngClass]="{
+                  disabled:
+                    this.pager.activePage === this.pager.totalPages ||
+                    this.pager.totalPages === 0
+                }"
+                class="pageNumber paginationBtn"
+                (click)="setPage(this.pager.totalPages)"
+              >
+                <a>Last</a>
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- 3rd col-lg-12 ends -->
+</div>
+<!-- Container Main screen ends -->
+
+<!-- Modal for Activitaing order starts -->
+<ng-template #active let-modal>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <h1 class="modal-heading">Are you sure to enable this order?</h1>
+  <form>
+    <div class="main-table-box">
+      <div class="center-btn">
+        <button
+          class="btn btn-success"
+          (click)="retrieve()"
+          (click)="modal.dismiss('Cross click')"
+          style="margin-right: 15px"
+        >
+          Yes
+        </button>
+        <button class="btn btn-danger" (click)="modal.dismiss('Cross click')">
+          No
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+<!-- Modal for Activitaing order ends -->
+
+<!-- Modal for Disabling order starts-->
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <h1 class="modal-heading">Are you sure to archive this order?</h1>
+  <form>
+    <div class="main-table-box">
+      <div class="center-btn">
+        <button
+          class="btn btn-success"
+          (click)="disableOrder()"
+          (click)="modal.dismiss('Cross click')"
+          style="margin-right: 15px"
+        >
+          Yes
+        </button>
+        <button class="btn btn-danger" (click)="modal.dismiss('Cross click')">
+          No
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+<!-- Modal for Disabling order ends-->
+
+<!-- Modal For Duplicating order starts-->
+<ng-template #duplicate let-modal>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <h1 class="modal-heading">Are you sure to duplicate this order?</h1>
+  <form>
+    <div class="main-table-box">
+      <div class="center-btn">
+        <button
+          class="btn btn-success clear-button"
+          (click)="saveDuplicate()"
+          style="margin-right: 15px"
+        >
+          Yes
+        </button>
+        <button class="btn btn-danger" (click)="modal.dismiss('Cross click')">
+          No
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+<!-- Modal For Duplicating order ends-->
+
+<!-- Modal for permanent delete ends-->
+<!-- <ng-template #permanentDelete let-modal>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <h1 class="modal-heading">Are you sure to permanently delete this order?</h1>
+  <form>
+    <div class="main-table-box">
+      <div class="center-btn">
+        <button
+          class="btn btn-success"
+          (click)="deleteOrder(this.permanentDelete_orderID)"
+          (click)="modal.dismiss('Cross click')"
+          style="margin-right: 15px;"
+        >
+          Yes
+        </button>
+        <button class="btn btn-danger" (click)="modal.dismiss('Cross click')">
+          No
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-template> -->
+<!-- Modal for permanent delete ends-->
+
+<!-- loadingModalTemplate Start -->
+<ng-template #loadingModalTemplate let-modal>
+  <!-- loading gif -->
+  <app-loading-gif
+    [progressValue]="this.progressValue"
+    [showProgress]="false"
+  ></app-loading-gif>
+
+  <!-- Close Button Hidden -->
+  <button
+    id="closeLoadingModal"
+    style="display: none"
+    type="button"
+    (click)="modal.dismiss('Cross click')"
+  ></button>
+</ng-template>
+<!-- loadingModalTemplate End -->

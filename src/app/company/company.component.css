@@ -1,0 +1,41 @@
+img {
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+}
+
+#contentHeader {
+  background-color: #333;
+  color: white;
+}
+
+#contentHeader h3 {
+  font-weight: 500;
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 0px !important;
+  /* margin: auto; */
+}
+
+#contentHeader #close-content {
+  margin-left: 0px !important;
+  color: white;
+}
+
+#updateModalHeader {
+  background-color: #333;
+  color: white;
+}
+
+#updateModalHeader h3 {
+  font-weight: 500;
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 0px !important;
+  /* margin: auto; */
+}
+
+#updateModalHeader #close-update {
+  margin-left: 0px !important;
+  color: white;
+}

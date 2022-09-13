@@ -1,0 +1,12 @@
+<!-- loading gif -->
+<div class="h-75 d-flex justify-content-center align-items-center">
+  <img src="../../assets/spinner5.gif" (load)="this.showProgressBarfn()" />
+</div>
+
+<!-- Progress Bar -->
+<section *ngIf="this.showProgressBar && this.showProgress" style="display: flex; align-content: center; align-items: center;">
+
+  <mat-progress-bar  mode="determinate" [value]="progressValue" style="height: 18px;"></mat-progress-bar>
+
+  <div style="position: absolute; padding: 12px; color: white; border: 0px !important; "> {{progressValue}}% </div>
+</section >

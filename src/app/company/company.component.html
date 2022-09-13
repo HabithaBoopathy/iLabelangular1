@@ -1,0 +1,248 @@
+<div class="col-lg-12" style="padding: 15px; margin-top: 5px">
+  <div class="panel panel-primary">
+    <!-- Header with Title and Create New Button -->
+    <div class="panel-heading">
+      <h2>
+        Company List
+        <div style="float: right">
+          <button
+            (click)="open(content)"
+            (click)="resetObj()"
+            class="btn btn-primary"
+          >
+            Create New Company
+          </button>
+        </div>
+      </h2>
+    </div>
+    <!-- Panel heading ends -->
+
+    <!-- Search Box -->
+    <input
+      class="form-control"
+      type="text"
+      name="search"
+      autocomplete="off"
+      placeholder="Search"
+      [(ngModel)]="searchText"
+    />
+    <br />
+
+    <div class="panel-body">
+      <table class="table table-striped executive-list">
+        <thead>
+          <tr style="font-weight: 500">
+            <th>S.No</th>
+            <th>Company Name</th>
+            <th>Registration Number</th>
+            <th>E-Mail</th>
+            <th>Merchandiser</th>
+            <th>Address</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="
+              let i = index;
+              let company;
+              of: companies | filter: searchText
+            "
+          >
+            <td>{{ i + 1 }}</td>
+            <td>{{ company.companyName }}</td>
+            <td>{{ company.regNumber }}</td>
+            <td>{{ company.email }}</td>
+            <td>{{ company.merchandiser }}</td>
+            <td>{{ company.address }}</td>
+            <td>
+              <img
+                src="./../../assets/edit.svg"
+                (click)="open(updateModal)"
+                (click)="initializeEdit(company.id)"
+                alt="Update Icon"
+              />
+              <!-- <img
+                src="./../../assets/Delete.svg"
+                (click)="onDelete(i)"
+                style="margin-left: 10px"
+                alt="Delete Icon"
+              /> -->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Panel body ends -->
+  </div>
+  <!-- Panel ends -->
+</div>
+<!-- col-lg-12 ends -->
+
+<ng-template #content let-modal>
+  <div class="modal-header" id="contentHeader">
+    <h3 class="modal-title" id="modal-basic-title">Create New Company</h3>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      id="close-content"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="companyName" style="font-weight: 500">Company Name *</label>
+      <div class="input-group">
+        <input
+          [(ngModel)]="company.companyName"
+          name="companyName"
+          id="companyName"
+          class="form-control"
+        />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="regNumber" style="font-weight: 500"
+        >Registration Number *</label
+      >
+      <div class="input-group">
+        <input
+          [(ngModel)]="company.regNumber"
+          name="regNumber"
+          id="regNumber"
+          class="form-control"
+        />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="email" style="font-weight: 500">E-Mail *</label>
+      <div class="input-group">
+        <input
+          [(ngModel)]="company.email"
+          name="email"
+          id="email"
+          class="form-control"
+        />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="merchandiser" style="font-weight: 500">Merchandiser</label>
+      <div class="input-group">
+        <input
+          [(ngModel)]="company.merchandiser"
+          name="merchandiser"
+          id="merchandiser"
+          class="form-control"
+        />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="address" style="font-weight: 500">Address *</label>
+      <div class="input-group">
+        <input
+          [(ngModel)]="company.address"
+          name="address"
+          id="address"
+          class="form-control"
+        />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <button
+        type="button"
+        class="btn btn-block btn-primary"
+        (click)="onSave()"
+      >
+        Save
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #updateModal let-modal>
+  <div class="modal-header" id="updateModalHeader">
+    <h3 class="modal-title" id="modal-basic-title">Update Company</h3>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      id="close-update"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="companyName" style="font-weight: 500">Company Name *</label>
+      <div class="input-group">
+        <input
+          [(ngModel)]="company.companyName"
+          name="companyName"
+          id="companyName"
+          class="form-control"
+        />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="regNumber" style="font-weight: 500"
+        >Registration Number *</label
+      >
+      <div class="input-group">
+        <input
+          [(ngModel)]="company.regNumber"
+          name="regNumber"
+          id="regNumber"
+          class="form-control"
+        />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="email" style="font-weight: 500">E-Mail *</label>
+      <div class="input-group">
+        <input
+          [(ngModel)]="company.email"
+          name="email"
+          id="email"
+          class="form-control"
+          type="email"
+        />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="merchandiser" style="font-weight: 500">Merchandiser</label>
+      <div class="input-group">
+        <input
+          [(ngModel)]="company.merchandiser"
+          name="merchandiser"
+          id="merchandiser"
+          class="form-control"
+        />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="address" style="font-weight: 500">Address *</label>
+      <div class="input-group">
+        <input
+          [(ngModel)]="company.address"
+          name="address"
+          id="address"
+          class="form-control"
+        />
+      </div>
+    </div>
+    <div class="form-group">
+      <button
+        type="button"
+        class="btn btn-block btn-primary"
+        (click)="onUpdate()"
+      >
+        Update
+      </button>
+    </div>
+  </div>
+</ng-template>

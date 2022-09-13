@@ -1,0 +1,490 @@
+<head>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap"
+    rel="stylesheet"
+  />
+</head>
+
+<div>
+  <div class="top-bar">
+    <img
+      src="./../../assets/arrow-left-solid.svg"
+      alt="Back-button"
+      class="back-img"
+      (click)="back()"
+    />
+  </div>
+
+  <ng-container *ngIf="showCreateNewSampleButton">
+    <div class="top-bar open-modal">
+      <button class="btn btn-primary" (click)="createRoute()">
+        Create New Sample
+      </button>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="accessType !== 'Customer'">
+    <!-- containers to toggle show archive / active orders -->
+    <ng-container *ngIf="displayActiveOrArchivedOrders === 'active'">
+      <div class="archive-btn">
+        <button class="btn btn-info" (click)="toggleActiveAndArchivedOrders()">
+          Show Archived
+        </button>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="displayActiveOrArchivedOrders === 'disabled'">
+      <div class="archive-btn">
+        <button class="btn btn-info" (click)="toggleActiveAndArchivedOrders()">
+          Show Current Orders
+        </button>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>
+
+<div class="bg">
+  <!-- Order Forms List -->
+
+  <div class="panel panel-primary">
+    <div class="flex-it">
+      <div class="panel-heading">
+        <ng-container *ngIf="displayActiveOrArchivedOrders === 'active'">
+          <p>Sample Orders List</p>
+        </ng-container>
+
+        <ng-container *ngIf="displayActiveOrArchivedOrders === 'disabled'">
+          <p style="font-size: 20px;">Archived Sample Orders List</p>
+        </ng-container>
+      </div>
+
+      <ng-container *ngIf="showTrimTypeFilter">
+        <div class="drop-down">
+          <mat-form-field appearance="fill">
+            <mat-label>Sample Filter</mat-label>
+
+            <mat-select
+              [(ngModel)]="trimTypesFilter"
+              name="trimTypesFilter"
+              id="trimTypesFilter"
+            >
+
+              <mat-option value="Woven"
+                >Woven</mat-option
+              >
+              <mat-option value="Sticker"
+                >Sticker</mat-option
+              >
+              <mat-option value="Tag"
+                >Tag</mat-option
+              >
+              <mat-option value="Printed"
+                >Printed</mat-option
+              >
+
+              <mat-option value=""
+                >None</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </ng-container>
+
+      <div class="drop-down">
+        <mat-form-field appearance="fill">
+          <mat-label>Order State Filter</mat-label>
+
+          <mat-select
+            [(ngModel)]="transactionStatusFilter"
+            name="transactionStatusFilter"
+            id="transactionStatusFilter"
+          >
+            <mat-option
+              *ngIf="this.accessType !== 'Sample Head'"
+              value="Sample Request Initiated"
+              >Sample Request Initiated</mat-option
+            >
+            <mat-option
+              *ngIf="this.accessType !== 'Sample Head'"
+              value="Customer / Executive Approval"
+              >Customer / Executive Approval</mat-option
+            >
+            <mat-option value="Sample Initiated"
+              >Sample Initiated</mat-option
+            >
+            <!-- value has been changed from Rejection (Production) to rejection
+            to avoid passing special characters to filter pipe -->
+            <mat-option
+              value="Rejection"
+              >Rejection (Production)</mat-option
+            >
+            <mat-option value="Production"
+              >Production</mat-option
+            >
+            <mat-option
+              value="Quotation / Dispatch"
+              >Quotation / Dispatch</mat-option
+            >
+            <mat-option value="Sample Approved"
+              >Sample Approved</mat-option
+            >
+            <mat-option value="Sample Rejected"
+              >Sample Rejected</mat-option
+            >
+            <mat-option value=""
+              >None</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="drop-down">
+        <mat-form-field appearance="fill">
+          <mat-label>Sort By</mat-label>
+
+          <mat-select [(ngModel)]="reverse" name="sortFilter">
+            <mat-option [value]="true"
+              >Newest First</mat-option
+            >
+            <mat-option [value]="false"
+              >Oldest First</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" placeholder="Search">
+
+    <div class="panel-body">
+      <table class="table table-striped order-list">
+        <thead>
+          <tr>
+            <th>S.No</th>
+            <th>Reference Number</th>
+            <th>Trim Type</th>
+            <th>Sample Name</th>
+            <th>Company Name</th>
+            <th>Category Name</th>
+            <th>Entry Date</th>
+            <th>Transaction Status</th>
+            <th>Actions</th>
+            <!-- for displaying duplicate icon -->
+            <th *ngIf="accessType === 'Customer'  || accessType === 'Sales Team'"></th>
+          </tr>
+        </thead>
+
+        <!-- //searchTrimTypeFilter can be put inside custom filter-->
+        <tbody>
+          <tr
+            *ngFor="
+              let i = index;
+              let everything;
+              of: everythingObs
+                | orderBy: key:reverse
+                | filter: trimTypesFilter
+                | filter: searchText
+                | customFilter: { transactionStatus: transactionStatusFilter}
+                | filter: displayActiveOrArchivedOrders
+                | customFilter: { transactionStatus: sampleHeadTStatusFilter }
+                | customFilter: { sampleName: sampleHeadTrimTypeFilter }
+                | paginate: { itemsPerPage: 10, currentPage: p }
+            "
+            class="content"
+          >
+            <td>{{ (p - 1) * 10 + (i + 1) }}</td>
+            <td>{{ everything.refNo }}</td>
+
+            <!-- can use this -->
+
+            <!-- <td
+              [class.woven-color] = "everything.sampleName === 'Woven'"
+              [class.tag-color] = "everything.sampleName === 'Tag'"
+              [class.sticker-color] = "everything.sampleName === 'Sticker'"
+              [class.printed-color] = "everything.sampleName === 'Printed'"
+              >{{everything.sampleName}}</td> -->
+
+            <!-- or this -->
+
+            <td
+              [ngClass]="{
+                'woven-color': everything.sampleName === 'Woven',
+                'tag-color': everything.sampleName === 'Tag',
+                'sticker-color': everything.sampleName === 'Sticker',
+                'printed-color': everything.sampleName === 'Printed'
+              }"
+            >
+              {{ everything.sampleName }}
+            </td>
+
+            <td>{{ everything.sampName }}</td>
+            <td>{{ everything.name }}</td>
+            
+            <td>{{employee.customerCategory}}</td>
+            <td>{{ everything.date }}</td>
+            <td>{{ everything.transactionStatus }}</td>
+
+            <td
+              *ngIf="
+                (everything.transactionStatus === 'Sample Request Initiated' ||
+                  everything.transactionStatus === 'Customer / Executive Approval' ||
+                  everything.transactionStatus === 'Quotation / Dispatch' ||
+                  everything.transactionStatus === 'Sample Approved' ||
+                  everything.transactionStatus === 'Sample Rejected') &&
+                (accessType === 'Customer' || accessType === 'Sales Team')
+              "
+            >
+              <!-- update order -->
+              <img
+                src="./../../assets/edit.svg"
+                (click)="updateEverythingRoute(everything.id)"
+                routerLink="/home/forms"
+                class="edit-img"
+                routerLinkActive="active"
+                alt="Edit-icon"
+              />
+
+              <!-- completely delete order -->
+              <ng-container *ngIf="displayActiveOrArchivedOrders === 'disabled'">
+                <img
+                  src="./../../assets/Delete.svg"
+                  (click)="deleteOrder(everything.id)"
+                  style="margin-left: 10px"
+                  class="delete-img"
+                  alt="Delete-icon"
+                />
+              </ng-container>
+
+              <!-- activate order -->
+              <ng-container *ngIf="displayActiveOrArchivedOrders === 'disabled'">
+                <img
+                  src="./../../assets/plus-circle-solid.svg"
+                  (click)="fetchOrder(everything.id)"
+                  (click)="show(active)"
+                  style="margin-left: 10px"
+                  class="delete-img"
+                  alt="Delete-icon"
+                />
+              </ng-container>
+
+              <!-- disable order -->
+              <ng-container *ngIf="displayActiveOrArchivedOrders === 'active'">
+                <ng-container *ngIf="showDeleteButton">
+                  <img
+                    src="./../../assets/logout.svg"
+                    (click)="fetchOrder(everything.id)"
+                    (click)="open(content)"
+                    style="margin-left: 10px"
+                    class="delete-img"
+                    alt="Deactivate"
+                  />
+                </ng-container>
+              </ng-container>
+            </td>
+
+            <!-- show for all transaction status && special access type  -->
+            <td
+              *ngIf="
+                (everything.transactionStatus === 'Sample Request Initiated' ||
+                  everything.transactionStatus ===
+                    'Customer / Executive Approval' ||
+                  everything.transactionStatus === 'Sample Initiated' ||
+                  everything.transactionStatus === 'Rejection (Production)' ||
+                  everything.transactionStatus === 'Production' ||
+                  everything.transactionStatus === 'Quotation / Dispatch' ||
+                  everything.transactionStatus === 'Sample Approved' ||
+                  everything.transactionStatus === 'Sample Rejected') &&
+                (accessType === 'Administrator' ||
+                  accessType === 'Sample Head' ||
+                  accessType === 'Customer Service Team')
+              "
+            >
+            <!-- update order -->
+              <img
+                src="./../../assets/edit.svg"
+                (click)="updateEverythingRoute(everything.id)"
+                routerLink="/home/forms"
+                class="edit-img"
+                routerLinkActive="active"
+                alt="Edit-icon"
+              />
+
+              <!-- completely delete order -->
+              <ng-container *ngIf="displayActiveOrArchivedOrders === 'disabled'">
+                <img
+                  src="./../../assets/Delete.svg"
+                  (click)="deleteOrder(everything.id)"
+                  style="margin-left: 10px"
+                  class="delete-img"
+                  alt="Delete-icon"
+                />
+              </ng-container>
+
+              <!-- Retreive back the order -->
+              <ng-container *ngIf="displayActiveOrArchivedOrders === 'disabled'">
+                <img
+                  src="./../../assets/plus-circle-solid.svg"
+                  (click)="fetchOrder(everything.id)"
+                  (click)="show(active)"
+                  style="margin-left: 10px"
+                  class="delete-img"
+                  alt="Delete-icon"
+                />
+              </ng-container>
+
+              <!-- disable order -->
+              <ng-container *ngIf="displayActiveOrArchivedOrders === 'active'">
+                <ng-container *ngIf="showDeleteButton">
+                  <img
+                    src="./../../assets/logout.svg"
+                    (click)="fetchOrder(everything.id)"
+                    (click)="open(content)"
+                    style="margin-left: 10px"
+                    class="delete-img"
+                    alt="Deactivate"
+                  />
+                </ng-container>
+              </ng-container>
+            </td>
+
+            <!-- To display cells on other cases  -->
+            <td
+              *ngIf="
+                (   everything.transactionStatus === 'Sample Initiated' ||
+                    everything.transactionStatus === 'Rejection (Production)' ||
+                    everything.transactionStatus === 'Production') &&
+                    (accessType === 'Customer' || accessType === 'Sales Team')"
+            ></td>
+
+            <ng-container
+              *ngIf="accessType === 'Customer' || accessType === 'Sales Team'"
+            >
+              <td>
+                <img
+                  src="./../../assets/Duplicate.svg"
+                  title="Create Duplicate"
+                  class="edit-img"
+                  (click)="getDuplicateId(everything.id)"
+                  (click)="order(duplicate)"
+                />
+              </td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Disabling order-->
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <h1>Are you sure you want to disable this Order?</h1>
+  <form>
+    <div class="main-table-box">
+      <div class="center-btn">
+        <button
+          class="btn btn-success clear-button"
+          (click)="disableOrder()"
+          (click)="modal.dismiss('Cross click')"
+        >
+          Yes
+        </button>
+        <button class="btn btn-danger" (click)="modal.dismiss('Cross click')">
+          No
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<!-- Modal for Activitaing order -->
+
+<ng-template #active let-modal>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <h1>Are you sure to Enable</h1>
+  <form>
+    <div class="main-table-box">
+      <div class="center-btn">
+        <button
+          class="btn btn-success clear-button"
+          (click)="retrieve()"
+          (click)="modal.dismiss('Cross click')"
+        >
+          Yes
+        </button>
+        <button class="btn btn-danger" (click)="modal.dismiss('Cross click')">
+          No
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<!-- Modal For Duplicating order -->
+
+<ng-template #duplicate let-modal>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <h1>Are you sure you want to duplicate this order?</h1>
+  <form>
+    <div class="main-table-box">
+      <div class="center-btn">
+        <button class="btn btn-success clear-button" (click)="saveDuplicate()">
+          Yes
+        </button>
+        <button class="btn btn-danger" (click)="modal.dismiss('Cross click')">
+          No
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<!-- loadingModalTemplate Start -->
+<ng-template #loadingModalTemplate let-modal>
+
+  <!-- loading gif -->
+  <app-loading-gif [progressValue]="this.progressValue" [showProgress]="false"></app-loading-gif>
+
+  <!-- Close Button Hidden -->
+  <button id="closeLoadingModal" style="display: none;" type="button" (click)="modal.dismiss('Cross click')"></button>
+
+</ng-template>
+<!-- loadingModalTemplate End -->
+
+<pagination-controls
+  (pageChange)="p = $event"
+  class="float-right"
+></pagination-controls>
+
+<router-outlet></router-outlet>

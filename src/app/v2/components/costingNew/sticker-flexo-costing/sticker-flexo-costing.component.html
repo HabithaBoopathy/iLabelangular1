@@ -1,0 +1,2294 @@
+<div id="top"></div>
+
+<!-- StickerFlexoCosting - Main container starts -->
+<div class="col-lg-12 main-container">
+  <!-- panel-primary starts -->
+  <div class="panel panel-primary">
+    <!-- Panel heading starts -->
+    <div
+      class="panel-heading custom-section"
+      style="padding-top: 15px; padding-bottom: 10px"
+    >
+      <!-- Row - title and buttons starts -->
+      <div class="row">
+        <!-- Container title starts -->
+        <div class="col-lg-10" style="margin-top: 0px">
+          <h2 style="margin-bottom: 0px; color: #2c9a42">
+            Sticker Flexo Costing
+            <span class="refNo" *ngIf="costing.refNo">{{ costing.refNo }}</span>
+            <button
+              class="btn btn-md btn-primary"
+              style="margin-left: 20px"
+              *ngIf="costing.status == 2"
+              (click)="sendForCustomerApproval()"
+              [disabled]="disableSendForCustomerApprovalBtn"
+            >
+              Send for Customer Approval
+            </button>
+
+            <span
+              class="refNo"
+              *ngIf="costing.status == 4 && this.accessType != 'Customer'"
+              style="font-weight: 500; font-size: 18px"
+            >
+              Waiting for Customer Approval
+            </span>
+
+            <span
+              class="refNo"
+              *ngIf="costing.status == 5"
+              style="font-weight: 500; font-size: 18px; color: darkgreen"
+            >
+              Customer Approved
+            </span>
+
+            <span
+              class="refNo"
+              *ngIf="costing.status == 6"
+              style="font-weight: 500; font-size: 18px; color: darkred"
+            >
+              Customer Rejected
+            </span>
+
+            <span
+              *ngIf="
+                this.costing.customerRejectedReason != '' &&
+                this.costing.status == 6
+              "
+              style="color: #333; font-size: 14px; margin-left: 5px"
+            >
+              <b style="font-weight: 600 !important">Reason: </b
+              >{{ this.costing.customerRejectedReason }}
+            </span>
+          </h2>
+          <!-- Container title ends -->
+        </div>
+
+        <!-- back button starts -->
+        <div class="col-lg-2">
+          <button
+            class="btn btn-block"
+            style="background-color: #333; color: white"
+            (click)="back()"
+          >
+            <i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Back
+          </button>
+          <!-- back button ends -->
+        </div>
+
+        <!-- Row - title and buttons ends -->
+      </div>
+
+      <hr style="margin-top: 10px" />
+
+      <!-- Row - state transition starts -->
+      <div class="row">
+        <!-- display save/update and send for approval button only for the first state -->
+        <ng-container *ngIf="this.costing.status == 0">
+          <!-- Save button starts -->
+          <div class="col-lg-2" *ngIf="this.isNew">
+            <button
+              class="btn btn-block"
+              style="background-color: #2c9a42; color: white"
+              (click)="saveCostingInputByExecutive()"
+              *ngIf="
+                this.accessType == 'Sales Team' || this.accessType == 'TManager'
+              "
+              [disabled]="this.disableSaveBtn"
+            >
+              Save&nbsp;&nbsp;<i class="fas fa-save"></i>
+            </button>
+            <!-- Save button ends -->
+          </div>
+
+          <!-- Update button starts -->
+          <div
+            class="col-lg-2"
+            *ngIf="!this.isNew && this.accessType != 'Administrator'"
+          >
+            <button
+              class="btn btn-block"
+              style="background-color: #2c9a42; color: white"
+              (click)="updateCostingInputBySampleHead()"
+              *ngIf="this.accessType == 'Sample Head'"
+            >
+              Update&nbsp;&nbsp;<i class="fas fa-save"></i>
+            </button>
+
+            <button
+              class="btn btn-block"
+              style="background-color: #2c9a42; color: white"
+              (click)="updateCostingInputByExecutive()"
+              *ngIf="
+                this.accessType == 'Sales Team' || this.accessType == 'TManager'
+              "
+            >
+              Update&nbsp;&nbsp;<i class="fas fa-save"></i>
+            </button>
+            <!-- Update button ends -->
+          </div>
+
+          <div class="col-lg-3" *ngIf="this.accessType == 'Sample Head'">
+            <button
+              class="btn btn-block btn-primary"
+              (click)="sendForApprovalBySampleHead()"
+            >
+              Send for Approval&nbsp;&nbsp;<i class="fas fa-check-circle"></i>
+            </button>
+            <!-- Send for approval button ends -->
+          </div>
+        </ng-container>
+
+        <!-- Display Approve/Reject buttons only for super users on waiting for approval state -->
+        <ng-container
+          *ngIf="
+            (costing.status < 2 || costing.status == 6) &&
+            this.isSuperUser &&
+            this.accessType == 'Administrator'
+          "
+        >
+          <!-- Approve button starts -->
+          <div class="col-lg-2">
+            <button
+              class="btn btn-block btn-success"
+              (click)="approve()"
+              [disabled]="disableAdminApprovalBtn"
+            >
+              Approve
+            </button>
+            <!-- Approve button ends -->
+          </div>
+
+          <!-- Reject button starts -->
+          <div class="col-lg-2">
+            <button class="btn btn-block btn-danger" (click)="reject()">
+              Reject
+            </button>
+            <!-- Reject button ends -->
+          </div>
+        </ng-container>
+
+        <!-- Display Approve/Reject buttons only for the mapped customer on waiting for approval state -->
+        <ng-container
+          *ngIf="
+            costing.status == 4 &&
+            (this.accessType == 'Customer' ||
+              this.accessType == 'Administrator')
+          "
+        >
+          <!-- Approve button starts -->
+          <div class="col-lg-2">
+            <button
+              class="btn btn-block btn-success"
+              (click)="approveByCustomer()"
+            >
+              Approve
+            </button>
+            <!-- Approve button ends -->
+          </div>
+
+          <!-- Reject button starts -->
+          <div class="col-lg-2">
+            <button
+              class="btn btn-block btn-danger"
+              (click)="rejectByCustomer()"
+            >
+              Reject
+            </button>
+            <!-- Reject button ends -->
+          </div>
+        </ng-container>
+
+        <div
+          class="col-lg-2"
+          *ngIf="this.costing.status == 2 || this.costing.status > 3"
+        >
+          <button class="btn btn-block btn-success" (click)="downloadPdf()">
+            Download PDF
+          </button>
+        </div>
+
+        <div class="col-lg-3" *ngIf="this.costing.status == 5">
+          <button
+            class="btn btn-primary"
+            (click)="createDraftOrder()"
+            *ngIf="this.accessType != 'Customer'"
+            [disabled]="disableDraftOrderBtn"
+          >
+            Create draft order
+          </button>
+        </div>
+
+        <div
+          class="col-lg-5 col-md-8"
+          style="margin-top: 0px; margin-left: auto; margin-right: 15px"
+          *ngIf="this.accessType != 'Customer'"
+        >
+          <ul class="breadCrumbs" style="float: right">
+            <li [ngClass]="{ activePage: costing.status == 0 }">
+              <a href="" title="New" class="animation">New</a>
+            </li>
+            <li [ngClass]="{ activePage: costing.status == 1 }">
+              <a href="" title="Waiting For Approval" class="animation"
+                >Waiting For Approval</a
+              >
+            </li>
+            <li *ngIf="costing.status < 2">
+              <a href="" title="Approved / Rejected" class="animation"
+                >Approved</a
+              >
+            </li>
+            <li
+              *ngIf="costing.status > 1"
+              [ngClass]="{
+                activePage: costing.status == 2 || this.costing.status > 3,
+                activePageRed: costing.status == 3
+              }"
+            >
+              <a href="" title="Approved / Rejected" class="animation">{{
+                costing.status == 2 || this.costing.status > 3
+                  ? "Approved"
+                  : "Rejected"
+              }}</a>
+            </li>
+            <!-- <li class="activePage">
+              <p href="" title="HPU internet services" class="animation">
+                HPU internet services
+              </p>
+            </li> -->
+            <div class="clear"></div>
+          </ul>
+        </div>
+
+        <!-- Row - state transition ends -->
+      </div>
+      <!-- Panel heading ends -->
+    </div>
+
+    <!-- Panel body starts -->
+    <div class="panel-body">
+      <!-- custom section - Artwork / label image starts -->
+      <div class="col-lg-12 custom-section">
+        <h2>Artwork / Label Image</h2>
+        <hr />
+        <div
+          class="col-lg-6"
+          style="
+            margin: auto;
+            padding: 15px;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+          "
+          *ngIf="this.attachmentSrc"
+        >
+          <img
+            style="
+              width: 100%;
+              height: 100%;
+              object-fit: contain;
+              max-height: 150px;
+              cursor: pointer;
+            "
+            class="mx-auto d-block"
+            [src]="_d.bypassSecurityTrustUrl(attachmentSrc)"
+            (click)="openImage()"
+            *ngIf="this.costing.attachmentExtension != 'pdf'"
+          />
+          <h3
+            *ngIf="this.costing.attachmentExtension == 'pdf'"
+            (click)="openImage()"
+            style="
+              cursor: pointer;
+              margin-bottom: 0px;
+              font-weight: 500;
+              text-align: center;
+            "
+          >
+            Open PDF Attachment <i class="fas fa-link"></i>
+          </h3>
+        </div>
+
+        <br />
+
+        <div
+          class="col-lg-6"
+          style="margin: auto"
+          *ngIf="
+            this.costing.status == 0 &&
+            (this.accessType == 'Sales Team' || this.accessType == 'TManager')
+          "
+        >
+          <input
+            type="file"
+            (change)="onFileChange($event)"
+            accept="image/png,  image/jpeg, image/jpg, .pdf, application/pdf"
+          />
+        </div>
+        <!-- custom section - Artwork / label image ends -->
+      </div>
+
+      <!-- Custom section - General Details starts -->
+      <div class="col-lg-12 custom-section" id="generalDetails">
+        <h2>Sample Details</h2>
+        <hr />
+        <!-- row - General Details starts -->
+        <div class="row">
+          <!-- entryDate starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="entryDate" class="col-lg-5">Entry Date</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="entryDate"
+                  id="entryDate"
+                  type="text"
+                  class="form-control"
+                  value="{{ this.displayDate }}"
+                  readonly
+                />
+              </div>
+            </div>
+
+            <!-- entryDate ends -->
+          </div>
+
+          <!-- Customer Id starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="customerId" class="col-lg-5">Customer</label>
+              <div
+                class="input-group col-lg-6"
+                *ngIf="
+                  (this.accessType == 'Sales Team' ||
+                    this.accessType == 'TManager') &&
+                  this.costing.status == 0
+                "
+              >
+                <select
+                  name="customerId"
+                  id="customerId"
+                  type="text"
+                  class="form-control"
+                  [ngStyle]="{
+                    padding: '0px',
+                    'pointer-events':
+                      generalDetailsReadOnly ||
+                      this.accessType == 'Administrator'
+                        ? 'none'
+                        : 'auto'
+                  }"
+                  [(ngModel)]="costing.customerId"
+                  (ngModelChange)="fetchCustomerName()"
+                >
+                  <option value="" disabled selected>
+                    Select the customer
+                  </option>
+                  <option
+                    *ngFor="let customer of customers"
+                    [value]="customer.id"
+                  >
+                    {{ customer.companyname }}
+                  </option>
+                </select>
+              </div>
+
+              <div
+                class="input-group col-lg-6"
+                *ngIf="
+                  this.costing.status > 0 ||
+                  (this.accessType != 'Sales Team' &&
+                    this.accessType != 'TManager')
+                "
+              >
+                <input
+                  name="customerId"
+                  id="customerId"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="costing.customerName"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- Customer Id ends -->
+          </div>
+
+          <!-- stickerName starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="stickerName" class="col-lg-5">Sticker Name</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="stickerName"
+                  id="stickerName"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="this.costing.stickerName"
+                />
+              </div>
+            </div>
+
+            <!-- stickerName ends -->
+          </div>
+
+          <!-- jobNo starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="jobNo" class="col-lg-5">Job No</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="jobNo"
+                  id="jobNo"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="this.costing.jobNo"
+                />
+              </div>
+            </div>
+
+            <!-- jobNo ends -->
+          </div>
+
+          <!-- printingQuantity starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="printingQuantity" class="col-lg-5"
+                >Printing Quantity</label
+              >
+              <div class="input-group col-lg-6">
+                <input
+                  name="printingQuantity"
+                  id="printingQuantity"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.printingQuantity"
+                  (ngModelChange)="onPrintingQuantityChange()"
+                />
+              </div>
+            </div>
+
+            <!-- printingQuantity ends -->
+          </div>
+
+          <!-- stickerLength starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="stickerLength" class="col-lg-5">Sticker Length</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="stickerLength"
+                  id="stickerLength"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.stickerLength"
+                />
+              </div>
+            </div>
+
+            <!-- stickerLength ends -->
+          </div>
+
+          <!-- stickerWidth starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="stickerWidth" class="col-lg-5">Sticker Width</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="stickerWidth"
+                  id="stickerWidth"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.stickerWidth"
+                />
+              </div>
+            </div>
+
+            <!-- stickerWidth ends -->
+          </div>
+
+          <!-- stickerShape starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="stickerShape" class="col-lg-5">Sticker Shape</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="stickerShape"
+                  id="stickerShape"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="costing.stickerShape"
+                />
+              </div>
+            </div>
+
+            <!-- stickerShape ends -->
+          </div>
+
+          <!-- remarks starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="remarks" class="col-lg-5">Remarks</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="remarks"
+                  id="remarks"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="this.costing.remarks"
+                />
+              </div>
+            </div>
+
+            <!-- remarks ends -->
+          </div>
+
+          <!-- row - General Details ends -->
+        </div>
+        <!-- Custom section - General Details ends -->
+      </div>
+
+      <!-- Custom section starts -->
+      <div
+        class="col-lg-12 custom-section"
+        *ngIf="
+          this.accessType == 'Sample Head' || this.accessType == 'Administrator'
+        "
+      >
+        <h2>Sticker Details</h2>
+        <hr />
+
+        <!-- row starts -->
+        <div class="row">
+          <!-- No of Colors starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="noOfColors" class="col-lg-5">No of Colors</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="noOfColors"
+                  id="noOfColors"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.noOfColors"
+                />
+              </div>
+            </div>
+
+            <!-- No of Colors ends -->
+          </div>
+
+          <!-- materialId starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="materialId" class="col-lg-5">Material</label>
+              <div class="input-group col-lg-6">
+                <select
+                  name="materialId"
+                  id="materialId"
+                  type="text"
+                  class="form-control"
+                  [ngStyle]="{
+                    padding: '0px'
+                  }"
+                  [(ngModel)]="costing.materialId"
+                >
+                  <option value="" disabled selected>
+                    Select the material
+                  </option>
+                  <option *ngFor="let paper of papers" [value]="paper.id">
+                    {{ paper.name }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <!-- materialId ends -->
+          </div>
+
+          <!-- Material Price starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="materialPrice" class="col-lg-5">Material Price</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="materialPrice"
+                  id="materialPrice"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.materialPrice"
+                  (ngModelChange)="onMaterialPriceChange()"
+                />
+              </div>
+            </div>
+
+            <!-- Material Price ends -->
+          </div>
+
+          <!-- Reel Width starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="reelWidth" class="col-lg-5">Reel Width</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="reelWidth"
+                  id="reelWidth"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.reelWidth"
+                  (ngModelChange)="onReelWidthChange()"
+                />
+              </div>
+            </div>
+
+            <!-- Reel Width ends -->
+          </div>
+
+          <!-- Across Ups starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="acrossUps" class="col-lg-5">Across Ups</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="acrossUps"
+                  id="acrossUps"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.acrossUps"
+                  (ngModelChange)="onAcrossUpsChange()"
+                />
+              </div>
+            </div>
+
+            <!-- Across Ups ends -->
+          </div>
+
+          <!-- Repeat Length starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="repeatLength" class="col-lg-5"
+                >Repeat Length (MM)</label
+              >
+              <div class="input-group col-lg-6">
+                <input
+                  name="repeatLength"
+                  id="repeatLength"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.repeatLength"
+                  (ngModelChange)="onRepeatLengthChange()"
+                />
+              </div>
+            </div>
+
+            <!-- Repeat Length ends -->
+          </div>
+
+          <!-- Around Ups starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="aroundUps" class="col-lg-5">Around Ups</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="aroundUps"
+                  id="aroundUps"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.aroundUps"
+                  (ngModelChange)="onAroundUpsChange()"
+                />
+              </div>
+            </div>
+
+            <!-- Around Ups ends -->
+          </div>
+
+          <!-- Total PCS per repeat starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label
+                for="totalPCSPerRepeat"
+                class="col-lg-5 uLine"
+                title="Across Ups x Around Ups"
+                >Total PCS per repeat</label
+              >
+              <div
+                class="input-group col-lg-6"
+                title="{{ costing.acrossUps + ' x ' + costing.aroundUps }}"
+              >
+                <input
+                  name="totalPCSPerRepeat"
+                  id="totalPCSPerRepeat"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.totalPCSPerRepeat"
+                  readonly
+                />
+              </div>
+            </div>
+
+            <!-- Total PCS per repeat ends -->
+          </div>
+
+          <!-- Required Meter starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label
+                for="requiredMeter"
+                class="col-lg-5 uLine"
+                title="( Printing Quantity / Total PCS per repeat ) x Repeat Length"
+                >Required Meter</label
+              >
+              <div
+                class="input-group col-lg-6"
+                title="{{
+                  '( ' +
+                    costing.printingQuantity +
+                    ' / ' +
+                    costing.totalPCSPerRepeat +
+                    ' ) x ' +
+                    costing.repeatLength
+                }}"
+              >
+                <input
+                  name="requiredMeter"
+                  id="requiredMeter"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.requiredMeter"
+                  readonly
+                />
+              </div>
+            </div>
+
+            <!-- Required Meter ends -->
+          </div>
+
+          <!-- Required Square Meter starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label
+                for="requiredSquareMeter"
+                class="col-lg-5 uLine"
+                title="Required Meter x Reel Width"
+                >Required Square Meter</label
+              >
+              <div
+                class="input-group col-lg-6"
+                title="{{ costing.requiredMeter + ' x ' + costing.reelWidth }}"
+              >
+                <input
+                  name="requiredSquareMeter"
+                  id="requiredSquareMeter"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.requiredSquareMeter"
+                  readonly
+                />
+              </div>
+            </div>
+
+            <!-- Required Square Meter ends -->
+          </div>
+
+          <!-- shRemarks starts -->
+          <div class="form-group col-lg-4 col-md-6">
+            <div class="row">
+              <label for="shRemarks" class="col-lg-5">Remarks</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="shRemarks"
+                  id="shRemarks"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="this.costing.shRemarks"
+                />
+              </div>
+            </div>
+
+            <!-- shRemarks ends -->
+          </div>
+          <!-- row ends -->
+        </div>
+        <!-- Custom section ends -->
+      </div>
+
+      <!-- Custom section - Costing Details ends -->
+      <div
+        class="col-lg-12 custom-section"
+        id="costingDetails"
+        *ngIf="
+          this.accessType == 'Administrator' ||
+          (this.accessType == 'Sample Head' && this.costing.status != 2)
+        "
+      >
+        <h2>Costing Details</h2>
+        <br />
+        <table
+          class="table table-striped table-bordered"
+          id="costingDetailsTable"
+          style="width: 100%; margin: auto"
+        >
+          <thead>
+            <tr>
+              <th style="width: 30%">Section</th>
+              <th style="width: 17.5%">Cost</th>
+              <th style="width: 17.5%">Description</th>
+              <th style="width: 17.5%">Unit Rate</th>
+              <th style="width: 17.5%">Total Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Art Work HRS</th>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="artWorkHrsCost"
+                    id="artWorkHrsCost"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.artWorkHrs.cost"
+                    (ngModelChange)="onArtWorkHrsCostChange()"
+                  />
+                </div>
+              </td>
+              <td></td>
+              <td></td>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="artWorkHrsTotalRate"
+                    id="artWorkHrsTotalRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.artWorkHrs.totalRate"
+                    readonly
+                  />
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>Proof Reading HRS</th>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="proofReadingHrsCost"
+                    id="proofReadingHrsCost"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.proofReadingHrs.cost"
+                    (ngModelChange)="onProofReadingHrsCostChange()"
+                  />
+                </div>
+              </td>
+              <td></td>
+              <td></td>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="proofReadingHrsTotalRate"
+                    id="proofReadingHrsTotalRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.proofReadingHrs.totalRate"
+                    readonly
+                  />
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>Die</th>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="dieCost"
+                    id="dieCost"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.die.cost"
+                    (ngModelChange)="onDieCostChange()"
+                  />
+                </div>
+              </td>
+
+              <td></td>
+              <td></td>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="dieTotalRate"
+                    id="dieTotalRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.die.totalRate"
+                    readonly
+                  />
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>Plate</th>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="plateCost"
+                    id="plateCost"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.plate.cost"
+                    (ngModelChange)="onPlateCostChange()"
+                  />
+                </div>
+              </td>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="plateDescription"
+                    id="plateDescription"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.plate.description"
+                    readonly
+                  />
+                </div>
+              </td>
+
+              <td></td>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="plateTotalRate"
+                    id="plateTotalRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.plate.totalRate"
+                    readonly
+                  />
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>Required Square Meter</th>
+              <td></td>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="requiredSquareMeter1Description"
+                    id="requiredSquareMeter1Description"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.requiredSquareMeter1.description"
+                    readonly
+                  />
+                </div>
+              </td>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="requiredSquareMeter1UnitRate"
+                    id="requiredSquareMeter1UnitRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.requiredSquareMeter1.unitRate"
+                    readonly
+                  />
+                </div>
+              </td>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="requiredSquareMeter1TotalRate"
+                    id="requiredSquareMeter1TotalRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.requiredSquareMeter1.totalRate"
+                    readonly
+                  />
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th></th>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="requiredSquareMeter2Cost"
+                    id="requiredSquareMeter2Cost"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.requiredSquareMeter2.cost"
+                    (ngModelChange)="onRequiredSquareMeter2CostChange()"
+                  />
+                </div>
+              </td>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="requiredSquareMeter2Description"
+                    id="requiredSquareMeter2Description"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.requiredSquareMeter2.description"
+                    readonly
+                  />
+                </div>
+              </td>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="requiredSquareMeter2UnitRate"
+                    id="requiredSquareMeter2UnitRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.requiredSquareMeter2.unitRate"
+                    readonly
+                  />
+                </div>
+              </td>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="requiredSquareMeter2TotalRate"
+                    id="requiredSquareMeter2TotalRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.requiredSquareMeter2.totalRate"
+                    readonly
+                  />
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>
+                Roll Change Waste <br />
+                (per reel 100 mtr waste)
+              </th>
+              <td></td>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="rollChangeWasteDescription"
+                    id="rollChangeWasteDescription"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.rollChangeWaste.description"
+                    readonly
+                  />
+                </div>
+              </td>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="rollChangeWasteUnitRate"
+                    id="rollChangeWasteUnitRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.rollChangeWaste.unitRate"
+                    readonly
+                  />
+                </div>
+              </td>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="rollChangeWasteTotalRate"
+                    id="rollChangeWasteTotalRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.rollChangeWaste.totalRate"
+                    readonly
+                  />
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>Ink</th>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="inkCost"
+                    id="inkCost"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.ink.cost"
+                    (ngModelChange)="onInkCostChange()"
+                  />
+                </div>
+              </td>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="inkDescription"
+                    id="inkDescription"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.ink.description"
+                    readonly
+                  />
+                </div>
+              </td>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="inkUnitRate"
+                    id="inkUnitRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.ink.unitRate"
+                    (ngModelChange)="onInkUnitRateChange()"
+                  />
+                </div>
+              </td>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="inkTotalRate"
+                    id="inkTotalRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.ink.totalRate"
+                    readonly
+                  />
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>Printing Machine Hours<br />MARKANDY 2200</th>
+              <td></td>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="printingMachineHoursDescription"
+                    id="printingMachineHoursDescription"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.printingMachineHours.description"
+                    readonly
+                  />
+                </div>
+              </td>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="printingMachineHoursUnitRate"
+                    id="printingMachineHoursUnitRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.printingMachineHours.unitRate"
+                    (ngModelChange)="onPrintingMachineHoursUnitRateChange()"
+                  />
+                </div>
+              </td>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="printingMachineHoursTotalRate"
+                    id="printingMachineHoursTotalRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.printingMachineHours.totalRate"
+                    readonly
+                  />
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>Rhyguan Slitting</th>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="rhyguanSlittingCost"
+                    id="rhyguanSlittingCost"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.rhyguanSlitting.cost"
+                    (ngModelChange)="onRhyguanSlittingCostChange()"
+                  />
+                </div>
+              </td>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="rhyguanSlittingDescription"
+                    id="rhyguanSlittingDescription"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.rhyguanSlitting.description"
+                    readonly
+                  />
+                </div>
+              </td>
+              <td></td>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="rhyguanSlittingTotalRate"
+                    id="rhyguanSlittingTotalRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.rhyguanSlitting.totalRate"
+                    readonly
+                  />
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>Foil</th>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="foilCost"
+                    id="foilCost"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.foil.cost"
+                    (ngModelChange)="onFoilCostChange()"
+                  />
+                </div>
+              </td>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="foilDescription"
+                    id="foilDescription"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.foil.description"
+                    readonly
+                  />
+                </div>
+              </td>
+              <td></td>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="foilTotalRate"
+                    id="foilTotalRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.foil.totalRate"
+                    readonly
+                  />
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>Lamination</th>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="laminationCost"
+                    id="laminationCost"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.lamination.cost"
+                    (ngModelChange)="onLaminationCostChange()"
+                  />
+                </div>
+              </td>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="laminationDescription"
+                    id="laminationDescription"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.lamination.description"
+                    readonly
+                  />
+                </div>
+              </td>
+              <td></td>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="laminationTotalRate"
+                    id="laminationTotalRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.lamination.totalRate"
+                    readonly
+                  />
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>Lamination Adhesive</th>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="laminationAdhesiveCost"
+                    id="laminationAdhesiveCost"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.laminationAdhesive.cost"
+                    (ngModelChange)="onLaminationAdhesiveCostChange()"
+                  />
+                </div>
+              </td>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="laminationAdhesiveDescription"
+                    id="laminationAdhesiveDescription"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.laminationAdhesive.description"
+                    readonly
+                  />
+                </div>
+              </td>
+              <td></td>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="laminationAdhesiveTotalRate"
+                    id="laminationAdhesiveTotalRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.laminationAdhesive.totalRate"
+                    readonly
+                  />
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>Offline Die Cutting</th>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="dieCuttingCost"
+                    id="dieCuttingCost"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.dieCutting.cost"
+                    (ngModelChange)="onDieCuttingCostChange()"
+                  />
+                </div>
+              </td>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="dieCuttingDescription"
+                    id="dieCuttingDescription"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.dieCutting.description"
+                    readonly
+                  />
+                </div>
+              </td>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="dieCuttingUnitRate"
+                    id="dieCuttingUnitRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.dieCutting.unitRate"
+                    (ngModelChange)="onDieCuttingUnitRateChange()"
+                  />
+                </div>
+              </td>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="dieCuttingTotalRate"
+                    id="dieCuttingTotalRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.dieCutting.totalRate"
+                    readonly
+                  />
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>Packing</th>
+              <td></td>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="packingDescription"
+                    id="packingDescription"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.packing.description"
+                    readonly
+                  />
+                </div>
+              </td>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="packingUnitRate"
+                    id="packingUnitRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.packing.unitRate"
+                    (ngModelChange)="onPackingUnitRateChange()"
+                  />
+                </div>
+              </td>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="packingTotalRate"
+                    id="packingTotalRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.packing.totalRate"
+                    readonly
+                  />
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>Admin Cost</th>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="adminCost"
+                    id="adminCost"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.admin.cost"
+                    (ngModelChange)="onAdminCostChange()"
+                  />
+                </div>
+              </td>
+
+              <td>
+                <div class="input-group">
+                  <input
+                    name="adminDescription"
+                    id="adminDescription"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.admin.description"
+                    readonly
+                  />
+                </div>
+              </td>
+              <td></td>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="adminTotalRate"
+                    id="adminTotalRate"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.admin.totalRate"
+                    readonly
+                  />
+                </div>
+              </td>
+            </tr>
+
+            <!-- <tr>
+              <th>Cost</th>
+              <td></td>
+
+              <td></td>
+              <td></td>
+              <td style="font-weight: 500">
+
+                <div class="input-group">
+                  <input
+                    name="cost"
+                    id="cost"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.cost"
+                    readonly
+                  />
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>Profit</th>
+              <td></td>
+
+              <td></td>
+              <td>
+                <div class="input-group">
+                  <input
+                    name="profitPercentage"
+                    id="profitPercentage"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.profitPercentage"
+                    (ngModelChange)="onProfitPercentChange()"
+                  />
+                </div>
+              </td>
+              <td style="font-weight: 500">
+
+                <div class="input-group">
+                  <input
+                    name="profit"
+                    id="profit"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.profit"
+                    readonly
+                  />
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>Total Cost</th>
+              <td></td>
+
+              <td></td>
+              <td></td>
+              <td style="font-weight: 500">
+
+                <div class="input-group">
+                  <input
+                    name="totalCost"
+                    id="totalCost"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.totalCost"
+                    readonly
+                  />
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>Rate / Pcs</th>
+              <td></td>
+
+              <td></td>
+              <td></td>
+              <td style="font-weight: 500">
+
+                <div class="input-group">
+                  <input
+                    name="ratePerPcs"
+                    id="ratePerPcs"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="costing.ratePerPcs"
+                    readonly
+                  />
+                </div>
+              </td>
+            </tr> -->
+          </tbody>
+        </table>
+
+        <hr />
+
+        <!-- Cost & Profit row -->
+        <div class="row">
+          <!-- cost starts -->
+          <div
+            class="form-group col-lg-4 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="cost" class="col-lg-5">Cost</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="cost"
+                  id="cost"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.cost"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- cost ends -->
+          </div>
+
+          <!-- profitPercentage starts -->
+          <div
+            class="form-group col-lg-4 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="profitPercentage" class="col-lg-5">Profit %</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="profitPercentage"
+                  id="profitPercentage"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.profitPercentage"
+                  (ngModelChange)="onProfitPercentChange()"
+                />
+              </div>
+            </div>
+            <!-- profitPercentage ends -->
+          </div>
+
+          <!-- profit starts -->
+          <div
+            class="form-group col-lg-4 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="profit" class="col-lg-5">Profit</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="profit"
+                  id="profit"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.profit"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- profit ends -->
+          </div>
+
+          <!-- totalCost row ends -->
+        </div>
+
+        <hr />
+
+        <!-- Total Cost row -->
+        <div class="row">
+          <!-- deliveryCost starts -->
+          <div
+            class="form-group col-lg-4 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="deliveryCost" class="col-lg-5">Delivery Cost</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="deliveryCost"
+                  id="deliveryCost"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.deliveryCost"
+                  (ngModelChange)="onDeliveryCostChange()"
+                />
+              </div>
+            </div>
+            <!-- deliveryCost ends -->
+          </div>
+
+          <!-- totalCost starts -->
+          <div
+            class="form-group col-lg-4 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="totalCost" class="col-lg-5">Total Cost</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="totalCost"
+                  id="totalCost"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.totalCost"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- totalCost ends -->
+          </div>
+
+          <!-- ratePerPiece starts -->
+          <div
+            class="form-group col-lg-4 col-md-6"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <div class="row">
+              <label for="ratePerPiece" class="col-lg-5">Rate / Pcs</label>
+              <div class="input-group col-lg-6">
+                <input
+                  name="ratePerPiece"
+                  id="ratePerPiece"
+                  type="number"
+                  step="any"
+                  class="form-control"
+                  [(ngModel)]="costing.ratePerPcs"
+                  readonly
+                />
+              </div>
+            </div>
+            <!-- ratePerPiece ends -->
+          </div>
+
+          <!-- totalCost row ends -->
+        </div>
+
+        <!-- Custom section - Costing Details ends -->
+      </div>
+
+      <!-- custom section - Slab rates starts -->
+      <div
+        class="col-lg-12 custom-section"
+        *ngIf="
+          this.accessType == 'Administrator' || this.accessType == 'Customer'
+        "
+      >
+        <!-- row- Line Item Input Starts -->
+        <div class="row">
+          <div class="form-group col-lg-2">
+            <!-- section heading starts -->
+            <h2>Slab Rates</h2>
+            <!-- section heading ends -->
+          </div>
+
+          <ng-container
+            *ngIf="
+              (costing.status < 2 || costing.status == 6) && this.isSuperUser
+            "
+          >
+            <!-- Quantity Slab starts -->
+            <div
+              class="form-group col-lg-4 col-md-6"
+              style="margin-left: auto; margin-right: auto"
+            >
+              <!-- Row - Quantity Slab starts -->
+              <div class="row">
+                <label for="quantitySlab" class="col-lg-5">Quantity Slab</label>
+
+                <div class="input-group col-lg-6">
+                  <!-- <select
+            name="quantitySlab"
+            id="quantitySlab"
+            class="form-control"
+            style="padding: 0px"
+            [(ngModel)]="slabRates.quantitySlab"
+          >
+            <option value="1-1000">1-1000</option>
+            <option value="1000-10000">1000-10000</option>
+            <option value="10000-25000">10000-25000</option>
+            <option value="25000-50000">25000-50000</option>
+            <option value="50000-100000">50000-100000</option>
+            <option value="100000-Above">100000 & Above</option>
+          </select> -->
+                  <input
+                    type="number"
+                    name="quantitySlab"
+                    id="quantitySlab"
+                    class="form-control"
+                    style="padding: 0px"
+                    [(ngModel)]="slabRates.quantitySlab"
+                  />
+                </div>
+                <!-- Row  - Quantity Slab ends -->
+              </div>
+              <!-- Quantity Slab ends -->
+            </div>
+
+            <!-- Price starts -->
+            <div
+              class="form-group col-lg-4 col-md-6"
+              style="margin-left: auto; margin-right: auto"
+            >
+              <div class="row">
+                <label for="price" class="col-lg-3">Rate / Pcs</label>
+                <div class="input-group col-lg-6">
+                  <input
+                    name="price"
+                    id="price"
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    [(ngModel)]="slabRates.price"
+                  />
+                </div>
+              </div>
+              <!-- Price ends -->
+            </div>
+
+            <!-- add btn starts -->
+            <div
+              class="form-group col-lg-2 col-md-4"
+              style="margin-left: auto; margin-right: auto"
+            >
+              <button class="btn btn-success btn-block" (click)="addLineItem()">
+                Add
+              </button>
+              <!-- add btn ends -->
+            </div>
+          </ng-container>
+
+          <!-- row- Line Item Input ends -->
+        </div>
+
+        <br *ngIf="this.costing.status == 0" />
+
+        <table class="table table-striped">
+          <thead>
+            <tr style="font-weight: 500">
+              <th>S No</th>
+              <th>Quantity Slab</th>
+              <th>Rate / Pcs</th>
+              <th
+                *ngIf="
+                  (costing.status < 2 || costing.status == 6) &&
+                  this.isSuperUser
+                "
+              >
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tr *ngFor="let slabRate of costing.slabRates; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ slabRate.quantitySlab }}</td>
+            <td>{{ slabRate.price }}</td>
+            <td
+              *ngIf="
+                (costing.status < 2 || costing.status == 6) && this.isSuperUser
+              "
+              style="padding: 5px"
+            >
+              <button class="btn btn-danger btn-sm" (click)="deleteLineItem(i)">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </table>
+
+        <!-- custom section - Slab rates ends -->
+      </div>
+
+      <!-- custom section - last section starts -->
+      <div class="custom-section" *ngIf="this.accessType != 'Customer'">
+        <!-- custom-section row starts -->
+        <div class="row justify-content-center">
+          <!-- createdBy starts -->
+          <div class="form-group col-lg-5 col-md-6">
+            <div class="row">
+              <label for="createdBy" class="col-lg-4">Created By</label>
+              <div class="input-group col-lg-7">
+                <input
+                  name="createdBy"
+                  id="createdBy"
+                  type="text"
+                  class="form-control"
+                  [value]="
+                    this.costing.tManagerEmail
+                      ? this.costing.tManagerEmail
+                      : this.executiveEmail
+                  "
+                  readonly
+                />
+              </div>
+            </div>
+
+            <!-- createdBy ends -->
+          </div>
+
+          <!-- approvedBy starts -->
+          <div
+            class="form-group col-lg-5 col-md-6"
+            *ngIf="this.costing.status > 1"
+          >
+            <div class="row">
+              <label for="approvedBy" class="col-lg-4">{{
+                this.costing.status == 2 || this.costing.status > 3
+                  ? "Approved By"
+                  : "Rejected By"
+              }}</label>
+              <div class="input-group col-lg-7">
+                <input
+                  name="approvedBy"
+                  id="approvedBy"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="this.costing.approverId"
+                  readonly
+                />
+              </div>
+            </div>
+
+            <!-- approvedBy ends -->
+          </div>
+
+          <div class="col-lg-2" *ngIf="this.costing.status == 0">
+            <button
+              class="btn btn-block"
+              style="background-color: #2c9a42; color: white"
+              *ngIf="
+                this.isNew &&
+                (this.accessType == 'Sales Team' ||
+                  this.accessType == 'TManager')
+              "
+              [disabled]="this.disableSaveBtn"
+              (click)="saveCostingInputByExecutive()"
+            >
+              Save&nbsp;&nbsp;<i class="fas fa-save"></i>
+            </button>
+
+            <button
+              class="btn btn-block"
+              style="background-color: #2c9a42; color: white"
+              (click)="updateCostingInputByExecutive()"
+              *ngIf="
+                !this.isNew &&
+                (this.accessType == 'Sales Team' ||
+                  this.accessType == 'TManager')
+              "
+            >
+              Update&nbsp;&nbsp;<i class="fas fa-save"></i>
+            </button>
+
+            <button
+              class="btn btn-block"
+              style="background-color: #2c9a42; color: white"
+              (click)="updateCostingInputBySampleHead()"
+              *ngIf="!this.isNew && this.accessType == 'Sample Head'"
+            >
+              Update&nbsp;&nbsp;<i class="fas fa-save"></i>
+            </button>
+          </div>
+
+          <div
+            class="col-lg-3"
+            *ngIf="this.costing.status == 0 && this.accessType == 'Sample Head'"
+          >
+            <button
+              class="btn btn-block btn-primary"
+              (click)="sendForApprovalBySampleHead()"
+            >
+              Send for Approval&nbsp;&nbsp;<i class="fas fa-check-circle"></i>
+            </button>
+          </div>
+
+          <div
+            class="col-lg-2"
+            *ngIf="this.costing.status == 2 || this.costing.status > 3"
+          >
+            <button class="btn btn-block btn-success" (click)="downloadPdf()">
+              Download PDF
+            </button>
+          </div>
+
+          <ng-container
+            *ngIf="
+              this.accessType == 'Administrator' &&
+              this.isSuperUser &&
+              (costing.status < 2 || costing.status == 6)
+            "
+          >
+            <!-- Approve button starts -->
+            <div class="col-lg-2">
+              <button
+                class="btn btn-block btn-success"
+                (click)="approve()"
+                [disabled]="disableAdminApprovalBtn"
+              >
+                Approve
+              </button>
+              <!-- Approve button ends -->
+            </div>
+
+            <!-- Reject button starts -->
+            <div class="col-lg-2">
+              <button class="btn btn-block btn-danger" (click)="reject()">
+                Reject
+              </button>
+              <!-- Reject button ends -->
+            </div>
+          </ng-container>
+          <!-- custom-section row ends -->
+        </div>
+        <!-- custom section - last section ends -->
+      </div>
+
+      <!-- Panel body ends -->
+    </div>
+
+    <!-- panel-primary ends -->
+  </div>
+  <!-- StickerFlexoCosting - Main container ends -->
+</div>
+
+<style>
+  .pdf-container {
+    padding: 20px;
+    position: relative;
+  }
+
+  .pdf_logo {
+    max-height: 60px;
+    margin-bottom: 0px;
+    display: inline-block;
+  }
+
+  .address {
+    margin: 0px;
+    color: #888888;
+    display: inline-block;
+    margin: 12px 0px 20px 5px !important;
+  }
+
+  .costing-refNo {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 10px 10px;
+    font-family: sans-serif;
+    font-weight: bold;
+    border-radius: 6px;
+    position: absolute;
+    right: 30px !important;
+    top: 30px !important;
+    font-size: 20px;
+  }
+
+  .custom-section-pdf h2 {
+    text-align: center;
+    padding: 6px;
+    background-color: #049b2f;
+    color: white;
+    font-family: sans-serif;
+    font-size: 16px;
+    margin-top: 0px !important;
+    margin-bottom: 10px !important;
+    font-weight: 600 !important;
+  }
+
+  .custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+      "Segoe UI Symbol", "Noto Color Emoji";
+    margin-bottom: 15px;
+    margin-top: 0px !important;
+  }
+
+  .custom-table th,
+  td {
+    border: 1px solid #ddd !important;
+    padding: 10px !important;
+  }
+
+  .custom-table th {
+    background-color: #e8e8e8;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  #clear {
+    content: " ";
+    display: block;
+    clear: both;
+  }
+</style>
+
+<!--
+1 date
+2 Refno
+3 Label/tag/Sticker name
+4 Customer Name
+5 length
+6 width
+7 slab rates
+8 Payment terms
+ -->
+
+<div style="opacity: 0">
+  <div class="pdf-container" id="pdf-container-sticker-flexo">
+    <img class="pdf_logo" src="../../../../../assets/newlogo-2.png" />
+
+    <br />
+
+    <p class="address">
+      ‘LABEL ARCADE’, 476/1B1A, Jothi Nagar,<br />K Chettipalayam, Tiruppur,
+      Tamil Nadu 641605
+    </p>
+
+    <span class="costing-refNo">{{ costing.refNo }}</span>
+
+    <div class="custom-section-pdf">
+      <h2>Costing Details</h2>
+
+      <table class="custom-table" style="width: 48%; float: left" id="c-table1">
+        <tbody>
+          <tr>
+            <th style="width: 40%">Entry Date</th>
+            <td style="width: 60%">{{ costing.entryDate }}</td>
+          </tr>
+          <tr>
+            <th style="width: 40%">Ref No</th>
+            <td style="width: 60%">{{ costing.refNo }}</td>
+          </tr>
+          <tr>
+            <th style="width: 40%">Sticker Name</th>
+            <td style="width: 60%">{{ costing.stickerName }}</td>
+          </tr>
+          <tr>
+            <th style="width: 40%">Customer Name</th>
+            <td style="width: 60%">{{ costing.customerName }}</td>
+          </tr>
+          <tr>
+            <th style="width: 40%">Length</th>
+            <td style="width: 60%">{{ costing.stickerLength }}</td>
+          </tr>
+          <tr>
+            <th style="width: 40%">Width</th>
+            <td style="width: 60%">{{ costing.stickerWidth }}</td>
+          </tr>
+          <!-- <tr>
+            <th style="width: 40%">Payment Terms</th>
+            <td style="width: 60%">{{ costing.paymentTerms }}</td>
+          </tr> -->
+        </tbody>
+      </table>
+
+      <div style="width: 2%; float: left">&nbsp;</div>
+
+      <table class="custom-table" style="width: 50%; float: left" id="c-table2">
+        <tr>
+          <th>S No</th>
+          <th>Quantity Slab</th>
+          <th>Rate / Pcs</th>
+        </tr>
+        <tr *ngFor="let item of costing.slabRates; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ item.quantitySlab }}</td>
+          <td>{{ item.price }}</td>
+        </tr>
+      </table>
+      <div id="clear" style="height: 5px">&nbsp;</div>
+    </div>
+
+    <div class="custom-section-pdf">
+      <h3 style="font-weight: 500">
+        Artwork / Label Image
+        <span *ngIf="this.costing.attachmentExtension == 'pdf'">
+          - PDF Attachment
+        </span>
+      </h3>
+      <div
+        class="col-lg-4"
+        style="margin: auto; padding: 15px"
+        *ngIf="this.attachmentSrc"
+      >
+        <img
+          style="
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            max-height: 200px;
+            cursor: pointer;
+          "
+          class="mx-auto d-block"
+          [src]="_d.bypassSecurityTrustUrl(attachmentSrc)"
+          *ngIf="this.costing.attachmentExtension != 'pdf'"
+        />
+      </div>
+    </div>
+  </div>
+</div>

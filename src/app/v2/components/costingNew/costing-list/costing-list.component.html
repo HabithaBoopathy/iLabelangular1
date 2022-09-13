@@ -1,0 +1,474 @@
+<div id="top"></div>
+<!-- Costing List - Main container starts -->
+<div class="col-lg-12 main-container">
+  <!-- panel-primary starts -->
+  <div class="panel panel-primary">
+    <!-- Panel heading with Create New Button -->
+    <div class="panel-heading custom-section">
+      <!-- row1 panel heading starts -->
+      <div class="row">
+        <!-- component title starts -->
+        <div class="col-lg-2">
+          <h2>Costing List</h2>
+          <!-- component title starts -->
+        </div>
+
+        <!-- Search box starts -->
+        <div
+          [ngClass]="{
+            'col-lg-8':
+              this.accessType == 'Sales Team' || this.accessType == 'TManager',
+            'col-lg-10':
+              this.accessType != 'Sales Team' && this.accessType != 'TManager'
+          }"
+        >
+          <input
+            class="form-control"
+            type="text"
+            name="search"
+            autocomplete="off"
+            placeholder="Search"
+            [(ngModel)]="searchText"
+          />
+          <!-- Search box ends -->
+        </div>
+
+        <!-- back button starts -->
+        <!-- <div class="col-lg-2" *ngIf="!this.archivedFlag">
+          <button
+            class="btn btn-block"
+            style="background-color: #333; color: white"
+            (click)="showArchivedCosting()"
+          >
+            Show Archived
+          </button> -->
+        <!-- back button ends -->
+        <!-- </div> -->
+
+        <!-- <div class="col-lg-2" *ngIf="this.archivedFlag">
+          <button
+            class="btn btn-block"
+            style="background-color: #333; color: white"
+            (click)="ngOnInit()"
+          >
+            Show Active
+          </button> -->
+        <!-- back button ends -->
+        <!-- </div> -->
+
+        <!-- Create button starts -->
+        <div class="col-lg-2">
+          <button
+            class="btn btn-block"
+            style="background-color: #2c9a42; color: white"
+            (click)="open(trimTypeModal)"
+            *ngIf="
+              this.accessType == 'Sales Team' || this.accessType == 'TManager'
+            "
+          >
+            Create
+            <!-- &nbsp;&nbsp;<i class="fas fa-save"></i> -->
+          </button>
+          <!-- create button ends -->
+        </div>
+
+        <!-- row1 panel heading ends -->
+      </div>
+
+      <!-- row2 filter starts -->
+      <div class="row" style="margin-top: 10px; display: none">
+        <div style="width: fit-content; margin-left: 15px; margin-right: 15px">
+          <button
+            class="btn btn-sm"
+            style="background-color: #f1f1f1"
+            (click)="open(filterModal)"
+          >
+            <i class="fas fa-plus"></i>&nbsp;Add Filter
+          </button>
+        </div>
+
+        <!-- date range filter starts-->
+        <div style="width: fit-content; margin-right: 15px">
+          <button class="btn btn-sm" style="background-color: #f1f1f1">
+            <span (click)="f1()">
+              <i class="fas fa-calendar"></i>&nbsp;01-01-2022&nbsp;&nbsp;&nbsp;
+              <i class="fas fa-calendar"></i>&nbsp;03-01-2022&nbsp;</span
+            >
+            <span>
+              <i class="fas fa-times-circle" (click)="f2()"></i>
+            </span>
+          </button>
+        </div>
+        <!-- date range filter starts-->
+
+        <!-- Company filter starts -->
+        <div style="width: fit-content; margin-right: 15px">
+          <button class="btn btn-sm" style="background-color: #f1f1f1">
+            <span (click)="f1()"> Indsys, Sainmarks ..</span>
+            <span>
+              <i class="fas fa-times-circle" (click)="f2()"></i>
+            </span>
+          </button>
+          <!-- Company filter ends -->
+        </div>
+
+        <!-- Trim type filter starts -->
+        <div style="width: fit-content; margin-right: 15px">
+          <button class="btn btn-sm" style="background-color: #f1f1f1">
+            <span (click)="f1()"> Woven, Printed, Tag, Sticker &nbsp;</span>
+            <span>
+              <i class="fas fa-times-circle" (click)="f2()"></i>
+            </span>
+          </button>
+          <!-- Trim type filter ends -->
+        </div>
+
+        <!-- Status filter starts -->
+        <div style="width: fit-content; margin-right: 15px">
+          <button class="btn btn-sm" style="background-color: #f1f1f1">
+            <span (click)="f1()">
+              New, Approved, Waiting for Approval, Rejected &nbsp;</span
+            >
+            <span>
+              <i class="fas fa-times-circle" (click)="f2()"></i>
+            </span>
+          </button>
+          <!-- Status filter ends -->
+        </div>
+
+        <!-- row2 filter ends -->
+      </div>
+
+      <!-- Panel heading ends -->
+    </div>
+
+    <!-- costingList section starts -->
+    <div class="custom-section" #fullScreen style="padding: 15px">
+      <div style="width: 100%">
+        <div style="float: right; cursor: pointer" (click)="openFullscreen()">
+          <i class="fas fa-expand"></i>
+        </div>
+      </div>
+      <table class="table table-striped">
+        <thead>
+          <tr style="font-weight: 500">
+            <th width="5%">S.No</th>
+            <th width="10%">Date</th>
+            <th width="10%">Ref No</th>
+            <th width="15%">Product</th>
+            <th width="20%">Company</th>
+            <th width="10%">Trim Type</th>
+            <th width="5%">Quantity</th>
+            <th width="20%">Status</th>
+            <th width="5%" colspan="2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="
+              let costing of commonDetails
+                | filter: searchText
+                | paginate: { itemsPerPage: 10, currentPage: p };
+              let i = index
+            "
+          >
+            <td>{{ (p - 1) * 10 + (i + 1) }}</td>
+            <td>{{ costing["entryDate"] }}</td>
+            <td>{{ costing["refNo"] }}</td>
+            <td>{{ costing["productName"] }}</td>
+            <td>{{ costing["customerName"] }}</td>
+            <td>
+              {{
+                costing["trimType"].split("-")[0] == "Sticker"
+                  ? costing["trimType"].split("-")[1]
+                  : costing["trimType"]
+              }}
+            </td>
+            <td>{{ costing["orderQuantity"] }}</td>
+            <td>
+              {{
+                costing["status"] == 0
+                  ? "New"
+                  : costing["status"] == 1
+                  ? "Waiting for Admin Approval"
+                  : costing["status"] == 2
+                  ? "Approved by Admin"
+                  : costing["status"] == 3
+                  ? "Rejected"
+                  : costing["status"] == 4
+                  ? "Waiting for Customer Approval"
+                  : costing["status"] == 5
+                  ? "Approved by Customer"
+                  : costing["status"] == 6
+                  ? "Rejected by Customer"
+                  : costing["status"] == 7
+                  ? "Draft Order Created"
+                  : ""
+              }}
+            </td>
+            <td class="icon-class">
+              <img
+                src="../../../../../assets/edit.svg"
+                (click)="
+                  redirect(costing['trimType'], costing['totalDetailsId'])
+                "
+                alt="Edit-icon"
+              />
+              <!-- &nbsp;&nbsp;
+              <img
+                src="../../../../../assets/Delete.svg"
+                (click)="archiveCosting(costing['id'])"
+                alt="delete-icon"
+                *ngIf="!this.archivedFlag"
+              />
+              <img
+                src="../../../../../assets/plus-circle-solid.svg"
+                (click)="activateCosting(costing['id'])"
+                alt="activate-icon"
+                *ngIf="this.archivedFlag"
+              /> -->
+            </td>
+            <td class="icon-class">
+              <img
+                src="../../../../../assets/Duplicate.svg"
+                title="Create Duplicate"
+                style="cursor: pointer"
+                *ngIf="this.accessType != 'Customer'"
+                (click)="
+                  confirmDuplicateCreation(
+                    costing['totalDetailsId'],
+                    costing['trimType'],
+                    costing['refNo']
+                  )
+                "
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div id="pagination">
+        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+      </div>
+      <!-- costing list section ends -->
+    </div>
+
+    <!-- panel-primary ends -->
+  </div>
+  <!-- Costing List - Main container ends -->
+</div>
+
+<!-- filter modal starts -->
+<ng-template #filterModal let-modal>
+  <!-- modal header starts -->
+  <div class="modal-header">
+    <h3 class="modal-title" id="modal-basic-title">Costing Filter</h3>
+    <button
+      type="button"
+      class="close close-modal"
+      aria-label="Close"
+      id="modalCloseBtn"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <!-- modal header ends -->
+  </div>
+
+  <!-- modal body starts -->
+  <div class="modal-body">
+    <!-- modal-col-lg-12 starts -->
+    <div class="col-lg-12">
+      <!-- row1 - date starts -->
+      <div class="row">
+        <!-- fromDate starts -->
+        <div class="form-group col-lg-5">
+          <label for="fromDate">From Date *</label>
+          <div class="input-group">
+            <input
+              type="date"
+              class="form-control"
+              name="fromDate"
+              id="fromDate"
+            />
+          </div>
+          <!-- fromDate ends -->
+        </div>
+
+        <!-- toDate starts -->
+        <div class="form-group col-lg-5">
+          <label for="toDate">To Date *</label>
+          <div class="input-group">
+            <input type="date" class="form-control" name="toDate" id="toDate" />
+          </div>
+          <!-- toDate ends -->
+        </div>
+
+        <div class="form-group col-lg-2" style="margin-bottom: 0px">
+          <div class="input-group">
+            <button class="btn btn-dark btn-sm centerBtn">Apply</button>
+          </div>
+        </div>
+
+        <!-- row1 date ends -->
+      </div>
+
+      <hr style="margin: 0px; margin-bottom: 15px" />
+
+      <!-- row2 Company starts -->
+      <div class="row">
+        <!-- companyName starts -->
+        <div class="form-group col-lg-10" style="margin-bottom: 0px">
+          <label for="companyName">Company Name *</label>
+          <div class="input-group">
+            <mat-form-field appearance="fill" style="width: 100%">
+              <mat-label>Company Name</mat-label>
+              <mat-select multiple>
+                <mat-option>Sainmarks</mat-option>
+                <mat-option>Brittania</mat-option>
+                <mat-option>Indsys</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <!-- <select class="form-control">
+              <option>Sainmarks</option>
+              <option>Brittania</option>
+              <option>Indsys</option>
+            </select> -->
+          </div>
+          <!-- companyName ends -->
+        </div>
+        <div class="form-group col-lg-2" style="margin-bottom: 0px">
+          <div class="input-group">
+            <button class="btn btn-dark btn-sm centerBtnSelect">Apply</button>
+          </div>
+        </div>
+
+        <!-- row2 Company ends -->
+      </div>
+
+      <hr style="margin: 0px; margin-bottom: 15px" />
+
+      <!-- row3 Trim Type starts -->
+      <div class="row">
+        <!-- trimType starts -->
+        <div class="form-group col-lg-10" style="margin-bottom: 0px">
+          <label for="trimType">Trim Type *</label>
+          <div class="input-group">
+            <mat-form-field appearance="fill" style="width: 100%">
+              <mat-label>Trim Type</mat-label>
+              <mat-select multiple>
+                <mat-option>Woven</mat-option>
+                <mat-option>Printed</mat-option>
+                <mat-option>Tag</mat-option>
+                <mat-option>Sticker</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <!-- trimType ends -->
+        </div>
+        <div class="form-group col-lg-2" style="margin-bottom: 0px">
+          <div class="input-group">
+            <button class="btn btn-dark btn-sm centerBtnSelect">Apply</button>
+          </div>
+        </div>
+
+        <!-- row3 Trim Type ends -->
+      </div>
+
+      <hr style="margin: 0px; margin-bottom: 15px" />
+
+      <!-- row4 status starts -->
+      <div class="row">
+        <!-- status starts -->
+        <div class="form-group col-lg-10" style="margin-bottom: 0px">
+          <label for="status">Status *</label>
+          <div class="input-group">
+            <mat-form-field appearance="fill" style="width: 100%">
+              <mat-label>Status</mat-label>
+              <mat-select multiple>
+                <mat-option>New</mat-option>
+                <mat-option>Waiting for Approval</mat-option>
+                <mat-option>Approved</mat-option>
+                <mat-option>Rejected</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <!-- status ends -->
+        </div>
+
+        <div class="form-group col-lg-2" style="margin-bottom: 0px">
+          <div class="input-group">
+            <button class="btn btn-dark btn-sm centerBtnSelect">Apply</button>
+          </div>
+        </div>
+        <!-- row4 status ends -->
+      </div>
+      <!-- modal-col-lg-12 ends-->
+    </div>
+
+    <!-- modal body ends -->
+  </div>
+</ng-template>
+<!-- filter modal ends -->
+
+<!-- trimType modal starts -->
+<ng-template #trimTypeModal let-modal>
+  <!-- modal header starts -->
+  <div class="modal-header">
+    <h3 class="modal-title" id="modal-basic-title">Create New Costing</h3>
+    <button
+      type="button"
+      class="close close-modal"
+      aria-label="Close"
+      id="modalCloseBtn"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <!-- modal header ends -->
+  </div>
+
+  <!-- modal body starts -->
+  <div class="modal-body">
+    <!-- modal-col-lg-12 starts -->
+    <div class="col-lg-12">
+      <!-- row1 starts -->
+      <div class="row">
+        <ng-container *ngIf="!this.stickerTypesDisplay">
+          <div class="trimTypeRedirect" (click)="redirect('Woven')">Woven</div>
+          <div class="trimTypeRedirect" (click)="redirect('Printed')">
+            Printed
+          </div>
+          <div class="trimTypeRedirect" (click)="redirect('Tag')">Tag</div>
+          <div
+            class="trimTypeRedirect"
+            (click)="this.stickerTypesDisplay = true"
+          >
+            Sticker
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="this.stickerTypesDisplay">
+          <div class="trimTypeRedirect" (click)="redirect('Sticker-Flexo')">
+            Flexo
+          </div>
+          <div class="trimTypeRedirect" (click)="redirect('Sticker-Offset')">
+            Offset
+          </div>
+          <div
+            class="trimTypeRedirect"
+            (click)="this.stickerTypesDisplay = false"
+          >
+            Back
+          </div>
+        </ng-container>
+
+        <!-- row1 ends -->
+      </div>
+
+      <!-- modal-col-lg-12 ends-->
+    </div>
+
+    <!-- modal body ends -->
+  </div>
+</ng-template>
+<!-- filter modal ends -->

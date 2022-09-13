@@ -1,0 +1,168 @@
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+
+  <div class="top-bar">
+    <img src="./../../assets/arrow-left-solid.svg" alt="Back-button" class="back-img" (click)="createRoute()">
+  </div>
+
+  <div class="top-bar open-modal">
+    <button class="btn btn-primary"
+    (click)="open(content)" (click)="resetForm()"> Create New Product Color </button>
+  </div>
+
+
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <h1>
+      Product Color
+    </h1>
+        <form>
+    <div class="main-table-box">
+      <table style="width: 100%">
+          <tr>
+               <td> <label for=""> Color Name </label></td>
+               <td> <input type="text" required  name="colorname" [(ngModel)]="mcolor.colorname" (change)="getCurrentColorName()"></td>
+             <td>
+              <label for="printed">
+                  <input type="checkbox" id="printed" [(ngModel)]="mcolor.printed" name="printed"> Printed
+              </label>
+             </td>
+             <td>
+              <label for="sticker">
+                  <input type="checkbox" id="sticker" [(ngModel)]="mcolor.sticker" name="sticker" value="sticker" > Sticker
+              </label>
+              </td>
+          </tr>
+
+          <div class="use-down"></div>
+          <tr>
+              <td></td>
+              <td>
+                  <button type="reset" class="btn btn-danger clear-button"> Clear </button>
+                  <button type="submit" class="btn btn-success" (click)="checkColorName()" > Save </button>
+                  <!-- <button (click)="masterFunction()"> Test </button> -->
+              </td>
+              <td>
+                  <label for="tag">
+                      <input type="checkbox" id="tag" [(ngModel)]="mcolor.tag" name="tag" value="tag"> Tag
+                  </label>
+              </td>
+              <td>
+                  <label for="woven">
+                      <input type="checkbox" id="woven" [(ngModel)]="mcolor.woven" name="woven" value="woven"> Woven
+                  </label>
+              </td>
+          </tr>
+       </table>
+    </div>
+    </form>
+  </ng-template>
+
+
+
+
+
+
+
+
+<!-- Product Color List -->
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+        <h2>Product Color List</h2>
+    </div>
+    <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" placeholder="Search">
+    <div class="panel-body">
+      <table class="table table-striped color-list">
+        <thead>
+          <tr>
+            <th>S.No</th>
+            <th>Color</th>
+            <th>Printed</th>
+            <th>Sticker</th>
+            <th>Tag</th>
+            <th>Woven</th>
+            <th>Actions</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let i = index; let mcolor of mcolors | async | filter:searchText">
+            <td>{{i+1}}</td>
+            <td>{{mcolor.colorname}}</td>
+            <td>{{mcolor.printed}}</td>
+            <td>{{mcolor.sticker}}</td>
+            <td>{{mcolor.tag}}</td>
+            <td>{{mcolor.woven}}</td>
+
+            <td>
+              <img src="./../../assets/edit.svg" (click)="updateMcolor(mcolor.id)" (click)="bring(updateModal)" alt="Edit-icon">
+              <img src="./../../assets/Delete.svg" (click)="deleteMcolor(mcolor.id)" style="margin-left: 10px" alt="Delete-icon">
+              </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+
+
+  <!-- Update -->
+  <ng-template #updateModal let-modal>
+  <div class="modal-header">
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+
+  <h1>
+    Product Color
+  </h1>
+      <form>
+  <div class="main-table-box">
+    <table style="width: 100%">
+        <tr>
+             <td> <label for=""> Color Name </label></td>
+             <td> <input type="text" [(ngModel)]="mcolor.colorname" name="colorname" readonly></td>
+           <td>
+            <label for="printed">
+                <input type="checkbox" id="printed" [(ngModel)]="mcolor.printed" name="printed" value="printed" readonly> Printed
+            </label>
+           </td>
+           <td>
+            <label for="sticker">
+                <input type="checkbox" id="sticker" [(ngModel)]="mcolor.sticker" name="sticker" readonly> Sticker
+            </label>
+            </td>
+        </tr>
+
+        <div class="use-down"></div>
+
+        <tr>
+            <td></td>
+            <td>
+              <button type="reset" class="btn btn-danger clear-button"> Clear </button>
+              <button type="submit" class="btn btn-success" (click)="checkColorNameUpdate()"> Save </button>
+          </td>
+            <td>
+                <label for="tag">
+                    <input type="checkbox" id="tag" [(ngModel)]="mcolor.tag" name="tag" readonly> Tag
+                </label>
+            </td>
+            <td>
+                <label for="woven">
+                    <input type="checkbox" id="woven" [(ngModel)]="mcolor.woven" name="woven" readonly> Woven
+                </label>
+            </td>
+        </tr>
+     </table>
+  </div>
+  </form>
+  </ng-template>
+
+  <router-outlet></router-outlet>

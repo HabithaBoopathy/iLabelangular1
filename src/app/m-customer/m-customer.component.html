@@ -1,0 +1,1899 @@
+<!-- <div class="top-bar">
+  <img
+    src="./../../assets/arrow-left-solid.svg"
+    alt="Back-button"
+    class="back-img"
+    (click)="createRoute()"
+  />
+</div> -->
+
+<div class="col-lg-12" style="padding: 15px; margin-top: 5px">
+  <div class="panel panel-primary">
+    <!-- Header with Title and Create New Button -->
+    <div class="panel-heading">
+      <h2>
+        Customers List
+        <div style="float: right">
+          <button
+            (click)="initializeCreate()"
+            (click)="open(createCustomer)"
+            class="btn btn-primary"
+          >
+            Create New Customer
+          </button>
+        </div>
+      </h2>
+    </div>
+    <!-- Panel heading ends -->
+
+    <!-- Search Box -->
+    <input
+      class="form-control test-check"
+      type="text"
+      name="search"
+      [(ngModel)]="searchText"
+      autocomplete="off"
+      placeholder="Search"
+    />
+    <br />
+    <br />
+
+    <div class="panel-body">
+      <table
+        class="table table-striped customer-list"
+        style="table-layout: fixed"
+      >
+        <thead>
+          <tr style="font-weight: 500">
+            <th width="5%" style="white-space: nowrap">SNo</th>
+            
+            <th width="19%">Customer Name</th>
+            <th width="19%">Company Name</th>
+            <!-- <th>Company Name</th> -->
+            <th width="19%">Category</th>
+            <th width="15%">Email Id</th>
+            <!-- <th>Phone</th> -->
+
+            <th width="11%">City</th>
+
+            <th width="15%">Executive</th>
+            <!-- <th>Territory</th> -->
+            <th width="5%">Status</th>
+            <th width="5%">Actions</th>
+            <th width="8%"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="
+              let i = index;
+              let employee;
+              of: employees
+                | filter: searchText
+                | paginate: { itemsPerPage: 10, currentPage: p }
+            "
+            [ngClass]="employee.isOk ? 'normal-field' : 'error-field'"
+          >
+            <td>{{ (p - 1) * 10 + (i + 1) }}</td>
+            <td>{{ employee.companyname }}</td>
+            <td>{{ employee.customername }}</td>
+            <td>
+              <img
+                *ngIf="employee.customerCategory === 'G'"
+                src="./../../assets/gold icon.jpg"
+                
+                alt="Gold"
+              />
+              <img
+                *ngIf="employee.customerCategory === 'S'"
+                src="./../../assets/silver icon.jpg"
+                
+                alt="Silver"
+              />
+              <img
+                *ngIf="employee.customerCategory === 'B'"
+                src="./../../assets/bronze icon.jpg"
+               
+                alt="Bronze"
+              />
+            
+            
+            <td style="word-wrap: break-word">{{ employee.emailId }}</td>
+            <!-- <td>{{ employee.phone }}</td> -->
+            <!-- <td>{{ employee.website }}</td>
+            <td hidden>{{ employee.paymentTerms }}</td>
+            <td>{{ employee.street1 }}</td> -->
+            <td>{{ employee.city }}</td>
+            <!-- <td>{{ employee.zipcode }}</td>
+            <td>{{ employee.state }}</td> -->
+            <td>{{ employee.executiveName }}</td>
+            <!-- <td>{{ employee.territory }}</td> -->
+            <td>
+              <img
+                *ngIf="employee.verificationStatus === 'Verified'"
+                src="./../../assets/check.svg"
+                (click)="verified()"
+                alt="Verified Icon"
+              />
+              <img
+                *ngIf="employee.verificationStatus === 'WCustomer'"
+                src="./../../assets/check2.svg"
+                (click)="wcverified()"
+                alt="Verified Icon"
+              />
+              <img
+                *ngIf="employee.verificationStatus === 'AAdmin'"
+                src="./../../assets/check4yellow.svg"
+                (click)="averified()"
+                alt="Verified Icon"
+              />
+              <img
+                *ngIf="employee.verificationStatus === 'WAdmin'"
+                src="./../../assets/check3black.svg"
+                (click)="wverified()"
+                alt="Verified Icon"
+              />
+              <img
+                *ngIf="employee.verificationStatus === 'RAdmin'"
+                src="./../../assets/cancel.svg"
+                (click)="rverified()"
+                alt="Un-Verified Icon"
+              />
+              <img
+                *ngIf="employee.verificationStatus === 'Not Verified'"
+                src="./../../assets/cancel.svg"
+                (click)="notverified()"
+                alt="Un-Verified Icon"
+              />
+            </td>
+            <!-- <td>{{ employee.customerreference }}</td> -->
+            <td>
+              <img
+                src="./../../assets/edit.svg"
+                (click)="initializeEdit(employee.id)"
+                (click)="bring(updateCustomer)"
+                alt="Update Icon"
+              />
+              <img
+                *ngIf="this.userToken == 'IndsysTesting'"
+                src="./../../assets/Delete.svg"
+                (click)="deleteEmployee(employee.id, employee.emailId)"
+                style="margin-left: 10px"
+                alt="Delete Icon"
+              />
+
+              <!-- <button (click)="deleteEmployee(employee.id)" class="btn btn-danger" style="margin-left: 10px">Delete</button> -->
+              <!-- <button (click)="updateEmployee(employee.id)" (click)="bring(updateModal)" class="btn btn-info" style="margin-left: 10px">Update</button> -->
+            </td>
+            <td>
+              <button
+                *ngIf="!employee.isDisabled"
+                class="btn btn-sm btn-outline-success"
+                (click)="deactivateCustomer(employee.id)"
+              >
+                Active
+              </button>
+              <button
+                *ngIf="employee.isDisabled"
+                class="btn btn-sm btn-outline-danger"
+                (click)="activateCustomer(employee.id)"
+              >
+                Deactive
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div id="pagination">
+        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+      </div>
+      <!-- Panel body ends -->
+    </div>
+    <!-- Panel ends -->
+  </div>
+  <!-- col-lg-12 ends -->
+</div>
+
+<!-- <div class="top-bar full-line">
+  <label class="btn btn-warning use-right mr-2"
+    >Import<input
+      type="file"
+      accept=".csv"
+      (change)="importData($event)"
+      style="display: none"
+  /></label>
+  <button class="btn btn-dark mr-2" (click)="exportfun()">Export</button>
+  <button
+    class="btn btn-primary mr-4"
+    (click)="resetForm()"
+    (click)="open(content)"
+  >
+    Create New Customer
+  </button>
+</div> -->
+
+<!-- createCustomer Modal template starts -->
+<ng-template #createCustomer let-modal>
+  <div class="modal-header" id="createCustomerHeader">
+    <h3 class="modal-title" id="modal-basic-title">Create Customer</h3>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      id="close-createCustomer"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="col-lg-12">
+      <div class="row">
+        <!-- company name -->
+        <div class="form-group col-lg-4">
+          <label for="companyName" style="font-weight: 500; color: #333"
+            >Company Name *</label
+          >
+          <div class="input-group">
+            <select
+              [(ngModel)]="this.employee.companyId"
+              class="form-control"
+              name="companyName"
+              id="companyName"
+              (ngModelChange)="onCompanyChange()"
+            >
+              <option
+                *ngFor="let i = index; let company1; of: companies"
+                value="{{ company1.id }}"
+              >
+                {{ company1.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <!-- company name ends -->
+
+        <!-- customerName -->
+        <div class="form-group col-lg-4">
+          <label for="customerName" style="font-weight: 500; color: #333"
+            >Customer Name *</label
+          >
+          <div class="input-group">
+            <input
+              type="text"
+              id="customerName"
+              [(ngModel)]="employee.companyname"
+              name="customerName"
+              class="form-control"
+            />
+          </div>
+        </div>
+        <!-- customerName ends -->
+
+        <!-- category starts-->
+        <div class="form-group col-lg-4">
+          <label for="customerCategory" style="font-weight: 500; color: #333"
+            >Customer Category *
+          </label>
+          <select
+            [(ngModel)]="employee.customerCategory"
+            class="form-control"
+            name="customerCategory"
+            id="customerCategory"
+           
+          >
+            <option value="G">Gold</option>
+            <option value="S"> Silver</option>
+            <option value="B">Bronze</option>
+            
+          </select>
+        </div>
+        <!-- category ends -->
+
+        <!-- email -->
+        <div class="form-group col-lg-4">
+          <label for="email" style="font-weight: 500; color: #333"
+            >Email Id *</label
+          >
+          <div class="input-group">
+            <input
+              type="email"
+              class="form-control"
+              [(ngModel)]="employee.emailId"
+              name="email"
+            />
+          </div>
+        </div>
+        <!-- email ends -->
+
+        <!-- phone -->
+        <div class="form-group col-lg-4">
+          <label for="phone" style="font-weight: 500; color: #333"
+            >Phone *</label
+          >
+          <div class="input-group">
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="employee.phone"
+              name="phone"
+            />
+          </div>
+        </div>
+        <!-- phone ends -->
+
+        <!-- Territory (admin) -->
+        <div class="form-group col-lg-4" *ngIf="accessType === 'Administrator'">
+          <label for="territory" style="font-weight: 500; color: #333"
+            >Territory *</label
+          >
+          <div class="input-group">
+            <select
+              [(ngModel)]="employee.territory"
+              class="form-control"
+              name="territory"
+              id="territory"
+              (change)="onTerritoryChange()"
+            >
+              <option
+                *ngFor="let i = index; let territory; of: territories"
+                value="{{ territory.id }}"
+              >
+                {{ territory.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <!-- Territory (admin) ends -->
+
+        <!-- NOTE: Can remove this -->
+        <!-- Territory (Sales Team) -->
+        <div class="form-group col-lg-4" *ngIf="accessType === 'Sales Team'">
+          <label for="territory" style="font-weight: 500; color: #333"
+            >Territory *</label
+          >
+          <div class="input-group">
+            <select
+              [(ngModel)]="employee.territory"
+              class="form-control control-width"
+              name="territory"
+              id="territory"
+              (change)="onTerritoryChange()"
+            >
+              <option
+                *ngFor="let i = index; let territory; of: territories"
+                value="{{ territory.id }}"
+              >
+                {{ territory.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <!-- Territory (Sales Team) ends -->
+
+        <!-- Executive (admin) -->
+        <div class="form-group col-lg-4" *ngIf="accessType === 'Administrator'">
+          <label for="executive" style="font-weight: 500; color: #333"
+            >Executive *</label
+          >
+          <div class="input-group">
+            <select
+              [(ngModel)]="employee.executiveCode"
+              class="form-control"
+              name="executiveCode"
+              id="executiveCode"
+              (change)="checkEmployeeName()"
+              [disabled]="
+                employee.territory == '' ||
+                employee.territory == null ||
+                employee.territory == undefined
+              "
+            >
+              <option value="" disabled selected></option>
+              <option
+                *ngFor="let memployee of mexecutives"
+                value="{{ memployee.code }}"
+              >
+                {{ memployee.name }}-({{ memployee.code }})
+              </option>
+            </select>
+          </div>
+        </div>
+        <!-- Executive (admin) ends -->
+
+        <!-- Executive (Sales Team) -->
+        <div class="form-group col-lg-4" *ngIf="accessType === 'Sales Team'">
+          <label for="executive" style="font-weight: 500; color: #333"
+            >Executive *</label
+          >
+          <div class="input-group">
+            <input
+              type="text"
+              id="execname"
+              name="execname"
+              class="form-control"
+              value="{{ this.executiveCode }}"
+              [disabled]="true"
+            />
+          </div>
+        </div>
+        <!-- Executive (Sales Team) ends -->
+
+        <!-- Merchandiser -->
+        <!-- <div class="form-group col-lg-4">
+          <label for="merchandiser" style="font-weight: 500; color: #333"
+            >Merchandiser</label
+          >
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="employee.merchandiser"
+              name="merchandiser"
+              disabled="true"
+            />
+          </div>
+        </div> -->
+        <!-- Merchandiser ends -->
+
+        <!-- GST -->
+        <div class="form-group col-lg-4">
+          <label for="gst" style="font-weight: 500; color: #333"
+            >GSTIN Number</label
+          >
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="employee.gstin"
+              name="gst"
+            />
+          </div>
+        </div>
+        <!-- gst ends -->
+
+        <!-- Alternate email -->
+        <div class="form-group col-lg-4">
+          <label for="alternateEmail" style="font-weight: 500; color: #333"
+            >Alternate Email Id</label
+          >
+          <div class="input-group">
+            <input
+              type="email"
+              class="form-control"
+              [(ngModel)]="employee.alternateemailId"
+              name="alternateEmail"
+            />
+          </div>
+        </div>
+        <!-- Alternate email ends -->
+
+        <!-- Website -->
+        <div class="form-group col-lg-4">
+          <label for="website" style="font-weight: 500; color: #333"
+            >Website
+          </label>
+          <div class="input-group">
+            <input
+              type="text"
+              id="website"
+              [(ngModel)]="employee.website"
+              name="website"
+              class="form-control"
+            />
+          </div>
+        </div>
+        <!-- Website ends -->
+
+        <!-- Street1 -->
+        <div class="form-group col-lg-4">
+          <label for="street1" style="font-weight: 500; color: #333"
+            >Street1 *</label
+          >
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="employee.street1"
+              name="street1"
+            />
+          </div>
+        </div>
+        <!-- Street1 ends -->
+
+        <!-- Street2 -->
+        <div class="form-group col-lg-4">
+          <label for="street2" style="font-weight: 500; color: #333"
+            >Street2 *</label
+          >
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="employee.street2"
+              name="street2"
+            />
+          </div>
+        </div>
+        <!-- Street2 ends -->
+
+        <!-- City -->
+        <div class="form-group col-lg-4">
+          <label for="city" style="font-weight: 500; color: #333">City *</label>
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="employee.city"
+              name="city"
+            />
+          </div>
+        </div>
+        <!-- City ends -->
+
+        <!-- Zip code -->
+        <div class="form-group col-lg-4">
+          <label for="zip" style="font-weight: 500; color: #333"
+            >Zip Code *</label
+          >
+          <div class="input-group">
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="employee.zipcode"
+              name="zipcode"
+            />
+          </div>
+        </div>
+        <!-- Zip code ends -->
+
+        <!-- State -->
+        <div class="form-group col-lg-4">
+          <label for="state" style="font-weight: 500; color: #333"
+            >State *</label
+          >
+          <div class="input-group">
+            <input
+              type="text"
+              id="state"
+              [(ngModel)]="employee.state"
+              name="state"
+              class="form-control"
+            />
+          </div>
+        </div>
+        <!-- State ends -->
+
+        <!-- Country -->
+        <div class="form-group col-lg-4">
+          <label for="country" style="font-weight: 500; color: #333"
+            >Country *</label
+          >
+          <div class="input-group">
+            <input
+              type="text"
+              id="country"
+              [(ngModel)]="employee.country"
+              name="country"
+              class="form-control"
+            />
+          </div>
+        </div>
+        <!-- Country ends -->
+
+        <!-- Payment Terms -->
+        <div class="form-group col-lg-4">
+          <label for="paymentTerms" style="font-weight: 500; color: #333"
+            >Payment Terms *
+          </label>
+          <select
+            [(ngModel)]="employee.paymentTerms"
+            class="form-control"
+            name="paymentTerms"
+            id="paymentTerms"
+          >
+            <option value="7 Days">7 Days</option>
+            <option value="10 Days">10 Days</option>
+            <option value="14 Days">14 Days</option>
+            <option value="21 Days">21 Days</option>
+            <option value="30 Days">30 Days</option>
+            <option value="45 Days">45 Days</option>
+            <option value="60 Days">60 Days</option>
+            <option value="90 Days">90 Days</option>
+            <option value="Advance Payment">Advance Payment</option>
+            <option value="Cash on Delivery">Cash on Delivery</option>
+          </select>
+        </div>
+        <!-- Payment terms end -->
+
+        <!-- shipmentTerms -->
+        <div class="form-group col-lg-4">
+          <label for="shipmentTerms" style="font-weight: 500; color: #333"
+            >Shipment Terms <span class="text-danger">*</span>
+          </label>
+          <select
+            [(ngModel)]="employee.shipmentTerms"
+            class="form-control"
+            name="shipmentTerms"
+            id="shipmentTerms"
+          >
+            <option value="Cost and Freight">Cost and Freight</option>
+            <option value="Cost Insurance and Freight">
+              Cost Insurance and Freight
+            </option>
+            <option value="Carriage and Insurance Paid">
+              Carriage and Insurance Paid
+            </option>
+            <option value="Carriage Paid To">Carriage Paid To</option>
+            <option value="Delivered at Frontier">Delivered at Frontier</option>
+            <option value="Delivered Duty Paid">Delivered Duty Paid</option>
+            <option value="Delivered Duty Unpaid">Delivered Duty Unpaid</option>
+            <option value="Delivery">Delivery</option>
+            <option value="Delivered Ex Quay">Delivered Ex Quay</option>
+            <option value="Delivered Ex Ship">Delivered Ex Ship</option>
+            <option value="Ex Warehouse">Ex Warehouse</option>
+            <option value="Free Alongside Ship">Free Alongside Ship</option>
+            <option value="Free Carrier">Free Carrier</option>
+            <option value="Free On Board">Free On Board</option>
+            <option value="Pickup at Location">Pickup at Location</option>
+          </select>
+        </div>
+        <!-- shipmentTerms end -->
+
+        <!-- email subscription checkbox -->
+        <div class="form-group col-lg-4">
+          <section class="example-section" style="padding: 15px">
+            <mat-checkbox
+              class="mat-checkbox-label"
+              name="customerEmail"
+              value="customerEmail"
+              [(ngModel)]="employee.customerEmail"
+              ><span
+                style="
+                  font-weight: 500 !important;
+                  font-style: italic;
+                  font-family: 'Source Sans Pro';
+                "
+                >Email Notification Subscription</span
+              ></mat-checkbox
+            >
+          </section>
+        </div>
+        <!-- email subscription checkbox ends -->
+
+        <!-- save button -->
+        <div class="col-lg-12">
+          <button class="btn btn-block btn-primary" (click)="onSave()">
+            Save
+          </button>
+        </div>
+        <!-- save button ends -->
+
+        <!-- row ends -->
+      </div>
+      <!-- col-lg-12 ends -->
+    </div>
+    <!-- modal body ends -->
+  </div>
+</ng-template>
+
+<!-- User Profile Confirmation -->
+<ng-template #userProfilePrompt let-modal>
+  <div class="modal-header" id="userProfilePromptHeader">
+    <h3 class="modal-title" id="modal-basic-title">Confirmation</h3>
+
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      id="close-userProfilePrompt"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p
+      style="
+        font-size: 18px;
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 25px;
+      "
+    >
+      Do you want to create a User Profile ?
+    </p>
+    <div class="form-group col-lg-12">
+      <div class="row">
+        <div class="col-lg-6">
+          <button
+            class="btn btn-block btn-primary"
+            (click)="bigOpen(userProfile)"
+            (click)="initializeUserProfile()"
+            (click)="modal.dismiss('Cross click')"
+          >
+            Yes
+          </button>
+        </div>
+        <div class="col-lg-6">
+          <button
+            class="btn btn-block btn-danger"
+            (click)="modal.dismiss('Cross click')"
+          >
+            No
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- userProfile modal starts -->
+<ng-template #userProfile let-modal>
+  <div class="modal-header" id="userProfileHeader">
+    <h3 class="modal-title" id="modal-basic-title">Create User Profile</h3>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      id="close-userProfile"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <!-- user name -->
+    <div class="form-group">
+      <label for="userName" style="font-weight: 500; color: #333"
+        >User Name *</label
+      >
+      <div class="input-group">
+        <input
+          [(ngModel)]="user.username"
+          name="userName"
+          id="userName"
+          class="form-control"
+          disabled="true"
+        />
+      </div>
+    </div>
+    <!-- user name ends -->
+
+    <!-- login Id -->
+    <div class="form-group">
+      <label for="loginId" style="font-weight: 500; color: #333"
+        >Login ID *</label
+      >
+      <div class="input-group">
+        <input
+          [(ngModel)]="user.loginId"
+          name="loginId"
+          id="loginId"
+          class="form-control"
+          type="email"
+          autocomplete="new-loginId"
+          disabled="true"
+        />
+      </div>
+    </div>
+    <!-- login Id ends -->
+
+    <!-- pwd -->
+    <div class="form-group">
+      <label for="password" style="font-weight: 500; color: #333"
+        >Password *</label
+      >
+      <div class="input-group">
+        <input
+          [(ngModel)]="user.password"
+          name="password"
+          id="password"
+          class="form-control"
+          type="password"
+          autocomplete="new-password"
+        />
+      </div>
+    </div>
+    <!-- pwd ends -->
+
+    <!-- Access Rights -->
+    <div class="form-group">
+      <label for="accessRights" style="font-weight: 500; color: #333"
+        >Access Rights *</label
+      >
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="user.accessRights"
+          disabled="true"
+        />
+      </div>
+    </div>
+    <!-- Access Rights ends -->
+
+    <!-- Trim Type -->
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>Trim Types</mat-label>
+      <mat-select multiple [(ngModel)]="user.trimTypes" id="trim-type">
+        <mat-option value="Print">Print</mat-option>
+        <mat-option value="Tag">Tag</mat-option>
+        <mat-option value="Woven">Woven</mat-option>
+        <mat-option value="Sticker">Sticker</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <!-- Trim Type ends -->
+
+    <!-- Save Button -->
+    <div class="form-group">
+      <button
+        type="button"
+        class="btn btn-block btn-primary"
+        (click)="onCreateUser()"
+      >
+        Save
+      </button>
+    </div>
+    <!-- Save Button Ends -->
+  </div>
+</ng-template>
+<!-- userProfile modal template ends -->
+
+<!-- updateCustomer Modal -->
+<ng-template #updateCustomer let-modal>
+  <div class="modal-header" id="createCustomerHeader">
+    <h3 class="modal-title" id="modal-basic-title">Update Customer</h3>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      id="close-createCustomer"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="col-lg-12">
+      <div class="row">
+        <!-- company name -->
+        <div class="form-group col-lg-4">
+          <label for="companyName" style="font-weight: 500; color: #333"
+            >Company Name *</label
+          >
+          <div class="input-group">
+            <select
+              [(ngModel)]="this.employee.companyId"
+              class="form-control"
+              name="companyName"
+              id="companyName"
+              (ngModelChange)="onCompanyChange()"
+            >
+              <option
+                *ngFor="let i = index; let company1; of: companies"
+                value="{{ company1.id }}"
+              >
+                {{ company1.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <!-- company name ends -->
+
+        <!-- customerName -->
+        <div class="form-group col-lg-4">
+          <label for="customerName" style="font-weight: 500; color: #333"
+            >Customer Name *</label
+          >
+          <div class="input-group">
+            <input
+              type="text"
+              id="customerName"
+              [(ngModel)]="employee.companyname"
+              name="customerName"
+              class="form-control"
+            />
+          </div>
+        </div>
+        <!-- customerName ends -->
+        <div class="form-group col-lg-4">
+          <label for="customerCategory" style="font-weight: 500; color: #333"
+            >Customer Category *
+          </label>
+          <select
+            [(ngModel)]="employee.customerCategory"
+            class="form-control"
+            name="customerCategory"
+            id="customerCategory"
+           
+          >
+            <option value="G">Gold</option>
+            <option value="S"> Silver</option>
+            <option value="B">Bronze</option>
+            
+          </select>
+        </div>
+
+        <!-- email -->
+        <div class="form-group col-lg-4">
+          <label for="email" style="font-weight: 500; color: #333"
+            >Email Id *</label
+          >
+          <div class="input-group">
+            <input
+              type="email"
+              class="form-control"
+              [(ngModel)]="employee.emailId"
+              name="email"
+            />
+          </div>
+        </div>
+        <!-- email ends -->
+
+        <!-- phone -->
+        <div class="form-group col-lg-4">
+          <label for="phone" style="font-weight: 500; color: #333"
+            >Phone *</label
+          >
+          <div class="input-group">
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="employee.phone"
+              name="phone"
+            />
+          </div>
+        </div>
+        <!-- phone ends -->
+
+        <!-- Territory -->
+        <div class="form-group col-lg-4">
+          <label for="territory" style="font-weight: 500; color: #333"
+            >Territory *</label
+          >
+          <div class="input-group">
+            <select
+              [(ngModel)]="employee.territory"
+              class="form-control"
+              name="territory"
+              id="territory"
+              (change)="onTerritoryChange()"
+            >
+              <option
+                *ngFor="let i = index; let territory; of: territories"
+                value="{{ territory.id }}"
+              >
+                {{ territory.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <!-- Territory ends -->
+
+        <!-- Executive (admin) -->
+        <div class="form-group col-lg-4" *ngIf="accessType === 'Administrator'">
+          <label for="executive" style="font-weight: 500; color: #333"
+            >Executive *</label
+          >
+          <div class="input-group">
+            <select
+              [(ngModel)]="employee.executiveCode"
+              class="form-control"
+              name="executiveCode"
+              id="executiveCode"
+              (change)="checkEmployeeName()"
+              [disabled]="
+                employee.territory == '' ||
+                employee.territory == null ||
+                employee.territory == undefined
+              "
+            >
+              <option value="" hidden selected disabled></option>
+              <option
+                *ngFor="let memployee of mexecutives"
+                value="{{ memployee.code }}"
+              >
+                {{ memployee.name }}-({{ memployee.code }})
+              </option>
+            </select>
+          </div>
+        </div>
+        <!-- Executive (admin) ends -->
+
+        <!-- Executive (Sales Team) -->
+        <div class="form-group col-lg-4" *ngIf="accessType === 'Sales Team'">
+          <label for="executive" style="font-weight: 500; color: #333"
+            >Executive *</label
+          >
+          <div class="input-group">
+            <input
+              type="text"
+              id="execname"
+              name="execname"
+              class="form-control"
+              value="{{ this.executiveCode }}"
+              [disabled]="true"
+            />
+          </div>
+        </div>
+        <!-- Executive (Sales Team) ends -->
+
+        <!-- Merchandiser -->
+        <!-- <div class="form-group col-lg-4">
+          <label for="merchandiser" style="font-weight: 500; color: #333"
+            >Merchandiser</label
+          >
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="employee.merchandiser"
+              name="merchandiser"
+              disabled="true"
+            />
+          </div>
+        </div> -->
+        <!-- Merchandiser ends -->
+
+        <!-- GST -->
+        <div class="form-group col-lg-4">
+          <label for="gst" style="font-weight: 500; color: #333"
+            >GSTIN Number
+          </label>
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="employee.gstin"
+              name="gst"
+            />
+          </div>
+        </div>
+        <!-- gst ends -->
+
+        <!-- Alternate email -->
+        <div class="form-group col-lg-4">
+          <label for="alternateEmail" style="font-weight: 500; color: #333"
+            >Alternate Email Id</label
+          >
+          <div class="input-group">
+            <input
+              type="email"
+              class="form-control"
+              [(ngModel)]="employee.alternateemailId"
+              name="alternateEmail"
+            />
+          </div>
+        </div>
+        <!-- Alternate email ends -->
+
+        <!-- Website -->
+        <div class="form-group col-lg-4">
+          <label for="website" style="font-weight: 500; color: #333"
+            >Website
+          </label>
+          <div class="input-group">
+            <input
+              type="text"
+              id="website"
+              [(ngModel)]="employee.website"
+              name="website"
+              class="form-control"
+            />
+          </div>
+        </div>
+        <!-- Website ends -->
+
+        <!-- Street1 -->
+        <div class="form-group col-lg-4">
+          <label for="street1" style="font-weight: 500; color: #333"
+            >Street1 *</label
+          >
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="employee.street1"
+              name="street1"
+            />
+          </div>
+        </div>
+        <!-- Street1 ends -->
+
+        <!-- Street2 -->
+        <div class="form-group col-lg-4">
+          <label for="street2" style="font-weight: 500; color: #333"
+            >Street2 *</label
+          >
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="employee.street2"
+              name="street2"
+            />
+          </div>
+        </div>
+        <!-- Street2 ends -->
+
+        <!-- City -->
+        <div class="form-group col-lg-4">
+          <label for="city" style="font-weight: 500; color: #333">City *</label>
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="employee.city"
+              name="city"
+            />
+          </div>
+        </div>
+        <!-- City ends -->
+
+        <!-- Zip code -->
+        <div class="form-group col-lg-4">
+          <label for="zip" style="font-weight: 500; color: #333"
+            >Zip Code *</label
+          >
+          <div class="input-group">
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="employee.zipcode"
+              name="zipcode"
+            />
+          </div>
+        </div>
+        <!-- Zip code ends -->
+
+        <!-- State -->
+        <div class="form-group col-lg-4">
+          <label for="state" style="font-weight: 500; color: #333"
+            >State *</label
+          >
+          <div class="input-group">
+            <input
+              type="text"
+              id="state"
+              [(ngModel)]="employee.state"
+              name="state"
+              class="form-control"
+            />
+          </div>
+        </div>
+        <!-- State ends -->
+
+        <!-- Country -->
+        <div class="form-group col-lg-4">
+          <label for="country" style="font-weight: 500; color: #333"
+            >Country *</label
+          >
+          <div class="input-group">
+            <input
+              type="text"
+              id="country"
+              [(ngModel)]="employee.country"
+              name="country"
+              class="form-control"
+            />
+          </div>
+        </div>
+        <!-- Country ends -->
+
+        <!-- Payment Terms -->
+        <div class="form-group col-lg-4">
+          <label for="paymentTerms" style="font-weight: 500; color: #333"
+            >Payment Terms *
+          </label>
+          <select
+            [(ngModel)]="employee.paymentTerms"
+            class="form-control"
+            name="paymentTerms"
+            id="paymentTerms"
+          >
+            <option value="7 Days">7 Days</option>
+            <option value="10 Days">10 Days</option>
+            <option value="14 Days">14 Days</option>
+            <option value="21 Days">21 Days</option>
+            <option value="30 Days">30 Days</option>
+            <option value="45 Days">45 Days</option>
+            <option value="60 Days">60 Days</option>
+            <option value="90 Days">90 Days</option>
+            <option value="Advance Payment">Advance Payment</option>
+            <option value="Cash on Delivery">Cash on Delivery</option>
+          </select>
+        </div>
+        <!-- Payment terms end -->
+
+        <!-- shipmentTerms -->
+        <div class="form-group col-lg-4">
+          <label for="shipmentTerms" style="font-weight: 500; color: #333"
+            >Shipment Terms <span class="text-danger">*</span>
+          </label>
+          <select
+            [(ngModel)]="employee.shipmentTerms"
+            class="form-control"
+            name="shipmentTerms"
+            id="shipmentTerms"
+          >
+            <option value="Cost and Freight">Cost and Freight</option>
+            <option value="Cost Insurance and Freight">
+              Cost Insurance and Freight
+            </option>
+            <option value="Carriage and Insurance Paid">
+              Carriage and Insurance Paid
+            </option>
+            <option value="Carriage Paid To">Carriage Paid To</option>
+            <option value="Delivered at Frontier">Delivered at Frontier</option>
+            <option value="Delivered Duty Paid">Delivered Duty Paid</option>
+            <option value="Delivered Duty Unpaid">Delivered Duty Unpaid</option>
+            <option value="Delivery">Delivery</option>
+            <option value="Delivered Ex Quay">Delivered Ex Quay</option>
+            <option value="Delivered Ex Ship">Delivered Ex Ship</option>
+            <option value="Ex Warehouse">Ex Warehouse</option>
+            <option value="Free Alongside Ship">Free Alongside Ship</option>
+            <option value="Free Carrier">Free Carrier</option>
+            <option value="Free On Board">Free On Board</option>
+            <option value="Pickup at Location">Pickup at Location</option>
+          </select>
+        </div>
+        <!-- shipmentTerms end -->
+
+        <!-- email subscription checkbox -->
+        <div class="form-group col-lg-4">
+          <section class="example-section" style="padding: 15px">
+            <mat-checkbox
+              class="mat-checkbox-label"
+              name="customerEmail"
+              value="customerEmail"
+              [(ngModel)]="employee.customerEmail"
+              ><span
+                style="
+                  font-weight: 500 !important;
+                  font-style: italic;
+                  font-family: 'Source Sans Pro';
+                "
+                >Email Notification Subscription</span
+              ></mat-checkbox
+            >
+          </section>
+        </div>
+        <!-- email subscription checkbox ends -->
+
+        <!-- update button -->
+        <div class="col-lg-4" *ngIf="this.updateFlag" style="margin: auto">
+          <button class="btn btn-block btn-primary" (click)="onUpdate()">
+            Update
+          </button>
+        </div>
+        <!-- update button ends -->
+
+        <!-- Request for Admin approval btn -->
+        <div
+          class="col-lg-4"
+          *ngIf="employee.verificationStatus === 'Not Verified'"
+          style="margin: auto"
+        >
+          <button
+            class="btn btn-block btn-dark"
+            (click)="requestByNotVerified(employee.emailId)"
+            style="margin-left: 10px"
+          >
+            Request for Admin Approval
+          </button>
+        </div>
+        <!-- Request for Admin approval btn ends-->
+
+        <!-- Create User Profile btn -->
+        <div class="col-lg-4" style="margin: auto">
+          <button
+            class="btn btn-block btn-warning"
+            (click)="this.initializeUserProfile()"
+            (click)="
+              createUserProfile(userProfile, employee.verificationStatus)
+            "
+          >
+            Create User Profile
+          </button>
+        </div>
+        <!-- Create User Profile btn ends-->
+
+        <!-- Resend Email btn -->
+        <div
+          class="col-lg-4"
+          *ngIf="
+            employee.verificationStatus === 'WCustomer' ||
+            employee.verificationStatus === 'Verified'
+          "
+        >
+          <button
+            class="btn btn-block btn-dark"
+            (click)="sendVerificationMail(employee.emailId)"
+            style="margin-left: 10px"
+          >
+            Resend Email
+          </button>
+        </div>
+        <!-- Resend Email btn ends-->
+
+        <!-- Request for Admin approval again btn -->
+        <div class="col-lg-12" *ngIf="employee.verificationStatus === 'RAdmin'">
+          <button
+            class="btn btn-block btn-dark"
+            (click)="requestAgain()"
+            style="margin-left: 10px"
+          >
+            Request for Admin approval again
+          </button>
+        </div>
+        <!-- Request for Admin approval again btn ends-->
+
+        <!-- row ends -->
+      </div>
+      <!-- col-lg-12 ends -->
+    </div>
+    <!-- modal body ends -->
+  </div>
+</ng-template>
+
+<!-- User Profile Pop Up Starting -->
+
+<ng-template #usercontent let-modal>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <form>
+    <div class="customer-form">
+      <h1>Create User Profile</h1>
+      <div class="form-data customer-left">
+        <div class="form-input" [formGroup]="intplusFloatGroup">
+          <label for="name">Username</label>
+          <input
+            [class.is-invalid]="intPlusFloat.invalid && intPlusFloat.touched"
+            type="text"
+            class="form-control"
+            [(ngModel)]="user.username"
+            name="username"
+            formControlName="intplusFloatControl"
+            readonly
+          />
+        </div>
+
+        <div class="form-input" [formGroup]="userEmail">
+          <label for="name">Login ID</label>
+          <input
+            [class.is-invalid]="primEmail.invalid && primEmail.touched"
+            class="form-control"
+            type="email"
+            id="loginId"
+            [(ngModel)]="user.loginId"
+            name="loginId"
+            formControlName="primaryEmail"
+            readonly
+          />
+        </div>
+
+        <div class="form-input small-gap">
+          <label for="name">Password</label>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            required
+            [(ngModel)]="user.password"
+            name="password"
+          />
+        </div>
+
+        <div class="vertical-gap"></div>
+        <div class="vertical-gap"></div>
+
+        <div class="form-input">
+          <label for="accessRights">Access Rights</label>
+          <input
+            type="text"
+            [(ngModel)]="user.accessRights"
+            name="accessRights"
+            id="accessRights"
+            class="form-control"
+            readonly
+          />
+        </div>
+
+        <div class="vertical-gap"></div>
+        <div class="vertical-gap"></div>
+
+        <div class="form-input">
+          <ng-container *ngIf="showCustomer">
+            <label for="customerName">Company Name</label>
+            <input
+              type="text"
+              placeholder="Company Name"
+              name="customerName"
+              id="customerName"
+              [(ngModel)]="user.customerName"
+              class="form-control"
+              readonly
+            />
+          </ng-container>
+        </div>
+
+        <div class="vertical-gap"></div>
+        <div class="vertical-gap"></div>
+
+        <div class="form-input">
+          <mat-form-field appearance="fill" class="form-type">
+            <mat-label>Trim Types</mat-label>
+            <mat-select
+              [(ngModel)]="user.trimTypes"
+              name="trimtypes"
+              id="trimTypes"
+              multiple
+            >
+              <mat-option value="Print">Print</mat-option>
+              <mat-option value="Tag">Tag</mat-option>
+              <mat-option value="Woven">Woven</mat-option>
+              <mat-option value="Sticker">Sticker</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="customer-btn-box">
+        <button
+          ngbAutofocus
+          type="submit"
+          class="btn btn-success"
+          (click)="onUserSubmit()"
+        >
+          Submit
+        </button>
+      </div>
+      <br />
+    </div>
+  </form>
+</ng-template>
+
+<!-- User Profile Pop Up Ending -->
+
+<!-- Update -->
+<ng-template #updateModal let-modal>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <form class="customer-modal">
+    <h1>Update Customer</h1>
+
+    <div class="row">
+      <!-- TODO: new task -->
+      <div class="col-lg-4">
+        <div class="form-input">
+          <label for="name"
+            >Company Name<span class="text-danger">*</span>
+          </label>
+          <select
+            [(ngModel)]="employee.customername"
+            class="form-control control-width"
+            name="customername"
+            id="customername"
+          >
+            <option
+              *ngFor="let i = index; let company1; of: companies"
+              value="{{ company1.companyName }}"
+            >
+              {{ company1.companyName }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <label for="name">Territory<span class="text-danger">*</span> </label>
+        <select
+          [(ngModel)]="employee.territory"
+          class="form-control control-width"
+          name="territory"
+          id="territory"
+        >
+          <option
+            *ngFor="let i = index; let territory; of: territories"
+            value="{{ territory.id }}"
+          >
+            {{ territory.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-lg-4" *ngIf="accessType === 'Administrator'">
+        <label for="name">Executive <span class="text-danger">*</span> </label>
+        <select
+          [(ngModel)]="employee.executiveCode"
+          class="form-control control-width"
+          name="executiveCode"
+          id="executiveCode"
+          (change)="checkEmployeeName()"
+        >
+          <option
+            *ngFor="let memployee of mexecutives1 | async"
+            value="{{ memployee.code }}"
+          >
+            {{ memployee.name }}-({{ memployee.code }})
+          </option>
+        </select>
+      </div>
+
+      <div class="col-lg-4" *ngIf="accessType === 'Sales Team'">
+        <label for="name">Executive <span class="text-danger">*</span> </label>
+        <input
+          type="text"
+          id="execname"
+          name="execname"
+          class="form-control"
+          value="{{ this.executiveCode }}"
+          [disabled]="true"
+        />
+      </div>
+    </div>
+
+    <div class="row mt-1">
+      <div class="col-lg-4">
+        <div [formGroup]="intplusFloatGroup2">
+          <label for="name"
+            >Merchandiser<span class="text-danger"></span>
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="employee.merchandiser"
+            name="customername"
+            formControlName="intplusFloatControl2"
+          />
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="form-input">
+          <label for="name">Customer Name </label>
+          <input
+            type="text"
+            id="lastName"
+            [(ngModel)]="employee.companyname"
+            name="companyname"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      
+
+      <div class="col-lg-4">
+        <div [formGroup]="intplusFloatGroup1">
+          <label for="name">GSTIN Number </label>
+          <input
+            [class.is-invalid]="intPlusFloat1.invalid && intPlusFloat1.touched"
+            type="text"
+            class="form-control"
+            [(ngModel)]="employee.gstin"
+            name="gstin"
+            formControlName="intplusFloatControl1"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-1">
+      <div class="col-lg-4">
+        <div class="form-input" [formGroup]="userEmail">
+          <label for="name">Email Id <span class="text-danger">*</span> </label>
+          <input
+            [class.is-invalid]="primEmail.invalid && primEmail.touched"
+            type="email"
+            class="form-control"
+            [(ngModel)]="employee.emailId"
+            (change)="checkExistingEmail()"
+            name="emailId"
+            formControlName="primaryEmail"
+          />
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="form-input" [formGroup]="userEmail1">
+          <label for="name">Alternate Email Id</label>
+          <input
+            [class.is-invalid]="primEmail1.invalid && primEmail1.touched"
+            type="text"
+            class="form-control"
+            [(ngModel)]="employee.alternateemailId"
+            name="alternateemailId"
+            formControlName="primaryEmail1"
+          />
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="form-input">
+          <label for="name">Website</label>
+          <input
+            type="text"
+            id="website"
+            [(ngModel)]="employee.website"
+            name="website"
+            class="form-control"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-1">
+      <div class="col-lg-4">
+        <div class="form-input" [formGroup]="onlyIntGroup3">
+          <label for="name">Phone <span class="text-danger">*</span> </label>
+          <input
+            [class.is-invalid]="onlyInt3.invalid && onlyInt3.touched"
+            class="form-control"
+            type="text"
+            [(ngModel)]="employee.phone"
+            name="phone"
+            formControlName="onlyIntControl3"
+          />
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="form-input">
+          <label for="name">Street1 <span class="text-danger">*</span> </label>
+          <input
+            type="text"
+            id="website"
+            [(ngModel)]="employee.street1"
+            name="street1"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="form-input">
+          <label for="name">Street2 <span class="text-danger">*</span> </label>
+          <input
+            type="text"
+            id="website"
+            [(ngModel)]="employee.street2"
+            name="street2"
+            class="form-control"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-1">
+      <div class="col-lg-4">
+        <div class="form-input">
+          <label for="name">City <span class="text-danger">*</span> </label>
+          <input
+            type="text"
+            id="website"
+            [(ngModel)]="employee.city"
+            name="city"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="form-input" [formGroup]="onlyIntGroup2">
+          <label for="name">Zip Code <span class="text-danger">*</span> </label>
+          <input
+            [class.is-invalid]="onlyInt2.invalid && onlyInt2.touched"
+            type="text"
+            class="form-control"
+            [(ngModel)]="employee.zipcode"
+            name="zipcode"
+            formControlName="onlyIntControl2"
+          />
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="form-input">
+          <label for="name">State <span class="text-danger">*</span> </label>
+          <input
+            type="text"
+            id="website"
+            [(ngModel)]="employee.state"
+            name="state"
+            class="form-control"
+          /> 
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="row mt-1">
+      <div class="col-lg-4">
+        <label for="name">Country <span class="text-danger">*</span> </label>
+        <input
+          type="text"
+          id="website"
+          [(ngModel)]="employee.country"
+          name="country"
+          class="form-control"
+        />
+      </div>
+      <div class="col-lg-4">
+        <label for="customerCategory" style="font-weight: 500; color: #333"
+          >Customer Category *
+        </label>
+        <select
+          [(ngModel)]="employee.customerCategory"
+          class="form-control"
+          name="customerCategory"
+          id="customerCategory"
+         
+        >
+          <option value="G">Gold</option>
+          <option value="S"> Silver</option>
+          <option value="B">Bronze</option>
+          
+        </select>
+      </div>
+
+      <div class="col-lg-4">
+        <label for="name"
+          >Payment Terms <span class="text-danger">*</span>
+        </label>
+        <select
+          [(ngModel)]="employee.paymentTerms"
+          class="form-control control-width"
+          name="paymentTerms"
+          id="paymentTerms"
+        >
+          <option value="7 Days">7 Days</option>
+          <option value="10 Days">10 Days</option>
+          <option value="14 Days">14 Days</option>
+          <option value="21 Days">21 Days</option>
+          <option value="30 Days">30 Days</option>
+          <option value="45 Days">45 Days</option>
+          <option value="60 Days">60 Days</option>
+          <option value="90 Days">90 Days</option>
+          <option value="Advance Payment">Advance Payment</option>
+          <option value="Cash on Delivery">Cash on Delivery</option>
+        </select>
+      </div>
+
+      <div class="col-lg-4">
+        <label for="name"
+          >Shipment Terms <span class="text-danger">*</span>
+        </label>
+        <select
+          [(ngModel)]="employee.shipmentTerms"
+          class="form-control control-width"
+          name="paymentTerms"
+          id="paymentTerms"
+        >
+          <option value="Cost and Freight">Cost and Freight</option>
+          <option value="Cost Insurance and Freight">
+            Cost Insurance and Freight
+          </option>
+          <option value="Carriage and Insurance Paid">
+            Carriage and Insurance Paid
+          </option>
+          <option value="Carriage Paid To">Carriage Paid To</option>
+          <option value="Delivered at Frontier">Delivered at Frontier</option>
+          <option value="Delivered Duty Paid">Delivered Duty Paid</option>
+          <option value="Delivered Duty Unpaid">Delivered Duty Unpaid</option>
+          <option value="Delivery">Delivery</option>
+          <option value="Delivered Ex Quay">Delivered Ex Quay</option>
+          <option value="Delivered Ex Ship">Delivered Ex Ship</option>
+          <option value="Ex Warehouse">Ex Warehouse</option>
+          <option value="Free Alongside Ship">Free Alongside Ship</option>
+          <option value="Free Carrier">Free Carrier</option>
+          <option value="Free On Board">Free On Board</option>
+          <option value="Pickup at Location">Pickup at Location</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row mt-1">
+      <div class="col-lg-4">
+        <section class="example-section">
+          <mat-checkbox
+            class="mat-checkbox-label"
+            name="customerEmail"
+            value="customerEmail"
+            [(ngModel)]="employee.customerEmail"
+            >Email Notification Subscription</mat-checkbox
+          >
+        </section>
+      </div>
+    </div>
+
+    <br /><br />
+
+    <div class="customer-btn-box">
+      <button
+        ngbAutofocus
+        type="submit"
+        class="btn btn-success"
+        (click)="post()"
+      >
+        Save
+      </button>
+      &nbsp;&nbsp;
+      <button
+        class="btn btn-info"
+        (click)="createUserProfile(usercontent, employee.verificationStatus)"
+      >
+        Create User Profile
+      </button>
+      <button
+        *ngIf="employee.verificationStatus === 'RAdmin'"
+        class="btn btn-dark"
+        (click)="requestAgain()"
+        style="margin-left: 10px"
+      >
+        Request for Admin approval again
+      </button>
+      <button
+        *ngIf="employee.verificationStatus === 'Not Verified'"
+        class="btn btn-dark"
+        (click)="requestByNotVerified(employee.emailId)"
+        style="margin-left: 10px"
+      >
+        Request for Admin approval
+      </button>
+      <button
+        *ngIf="employee.verificationStatus === 'WCustomer'"
+        class="btn btn-dark"
+        (click)="sendVerificationMail(employee.emailId)"
+        style="margin-left: 10px"
+      >
+        Resend Email
+      </button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- <form>
+    <div class="customer-form">
+      <h1>Do you want to Create a User Profile</h1>
+      <div class="form-data customer-left"></div>
+      <div class="customer-btn-box">
+        <button
+          class="btn btn-success"
+          id="closeModal"
+          (click)="modal.dismiss('Cross click')"
+          (click)="bigOpen(usercontent)"
+          (click)="useAdmin()"
+          (click)="testFunction()"
+        >
+          Yes
+        </button>
+        &nbsp;&nbsp;
+        <button class="btn btn-success" id="closeModal" (click)="useNo()">
+          No
+        </button>
+      </div>
+      <br />
+    </div>
+  </form> -->

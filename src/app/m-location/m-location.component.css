@@ -1,0 +1,68 @@
+.form-control
+{
+  margin-bottom: 30px !important;
+}
+.use-down{
+  margin-bottom: 5px;
+}
+.main-table-box{
+  max-width: 500px;
+  min-height: 100px;
+  margin: 0 auto 0 auto;
+  padding: 20px 5px 0px 10px;
+  font-size: large;
+}
+.clear-button{
+  margin: 3px 15px 0px 0px;
+}
+.add-icon{
+  height: 22px;
+  width: 22px;
+  justify-content: center;
+}
+.delete-icon{
+  height: 22px;
+  width: 22px;
+}
+
+h1{
+  color: rgb(66, 187, 66);
+  text-align: center;
+  font-weight: 500;
+  display: block;
+  margin: 0;
+}
+
+.top-bar{
+  display: inline-block;
+}
+.back-img{
+  width: 25px;
+  height: 25px;
+  margin-left: 18px;
+  cursor: pointer;
+}
+.open-modal{
+  margin: 20px auto 10px auto;
+  margin-left: 80%;
+}
+
+.customer-btn-box{
+    display: block;
+    text-align: center;
+    margin-bottom: 5px;
+
+}
+.panel-primary
+{
+  margin: 1.5%;
+}
+
+img{
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+}
+.location-list th{
+  font-weight: 550;
+}

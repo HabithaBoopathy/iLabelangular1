@@ -1,0 +1,41 @@
+<div class="bg-main">
+  <div class="logo-box">
+    <div class="sainmarks-logo">
+      <img src="./../../assets/newlogo-2.png" alt="Logo" />
+    </div>
+    <form>
+      <div class="form-group clearfix">
+        <label for="loginId">Login ID</label>
+        <input
+          type="text"
+          class="form-control"
+          name="loginId"
+          id="loginId"
+          [(ngModel)]="loginId"
+          (keyup.enter)="handleLogin()"
+        />
+      </div>
+      <div class="form-group clearfix">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          name="password"
+          id="password"
+          [(ngModel)]="password"
+          class="form-control"
+          (keyup.enter)="handleLogin()"
+        />
+      </div>
+      <div class="submit-button">
+        <button type="button" class="btn btn-primary" (click)="handleLogin()">
+          Submit
+        </button>
+      </div>
+    </form>
+    <div class="forgot">
+      <a class="forgot" routerLink="/header/forgot" routerLinkActive="active"
+        >Forgot Email or Password</a
+      >
+    </div>
+  </div>
+</div>

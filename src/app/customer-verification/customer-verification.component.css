@@ -1,0 +1,26 @@
+.verify img
+{
+  width: 40px;
+  margin-top: 20px;
+}
+.verify
+{
+  text-align: center;
+  padding-top: 20%;
+  font-weight: bold;
+  font-size: 2vw;
+}
+.verify-box
+{
+  padding: 40px;
+  margin-left: 20%;
+  margin-right: 20%;
+  border-radius: 15px;
+  border: solid 2px;
+  border-color: rgb(48, 175, 26);
+}
+.bg
+{
+  background-color: rgb(255, 255, 255);
+  height: 100vh;
+}

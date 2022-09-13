@@ -1,0 +1,71 @@
+.logo-box
+{
+  /* background-color:#f5f5f5; */
+  max-width: fit-content;
+  padding: 30px;
+  display: block;
+  margin: 150px auto;
+  border-radius: 15px;
+  -webkit-box-shadow: -4px -4px 17px -5px rgba(0,0,0,0.54);
+  -moz-box-shadow: -4px -4px 17px -5px rgba(0,0,0,0.54);
+  box-shadow: -4px -4px 17px -5px rgba(0,0,0,0.54);
+}
+.sainmarks-logo img
+{
+  max-height: 120px;
+  text-align: center;
+}
+.sainmarks-logo
+{
+  text-align: center;
+  margin-bottom: 10%;
+}
+.submit-button
+{
+  display: block;
+  text-align: center;
+  margin-bottom: 40px;
+}
+.form-group
+{
+  /* background-color: #095C3B; */
+  padding: 3%;
+  font-family: sans-serif;
+}
+
+.form-group label
+{
+  display: block;
+  text-align: center;
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+button{
+  margin-top: 7%;
+  padding: 10px 25px;
+  font-weight: bold;
+  color: #095C3B;
+  cursor: pointer;
+  background-color: black;
+  border: none;
+  color: white;
+  border-radius: 12px;
+  text-transform: uppercase;
+  font-size: 130%;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+.forgot{
+  margin-top: 5%;
+  text-align: center;
+  color: #095C3B;
+  font-size: 20px;
+  font-weight: bold;
+  text-decoration: none;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+

@@ -1,0 +1,86 @@
+.containerMainScreen{
+  margin-top: 15px;
+}
+
+.createNewSampleBtn{
+  display: block;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.activeOrderHeading{
+  font-size: 20px;
+  font-weight: 500;
+  color: #212121;
+  font: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.archiveOrderHeading{
+  font-size: 20px;
+  font-weight: 500;
+  color: #212121;
+  font: Roboto, "Helvetica Neue", sans-serif;
+}
+
+th{
+  font-weight: 550;
+}
+
+.edit-img {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.delete-img {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.active{
+  background-color: #2199E8;
+  color: white!important;
+}
+
+.pageNumber{
+  padding: 5px 10px 5px 10px;
+  color: #333
+}
+
+a{
+  cursor: pointer;
+}
+
+.paginationBtn{
+  background-color: #f1f1f1;
+  margin-right: 5px;
+  color: #333;
+}
+
+.disabled {
+  pointer-events:none;
+  opacity:0.6;
+}
+
+.modal-heading{
+  text-align: center;
+  padding:10px;
+  padding-bottom: 0px;
+}
+.main-table-box {
+  max-width: 500px;
+  min-height: 80px;
+  margin: 0 auto 0 auto;
+  padding: 20px 5px 0px 10px;
+  font-size: large;
+}
+.center-btn {
+  text-align: center;
+}
+.chromeHighlight{
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+  /* padding: 3px 5px 3px 3px; */
+  /* margin: 5px 1px 3px 0px; */
+  border: 1px solid rgba(81, 203, 238, 1);
+}

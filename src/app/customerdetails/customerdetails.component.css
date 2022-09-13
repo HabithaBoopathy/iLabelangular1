@@ -1,0 +1,35 @@
+body{
+  height: 100vh;
+}
+
+.top-bar{
+    display: flex;
+    justify-content: space-between;
+    background-color: aliceblue;
+    padding: 1%;
+    align-items: center;
+    font-size: 20px;
+    
+    margin: auto;
+}
+img{
+    height: 15px;
+    width: 20px;
+}
+.normalise{
+    text-decoration: none;
+    color: black;
+}
+.new
+{
+  margin-left: 2%;
+  flex: 1;
+}
+.sort
+{
+  flex: 8;
+}
+.search
+{
+  flex: 3;
+}

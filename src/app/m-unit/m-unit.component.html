@@ -1,0 +1,170 @@
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+
+<div class="top-bar">
+  <img src="./../../assets/arrow-left-solid.svg" alt="Back-button" class="back-img" (click)="createRoute()">
+</div>
+
+<div class="top-bar open-modal">
+    <button class="btn btn-primary"
+    (click)="open(content)" (click)="resetForm()"> Create Product Unit </button>
+</div>
+
+    <ng-template #content let-modal>
+      <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <h1>
+        Product Unit
+      </h1>
+          <form>
+      <div class="main-table-box">
+        <table style="width: 100%">
+            <tr>
+                 <td> <label for=""> Product Unit </label></td>
+                 <td> <input type="text" [(ngModel)]="munit.productunit" (change)="getCurrentUnit()" name="productunit"></td>
+               <td>
+                <label for="printed">
+                    <input type="checkbox" id="printed" [(ngModel)]="munit.printed" name="printed" value="printed"> Printed
+                </label>
+               </td>
+               <td>
+                <label for="sticker">
+                    <input type="checkbox" id="sticker" [(ngModel)]="munit.sticker" name="sticker" value="sticker"> Sticker
+                </label>
+                </td>
+            </tr>
+
+            <div class="use-down"></div>
+
+            <tr>
+                <td></td>
+                <td>
+                    <button type="reset" class="btn btn-danger clear-button"> Clear </button>
+                    <button type="submit" class="btn btn-success" (click)="checkUnit()" > Save </button>
+                </td>
+                <td>
+                    <label for="tag">
+                        <input type="checkbox" id="tag" [(ngModel)]="munit.tag" name="tag" value="taged"> Tag
+                    </label>
+                </td>
+                <td>
+                    <label for="woven">
+                        <input type="checkbox" id="woven" [(ngModel)]="munit.woven" name="woven" value="woven"> Woven
+                    </label>
+                </td>
+            </tr>
+         </table>
+      </div>
+      </form>
+    </ng-template>
+
+
+
+
+
+
+
+
+  <!-- Product Unit List -->
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h2>Product Unit List</h2>
+      </div>
+    <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" placeholder="Search">
+      <div class="panel-body">
+        <table class="table table-striped unit-list">
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Units</th>
+              <th>Printed</th>
+              <th>Sticker</th>
+              <th>Tag</th>
+              <th>Woven</th>
+              <th>Actions</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let i = index; let munit of munits | async | filter:searchText">
+              <td>{{i+1}}</td>
+              <td>{{munit.productunit}}</td>
+              <td>{{munit.printed}}</td>
+              <td>{{munit.sticker}}</td>
+              <td>{{munit.tag}}</td>
+              <td>{{munit.woven}}</td>
+              <td>
+                <img src="./../../assets/edit.svg" (click)="updateMunit(munit.id)" (click)="bring(updateModal)" alt="Edit-icon">
+                <img src="./../../assets/Delete.svg" (click)="deleteMunit(munit.id)" style="margin-left: 10px" alt="Delete-icon">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+
+
+
+
+
+
+    <!-- Update -->
+    <ng-template #updateModal let-modal>
+    <div class="modal-header">
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+
+    <h1>
+      Product Unit
+    </h1>
+        <form>
+    <div class="main-table-box">
+      <table style="width: 100%">
+          <tr>
+               <td> <label for=""> Product Unit </label></td>
+               <td> <input type="text" [(ngModel)]="munit.productunit" name="productunit"></td>
+             <td>
+              <label for="printed">
+                  <input type="checkbox" id="printed" [(ngModel)]="munit.printed" name="printed" value="printed"> Printed
+              </label>
+             </td>
+             <td>
+              <label for="sticker">
+                  <input type="checkbox" id="sticker" [(ngModel)]="munit.sticker" name="sticker"> Sticker
+              </label>
+              </td>
+          </tr>
+
+        <div class="use-down"></div>
+
+          <tr>
+              <td></td>
+              <td>
+                <button type="reset" class="btn btn-danger clear-button"> Clear </button>
+                <button type="submit" class="btn btn-success" (click)="checkUnitUpdate()"  > Save </button>
+            </td>
+              <td>
+                  <label for="tag">
+                      <input type="checkbox" id="tag" [(ngModel)]="munit.tag" name="tag"> Tag
+                  </label>
+              </td>
+              <td>
+                  <label for="woven">
+                      <input type="checkbox" id="woven" [(ngModel)]="munit.woven" name="woven"> Woven
+                  </label>
+              </td>
+          </tr>
+       </table>
+    </div>
+    </form>
+    </ng-template>
+
+    <router-outlet></router-outlet>

@@ -1,0 +1,21 @@
+label {
+    display: block;
+    font: 1rem 'Fira Sans', sans-serif;
+}
+
+input,
+label {
+    margin: .4rem 0;
+}
+.printed-color {
+    background-color: rgb(191, 130, 169, 0.6);
+  }
+  .tag-color {
+    background-color: rgb(218, 74, 32, 0.6);
+  }
+  .sticker-color {
+    background-color: rgb(54, 162, 235, 0.6);
+  }
+  .woven-color {
+    background-color: rgb(68, 193, 214, 0.6);
+  }

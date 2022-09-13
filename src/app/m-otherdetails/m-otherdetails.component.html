@@ -1,0 +1,210 @@
+   <head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+  </head>
+
+  <div class="top-bar">
+    <img src="./../../assets/arrow-left-solid.svg" alt="Back-button" class="back-img" (click)="createRoute()">
+  </div>
+
+  <div class="top-bar open-modal">
+    <button class="btn btn-primary"
+    (click)="open(content)" (click)="resetForm()"> Create Other Details </button>
+  </div>
+
+   <ng-template #content let-modal>
+    <div class="modal-header">
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+     <form>
+
+  <div class="customer-form">
+  <h1>Create Other Details</h1>
+  <div class="form-data customer-left">
+
+
+    <div class="main-table-box">
+      <table style="width: 100%">
+          <tr>
+               <td> <label> Details </label></td>
+               <td> <input type="text" name="name" id="name" (change)=  "getOtherDetails()" [(ngModel)]="otherdetails.name"></td>
+             <td>
+              <label for="printed">
+                  <input type="checkbox" name="sample1" id="printed" value="Printed" [(ngModel)]="otherdetails.printed"> Printed
+              </label>
+             </td>
+             <td>
+              <label for="sticker">
+                <input type="checkbox" name="sample2" id="sticker" value="Sticker" [(ngModel)]="otherdetails.sticker"> Sticker
+              </label>
+              </td>
+          </tr>
+
+          <tr>
+
+            <td>
+
+          </td>
+          <td><div class="dropdown-input">
+            <mat-form-field appearance="fill">
+              <mat-label for="other details">Other Details</mat-label>
+              <mat-select [(ngModel)]="otherdetails.otherdetails" name="otherdetails" id="otherdetails"  class="next-input-box">
+                <mat-option value="Quality">Quality</mat-option>
+                <mat-option value="Folding">Folding</mat-option>
+                <mat-option value="Finishing">Finishing</mat-option>
+                <mat-option value="Additional Work">Additional Work</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div></td>
+
+              <td>
+                  <label for="tag">
+                    <input type="checkbox" name="sample3" id="tag" value="Tag" [(ngModel)]="otherdetails.tag"> Tag
+                  </label>
+              </td>
+              <td>
+                  <label for="woven">
+                    <input type="checkbox" name="sample4" id="woven" value="Woven" [(ngModel)]="otherdetails.woven"> Woven
+                  </label>
+              </td>
+          </tr>
+       </table>
+
+       <div class="push-right">
+        <button type="reset" class="btn btn-danger"> Clear </button>
+        &nbsp; &nbsp;<button class="btn btn-success" type="submit" (click)="checkOtherdetails()"> Save </button>
+       </div>
+
+
+    </div>
+  </div>
+  <br>
+  </div>
+  </form>
+  </ng-template>
+
+
+
+
+
+
+  <div class="panel panel-primary">
+  <div class="panel-heading">
+    <h2>Other Details List</h2>
+  </div>
+  <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" placeholder="Search">
+  <div class="panel-body">
+    <table class="table table-striped detail-list">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Name</th>
+          <th>Other Details</th>
+          <th>Printed</th>
+          <th>Sticker</th>
+          <th>Tag</th>
+          <th>Woven</th>
+          <th>Actions</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let i = index; let motherdetail of motherdetailsObs | async | filter:searchText">
+          <td>{{i+1}}</td>
+          <td>{{motherdetail.name}}</td>
+          <td>{{motherdetail.otherdetails}}</td>
+          <td>{{motherdetail.printed}}</td>
+          <td>{{motherdetail.sticker}}</td>
+          <td>{{motherdetail.tag}}</td>
+          <td>{{motherdetail.woven}}</td>
+          <td>
+            <img src="./../../assets/edit.svg" (click)="updateMotherDetails(motherdetail.id)" (click)="bring(updateModal)" alt="Edit-icon">
+            <img src="./../../assets/Delete.svg" (click)="deleteMotherdetails(motherdetail.id)" style="margin-left: 10px" alt="Delete-icon">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+
+
+
+  <!-- Update -->
+  <ng-template #updateModal let-modal>
+  <div class="modal-header">
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+
+  <form>
+
+    <div class="customer-form">
+    <h1>Create Other Details</h1>
+    <div class="form-data customer-left">
+
+
+      <div class="main-table-box">
+        <table style="width: 100%">
+            <tr>
+                 <td> <label> Details </label></td>
+                 <td> <input type="text" name="name" id="name" [(ngModel)]="otherdetails.name"></td>
+               <td>
+                <label for="printed">
+                    <input type="checkbox" name="sample1" id="printed" value="Printed" [(ngModel)]="otherdetails.printed"> Printed
+                </label>
+               </td>
+               <td>
+                <label for="sticker">
+                  <input type="checkbox" name="sample2" id="sticker" value="Sticker" [(ngModel)]="otherdetails.sticker"> Sticker
+                </label>
+                </td>
+            </tr>
+
+            <tr>
+
+              <td>
+
+            </td>
+            <td><div class="dropdown-input">
+              <mat-form-field appearance="fill">
+                <mat-label for="other details">Other Details</mat-label>
+                <mat-select [(ngModel)]="otherdetails.otherdetails" name="otherdetails" id="otherdetails"  class="next-input-box">
+                  <mat-option value="Quality">Quality</mat-option>
+                  <mat-option value="Folding">Folding</mat-option>
+                  <mat-option value="Finishing">Finishing</mat-option>
+                  <mat-option value="Additional Work">Additional Work</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div></td>
+
+                <td>
+                    <label for="tag">
+                      <input type="checkbox" name="sample3" id="tag" value="Tag" [(ngModel)]="otherdetails.tag"> Tag
+                    </label>
+                </td>
+                <td>
+                    <label for="woven">
+                      <input type="checkbox" name="sample4" id="woven" value="Woven" [(ngModel)]="otherdetails.woven"> Woven
+                    </label>
+                </td>
+            </tr>
+         </table>
+
+         <div class="push-right">
+          <button type="reset" class="btn btn-danger"> Clear </button>
+          &nbsp; &nbsp;<button class="btn btn-success" type="submit" (click)="checkOtherDetailsUpdate()"> Save </button>
+         </div>
+
+
+      </div>
+    </div>
+    <br>
+    </div>
+    </form>
+  </ng-template>
+
+  <router-outlet></router-outlet>

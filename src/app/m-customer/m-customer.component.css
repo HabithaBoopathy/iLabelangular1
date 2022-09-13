@@ -1,0 +1,137 @@
+h1 {
+  color: rgb(66, 187, 66);
+  text-align: center;
+  font-weight: 550;
+  display: block;
+}
+.full-line {
+  text-align: right;
+}
+.back-img {
+  width: 25px;
+  height: 25px;
+  margin-left: 18px;
+  cursor: pointer;
+}
+.sm-gap {
+  margin-top: 40px;
+}
+.open-modal {
+  margin: 20px auto 10px auto;
+  margin-left: 80%;
+}
+.space {
+  margin-top: 20px !important;
+}
+img {
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+}
+.vertical-gap {
+  margin-top: 5px;
+}
+.mid {
+  text-align: center;
+}
+.form-control {
+  height: 35px;
+  display: inline-block;
+}
+
+.customer-modal label {
+  width: 150px;
+}
+
+.customer-modal {
+  padding: 20px;
+}
+
+.mat-checkbox-label {
+  line-height: 40px;
+}
+
+label {
+  display: inline-block;
+}
+
+.customer-btn-box {
+  text-align: center;
+}
+
+.customer-form label {
+  width: 150px;
+}
+
+.customer-form {
+  padding: 30px;
+}
+
+.error-field {
+  background-color: rgb(240, 190, 190) !important;
+}
+
+.normal-field {
+  text-decoration-color: black !important;
+}
+
+#createCustomerHeader {
+  background-color: #333;
+  color: white;
+}
+
+#createCustomerHeader h3 {
+  font-weight: 500;
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 0px !important;
+  /* margin: auto; */
+}
+
+#createCustomerHeader #close-createCustomer {
+  margin-left: 0px !important;
+  color: white;
+}
+
+#userProfilePromptHeader {
+  background-color: #333;
+  color: white;
+}
+
+#userProfilePromptHeader h3 {
+  font-weight: 500;
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 0px !important;
+  /* margin: auto; */
+}
+
+#userProfilePromptHeader #close-userProfilePrompt {
+  margin-left: 0px !important;
+  color: white;
+}
+
+#userProfileHeader {
+  background-color: #333;
+  color: white;
+}
+
+#userProfileHeader h3 {
+  font-weight: 500;
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 0px !important;
+  /* margin: auto; */
+}
+
+#userProfileHeader #close-userProfile {
+  margin-left: 0px !important;
+  color: white;
+}
+.fa {
+  font-family: 'Lato', 'Font Awesome 5 Free', 'Font Awesome 5 Brands';
+   font-weight: 900;
+ padding: 1rem 2rem;
+ color: #3a9c7d;
+
+}

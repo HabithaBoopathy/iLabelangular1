@@ -1,0 +1,179 @@
+<div class="col-lg-12" style="padding: 15px; margin-top: 5px">
+  <div class="panel panel-primary">
+    <!-- Header with Title and Create New Button -->
+    <div class="panel-heading">
+      <h2>
+        Territory List
+        <div style="float: right">
+          <button
+            (click)="open(content)"
+            (click)="resetObj()"
+            class="btn btn-primary"
+          >
+            Create New Territory
+          </button>
+        </div>
+      </h2>
+    </div>
+    <!-- panel heading ends -->
+
+    <!-- Search Box -->
+    <input
+      class="form-control test-check"
+      type="text"
+      name="search"
+      autocomplete="off"
+      placeholder="Search"
+      [(ngModel)]="searchText"
+    />
+    <br />
+
+    <div class="panel-body">
+      <table class="table table-striped executive-list">
+        <thead>
+          <tr style="font-weight: 500">
+            <th style="width: 10%">S.No</th>
+            <th style="width: 70%">Name</th>
+            <th style="width: 10%">Edit</th>
+            <th style="width: 10%">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="
+              let i = index;
+              let territory;
+              of: territories | filter: searchText
+            "
+          >
+            <td>{{ i + 1 }}</td>
+            <td>{{ territory.name }}</td>
+            <td>
+              <img
+                src="./../../assets/edit.svg"
+                (click)="open(updateModal)"
+                (click)="initializeEdit(territory.id)"
+                alt="Update Icon"
+              />
+            </td>
+            <td>
+              <button
+                *ngIf="territory.isActive == true"
+                class="btn btn-sm btn-outline-success"
+                (click)="updateActivationStatus(i)"
+              >
+                Active
+              </button>
+              <button
+                *ngIf="territory.isActive == false"
+                class="btn btn-sm btn-outline-danger"
+                (click)="updateActivationStatus(i)"
+              >
+                Deactive
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- panel body ends -->
+  </div>
+  <!-- panel ends -->
+</div>
+<!-- col-lg-12 ends -->
+
+<ng-template #content let-modal>
+  <div class="modal-header" id="contentHeader">
+    <h3 class="modal-title" id="modal-basic-title">Create New Territory</h3>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      id="close-content"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="territoryname" style="font-weight: 500">Territory Name</label>
+      <div class="input-group">
+        <input
+          [(ngModel)]="this.territory.name"
+          name="territoryname"
+          id="territoryname"
+          class="form-control"
+        />
+      </div>
+    </div>
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>Executives List</mat-label>
+      <mat-select multiple [(ngModel)]="this.territory.executiveIds">
+        <mat-option
+          *ngFor="let mExecutive of mExecutives"
+          [value]="mExecutive.id"
+        >
+          {{ mExecutive.name }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+    <div class="form-group">
+      <button
+        type="button"
+        class="btn btn-block btn-primary"
+        (click)="onSave()"
+      >
+        Save
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #updateModal let-modal>
+  <div class="modal-header" id="updateModalHeader">
+    <h3 class="modal-title" id="modal-basic-title">Update Territory</h3>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+      id="close-update"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="territoryname" style="font-weight: 500">Territory Name</label>
+      <div class="input-group">
+        <input
+          [(ngModel)]="this.territory.name"
+          name="territoryname"
+          id="territoryname"
+          class="form-control"
+        />
+      </div>
+    </div>
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>Executives List</mat-label>
+      <mat-select multiple [(ngModel)]="this.territory.executiveIds">
+        <mat-option
+          *ngFor="let mExecutive of mExecutives; let i = index"
+          [value]="mExecutive.id"
+        >
+          {{ mExecutive.name }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+    <div class="form-group">
+      <button
+        type="button"
+        class="btn btn-block btn-primary"
+        (click)="onUpdate()"
+      >
+        Update
+      </button>
+    </div>
+  </div>
+</ng-template>

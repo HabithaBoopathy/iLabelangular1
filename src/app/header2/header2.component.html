@@ -1,0 +1,371 @@
+<head>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap"
+    rel="stylesheet"
+  />
+</head>
+
+<mat-toolbar>
+  <mat-toolbar-row>
+    <button mat-icon-button>
+      <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
+    </button>
+    <span><img src="./../../assets/newlogo-2.png" class="logo" /></span>
+
+    <div class="top-bar">
+      <span class="null-top"></span>
+
+      <span class="name-top">
+        <a mat-button class="adm-font">
+          {{ username }}
+        </a></span
+      >
+
+      <ng-container *ngIf="showAdmin">
+        <span class="admin-top">
+          <a mat-button [routerLink]="'/home/admin'" class="adm-font">
+            <!-- <img src="./../../assets/admin.svg" alt="Admin" /> Admin -->
+            <i class="fas fa-user-circle" style="vertical-align: baseline"></i
+            >&nbsp;Admin
+          </a>
+        </span>
+      </ng-container>
+
+      <span class="logout">
+        <a
+          mat-button
+          href="javascript:void(0);"
+          (click)="logout()"
+          class="log-font"
+        >
+          <!-- <img src="./../../assets/logout.svg" alt="Logout" /> Logout -->
+          <i class="fas fa-sign-out-alt" style="vertical-align: baseline"></i
+          >&nbsp;Logout
+        </a>
+      </span>
+    </div>
+
+    <span class="menu-spacer"></span>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-sidenav-container class="main-container">
+  <mat-sidenav
+    #sidenav
+    class="drawbox"
+    mode="side"
+    opened
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="!(isHandset$ | async)"
+  >
+    <mat-nav-list style="padding-top: 0px">
+      <div class="left-menu">
+        <ul>
+          <li class="nav-item" *ngIf="!readOnlyMode">
+            <a
+              class="nav-link"
+              routerLink="/home/dashboard"
+              routerLinkActive="active">
+              <!-- <i class=""></i> -->
+              Dashboard
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="!readOnlyMode">
+            <a
+              class="nav-link"
+              routerLink="/home/orders"
+              routerLinkActive="active" 
+            >
+              <i class=""></i>
+              <span>Orders</span>
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="!readOnlyMode && showCosting">
+            <a
+              class="nav-link"
+              routerLink="/home/costingList"
+              routerLinkActive="active"
+            >
+              <i class=""></i>
+              <span>Costing</span>
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="!readOnlyMode && showQuotationForm">
+            <a
+              class="nav-link"
+              routerLink="/home/quotationorders"
+              routerLinkActive="active"
+            >
+              <i class=""></i>
+              <span>Quotation Form</span>
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="!readOnlyMode && showSalesTeam">
+            <a
+              class="nav-link"
+              routerLink="/home/customer"
+              routerLinkActive="active"
+            >
+              <i class=""></i>
+              <span>Customers</span>
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="!readOnlyMode && showAdmin">
+            <a
+              class="nav-link"
+             
+              (click)="this.showMasterList = !this.showMasterList"
+ 
+            >
+              <i class=""></i>
+              <span class="noselect">Masters</span>
+            </a>
+
+            <ul *ngIf="this.showMasterList">
+              <li class="nav-item" routerLinkActive="active">
+                <a
+                  class="nav-link"
+                  routerLink="/home/color"
+                  routerLinkActive="active"
+                >
+                  <i class=""></i>
+                  <span>Color</span>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  routerLink="/home/labeltype"
+                  routerLinkActive="active"
+                >
+                  <i class=""></i>
+                  <span>Label Type</span>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  routerLink="/home/documenttype"
+                  routerLinkActive="active"
+                >
+                  <i class=""></i>
+                  <span>Document Type</span>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  routerLink="/home/unit"
+                  routerLinkActive="active"
+                >
+                  <i class=""></i>
+                  <span>Unit</span>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  routerLink="/home/status"
+                  routerLinkActive="active"
+                >
+                  <i class=""></i>
+                  <span>Status</span>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  routerLink="/home/location"
+                  routerLinkActive="active"
+                >
+                  <i class=""></i>
+                  <span>Location</span>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  routerLink="/home/productreference"
+                  routerLinkActive="active"
+                >
+                  <i class=""></i>
+                  <span>Product Reference</span>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  routerLink="/home/customerreference"
+                  routerLinkActive="active"
+                >
+                  <i class=""></i>
+                  <span>Customer Reference</span>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  routerLink="/home/otherdetails"
+                  routerLinkActive="active"
+                >
+                  <i class=""></i>
+                  <span>Other Details</span>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  routerLink="/home/tape"
+                  routerLinkActive="active"
+                >
+                  <i class=""></i>
+                  <span>Tape</span>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  routerLink="/home/tapeMachine"
+                  routerLinkActive="active"
+                >
+                  <i class=""></i>
+                  <span>Tape Machine</span>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  routerLink="/home/paper"
+                  routerLinkActive="active"
+                >
+                  <i class=""></i>
+                  <span>Paper</span>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  routerLink="/home/executive"
+                  routerLinkActive="active"
+                >
+                  <i class=""></i>
+                  <span>Executives</span>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  routerLink="/home/customer"
+                  routerLinkActive="active"
+                >
+                  <i class=""></i>
+                  <span>Customers</span>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  routerLink="/home/territory"
+                  routerLinkActive="active"
+                >
+                  <i class=""></i>
+                  <span>Territory</span>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  routerLink="/home/companyv2"
+                  routerLinkActive="active"
+                >
+                  <i class=""></i>
+                  <span>Company</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item" *ngIf="showAdmin">
+            <a
+              class="nav-link"
+              routerLink="/home/admin"
+              routerLinkActive="active"
+            >
+              <i class=""></i>
+              <span>Admin</span>
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="showAdmin">
+            <a
+              class="nav-link"
+              routerLink="/home/reports"
+              routerLinkActive="active"
+            >
+              <i class=""></i>
+              <span>Reports</span>
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="this.showUserApproval">
+            <a
+              class="nav-link"
+              routerLink="/home/approveusers"
+              routerLinkActive="active"
+            >
+              <i class=""></i>
+              <span>User Approval</span>
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="showCostingApproval">
+            <a
+              class="nav-link"
+              routerLink="/home/costingApproval"
+              routerLinkActive="active"
+            >
+              <i class=""></i>
+              <span>Costing Approval</span>
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="showCostingRejected">
+            <a
+              class="nav-link"
+              routerLink="/home/costingRejected"
+              routerLinkActive="active"
+            >
+              <i class=""></i>
+              <span>Rejected Costing</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

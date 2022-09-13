@@ -1,0 +1,2057 @@
+<!-- main container starts -->
+<div class="col-lg-12" id="container">
+  <!-- panel starts -->
+  <div class="panel panel-primary">
+    <!-- panel heading starts -->
+    <div class="panel-heading">
+      <h2>
+        Costing
+        <div style="float: right">
+          <button class="btn btn-primary">Save</button>
+        </div>
+      </h2>
+    </div>
+    <!-- panel heading ends -->
+
+    <!-- panel body starts -->
+    <div class="panel-body">
+      <!-- Custom section - General Details starts -->
+      <div class="col-lg-12 custom-section">
+        <p id="inputGroupHeading">General Details</p>
+        <hr />
+        <!-- row - General Details starts -->
+        <div class="row">
+          <!-- date starts -->
+          <div class="form-group col-lg-3 col-md-6">
+            <label for="date">Date</label>
+            <div class="input-group">
+              <input
+                name="date"
+                id="date"
+                type="date"
+                class="form-control"
+                [value]="this.substrateCosting.date"
+                readonly
+              />
+            </div>
+            <!-- date ends -->
+          </div>
+
+          <!-- Job No starts -->
+          <div class="form-group col-lg-3 col-md-6">
+            <label for="jobNo">Job No</label>
+            <div class="input-group">
+              <input
+                name="jobNo"
+                id="jobNo"
+                type="text"
+                class="form-control"
+                [(ngModel)]="this.substrateCosting.jobNo"
+                readonly
+              />
+            </div>
+            <!-- Job No ends -->
+          </div>
+
+          <!-- description starts -->
+          <div class="form-group col-lg-3 col-md-6">
+            <label for="description">Description</label>
+            <div class="input-group">
+              <input
+                name="description"
+                id="description"
+                type="text"
+                class="form-control"
+                [(ngModel)]="this.substrateCosting.description"
+                readonly
+              />
+            </div>
+            <!-- description ends -->
+          </div>
+
+          <!-- Customer starts -->
+          <div class="form-group col-lg-3 col-md-6">
+            <label for="customer">Customer</label>
+            <div class="input-group">
+              <input
+                name="customer"
+                id="customer"
+                type="text"
+                class="form-control"
+                [(ngModel)]="this.substrateCosting.customer"
+                readonly
+              />
+            </div>
+            <!-- Customer ends -->
+          </div>
+
+          <!-- Retailer Program starts -->
+          <div class="form-group col-lg-3 col-md-6">
+            <label for="retailerProgram">Retailer Program</label>
+            <div class="input-group">
+              <input
+                name="retailerProgram"
+                id="retailerProgram"
+                type="text"
+                class="form-control"
+                [(ngModel)]="this.substrateCosting.retailerProgram"
+              />
+            </div>
+            <!-- Retailer Program ends -->
+          </div>
+
+          <!-- Overseas Rebate starts -->
+          <div class="form-group col-lg-3 col-md-6">
+            <label for="overseasRebate">Overseas Rebate %</label>
+            <div class="input-group">
+              <input
+                name="overseasRebate"
+                id="overseasRebate"
+                type="number"
+                class="form-control"
+                [(ngModel)]="this.substrateCosting.overSeasRebatePercent"
+              />
+            </div>
+            <!-- Overseas Rebate ends -->
+          </div>
+
+          <!-- Retailer Rebate starts -->
+          <div class="form-group col-lg-3 col-md-6">
+            <label for="retailerRebate">Retailer Rebate %</label>
+            <div class="input-group">
+              <input
+                name="retailerRebate"
+                id="retailerRebate"
+                type="number"
+                class="form-control"
+                [(ngModel)]="this.substrateCosting.retailerRebatePercent"
+              />
+            </div>
+            <!-- Retailer Rebate ends -->
+          </div>
+
+          <!-- Rebate Value starts -->
+          <div class="form-group col-lg-3 col-md-6">
+            <label for="rebateValue">Rebate Value (Rs)</label>
+            <div class="input-group">
+              <input
+                name="rebateValue"
+                id="rebateValue"
+                type="number"
+                class="form-control"
+                [(ngModel)]="this.substrateCosting.rebateValue"
+              />
+            </div>
+            <!-- Rebate Value ends -->
+          </div>
+
+          <!-- row - General Details ends-->
+        </div>
+        <!-- Custom Section - General Details ends -->
+      </div>
+
+      <!-- Custom Section - Dimensions starts -->
+      <div class="col-lg-12 custom-section">
+        <p id="inputGroupHeading">Dimensions</p>
+        <hr />
+
+        <!-- row - Dimensions starts -->
+        <div class="row">
+          <!-- Product Size in MM starts -->
+          <div class="col-lg-6" style="margin-top: 15px">
+            <p id="inputGroupHeadingSmall">Product Size in MM</p>
+            <hr />
+            <!-- row1 - inner row starts -->
+            <div class="row">
+              <!-- Width starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="widthInMM">Width</label>
+                <div class="input-group">
+                  <input
+                    name="widthInMM"
+                    id="widthInMM"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="
+                      this.substrateCosting.dimensions.productSizeInMMWidth
+                    "
+                    (ngModelChange)="change()"
+                  />
+                </div>
+                <!-- width ends -->
+              </div>
+
+              <!-- Length starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="lengthInMM">Length</label>
+                <div class="input-group">
+                  <input
+                    name="lengthInMM"
+                    id="lengthInMM"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="
+                      this.substrateCosting.dimensions.productSizeInMMLength
+                    "
+                    (ngModelChange)="change()"
+                  />
+                </div>
+                <!-- Length ends -->
+              </div>
+
+              <!-- row1 - inner row ends -->
+            </div>
+            <!-- Product Size in MM ends -->
+          </div>
+
+          <!-- Bleed starts -->
+          <div class="col-lg-6" style="margin-top: 15px">
+            <p id="inputGroupHeadingSmall">Bleed</p>
+            <hr />
+            <!-- row2 - inner row starts -->
+            <div class="row">
+              <!-- Front Bleed starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="frontBleed">Front</label>
+                <div class="input-group">
+                  <input
+                    name="frontBleed"
+                    id="frontBleed"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="this.substrateCosting.dimensions.bleedFront"
+                    (ngModelChange)="change()"
+                  />
+                </div>
+                <!-- Front Bleed ends -->
+              </div>
+
+              <!-- Rear Bleed -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="rearBleed">Rear</label>
+                <div class="input-group">
+                  <input
+                    name="rearBleed"
+                    id="rearBleed"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="this.substrateCosting.dimensions.bleedRear"
+                    (ngModelChange)="change()"
+                  />
+                </div>
+                <!-- Rear Bleed ends -->
+              </div>
+
+              <!-- row2 - inner row ends -->
+            </div>
+            <!-- Bleed ends -->
+          </div>
+
+          <!-- Product Size in Inches with Bleed starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">Product Size in Inches with Bleed</p>
+            <hr />
+            <!-- row3 - inner row starts -->
+            <div class="row">
+              <!-- WidthinInchesWithBleed starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="widthinInchesWithBleed">Width</label>
+                <div class="input-group">
+                  <input
+                    name="widthinInchesWithBleed"
+                    id="widthinInchesWithBleed"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="
+                      this.substrateCosting.dimensions
+                        .productSizeInInchesWithBleedWidth
+                    "
+                    readonly
+                  />
+                </div>
+                <!-- WidthinInchesWithBleed ends -->
+              </div>
+
+              <!-- LengthinInchesWithBleed -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="lengthinInchesWithBleed">Length</label>
+                <div class="input-group">
+                  <input
+                    name="lengthinInchesWithBleed"
+                    id="lengthinInchesWithBleed"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="
+                      this.substrateCosting.dimensions
+                        .productSizeInInchesWithBleedLength
+                    "
+                    readonly
+                  />
+                </div>
+                <!-- LengthinInchesWithBleed ends -->
+              </div>
+
+              <!-- row3 - inner row ends -->
+            </div>
+            <!-- Product Size in Inches with Bleed ends -->
+          </div>
+
+          <!-- Paper Quality & GSM starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">Paper Quality & GSM</p>
+            <hr />
+            <!-- row4 - inner row starts -->
+            <div class="row">
+              <!-- paperQuality starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="paperQuality">Paper Quality</label>
+                <div class="input-group">
+                  <select
+                    name="paperQuality"
+                    id="paperQuality"
+                    type="text"
+                    class="form-control"
+                    style="padding: 0px"
+                    [(ngModel)]="this.substrateCosting.dimensions.paperQuality"
+                  >
+                    <option value="Black Board - Burano">
+                      Black Board - Burano (W x L)
+                    </option>
+                    <option value="Black Board - Just Black">
+                      Black Board - Just Black (Transasia)
+                    </option>
+                    <option value="Black Board - Sumo">
+                      Black Board - Sumo
+                    </option>
+                    <option value="C1S - Arena Smooth">
+                      C1S - Arena Smooth
+                    </option>
+                    <option value="C1S - JK Ivory">C1S - JK Ivory</option>
+                    <option value="C1S - JK Ultima">C1S - JK Ultima</option>
+                    <option value="C2S - Matt Art - Bilt Royal">
+                      C2S - Matt Art - Bilt Royal
+                    </option>
+                    <option value="C2S - SBS - Ensocoat">
+                      C2S - SBS - Ensocoat
+                    </option>
+                    <option value="Kraft Board - Transasia">
+                      Kraft Board - Transasia
+                    </option>
+                    <option value="Sticker - Permanent - AW2403">
+                      Sticker - Permanent - AW2403
+                    </option>
+                    <option value="Sticker - Removable">
+                      Sticker - Removable
+                    </option>
+                    <option value="Special Board (L x B)">
+                      Special Board (L x B)
+                    </option>
+                  </select>
+                </div>
+                <!-- paperQuality ends -->
+              </div>
+
+              <!-- gsm -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="gsm">GSM</label>
+                <div class="input-group">
+                  <input
+                    name="gsm"
+                    id="gsm"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="this.substrateCosting.dimensions.gsm"
+                    (ngModelChange)="change()"
+                  />
+                </div>
+                <!-- gsm ends -->
+              </div>
+
+              <!-- row4 - inner row ends -->
+            </div>
+            <!-- Paper Quality & GSM ends -->
+          </div>
+
+          <!-- Full Sheet Size (Inch) starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">Full Sheet Size (Inch)</p>
+            <hr />
+            <!-- row5 - inner row starts -->
+            <div class="row">
+              <!-- fullSheetSizeInchWidth starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="fullSheetSizeInchWidth">Width</label>
+                <div class="input-group">
+                  <input
+                    name="fullSheetSizeInchWidth"
+                    id="fullSheetSizeInchWidth"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="
+                      this.substrateCosting.dimensions.fullSheetSizeInchWidth
+                    "
+                    (ngModelChange)="change()"
+                  />
+                </div>
+                <!-- fullSheetSizeInchWidth ends -->
+              </div>
+
+              <!-- fullSheetSizeInchLength starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="fullSheetSizeInchLength">Length</label>
+                <div class="input-group">
+                  <input
+                    name="fullSheetSizeInchLength"
+                    id="fullSheetSizeInchLength"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="
+                      this.substrateCosting.dimensions.fullSheetSizeInchLength
+                    "
+                    (ngModelChange)="change()"
+                  />
+                </div>
+                <!-- fullSheetSizeInchLength ends -->
+              </div>
+
+              <!-- row5 - inner row ends -->
+            </div>
+            <!-- Full Sheet Size (Inch) ends -->
+          </div>
+
+          <!-- Full Sheet Size (MM) starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">Full Sheet Size (MM)</p>
+            <hr />
+            <!-- row6 - inner row starts -->
+            <div class="row">
+              <!-- fullSheetSizeMMWidth starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="fullSheetSizeMMWidth">Width</label>
+                <div class="input-group">
+                  <input
+                    name="fullSheetSizeMMWidth"
+                    id="fullSheetSizeMMWidth"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="
+                      this.substrateCosting.dimensions.fullSheetSizeMMWidth
+                    "
+                    readonly
+                  />
+                </div>
+                <!-- fullSheetSizeMMWidth ends -->
+              </div>
+
+              <!-- fullSheetSizeMMLength starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="fullSheetSizeMMLength">Length</label>
+                <div class="input-group">
+                  <input
+                    name="fullSheetSizeMMLength"
+                    id="fullSheetSizeMMLength"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="
+                      this.substrateCosting.dimensions.fullSheetSizeMMLength
+                    "
+                    readonly
+                  />
+                </div>
+                <!-- fullSheetSizeMMLength ends -->
+              </div>
+
+              <!-- row6 - inner row ends -->
+            </div>
+            <!-- Full Sheet Size (MM) ends -->
+          </div>
+
+          <!-- Full Sheet Price starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">Full Sheet Price</p>
+            <hr />
+            <!-- row7 - inner row starts -->
+            <div class="row">
+              <!-- fullSheetPriceUnit starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="fullSheetPriceUnit">Unit</label>
+                <div class="input-group">
+                  <select
+                    name="fullSheetPriceUnit"
+                    id="fullSheetPriceUnit"
+                    class="form-control"
+                    style="padding: 0px"
+                    [(ngModel)]="
+                      this.substrateCosting.dimensions.fullSheetPriceUnit
+                    "
+                    (ngModelChange)="change()"
+                  >
+                    <option value="KG">KG</option>
+                    <option value="SHEET">SHEET</option>
+                  </select>
+                </div>
+                <!-- fullSheetPriceUnit ends -->
+              </div>
+
+              <!-- fullSheetPrice starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="fullSheetPrice">Price</label>
+                <div class="input-group">
+                  <input
+                    name="fullSheetPrice"
+                    id="fullSheetPrice"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="
+                      this.substrateCosting.dimensions.fullSheetPrice
+                    "
+                    (ngModelChange)="change()"
+                  />
+                </div>
+                <!-- fullSheetPrice ends -->
+              </div>
+
+              <!-- row7 - inner row ends -->
+            </div>
+            <!-- Full Sheet Price ends -->
+          </div>
+
+          <!-- Sheet Price starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">Sheet Price</p>
+            <hr />
+            <!-- row8 - inner row starts -->
+            <div class="row">
+              <!-- sheetPrice starts -->
+              <div class="form-group col-lg-6" style="margin: auto">
+                <label for="sheetPrice">Sheet Price</label>
+                <div class="input-group">
+                  <input
+                    name="sheetPrice"
+                    id="sheetPrice"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="this.substrateCosting.dimensions.sheetPrice"
+                    readonly
+                  />
+                </div>
+                <!-- sheetPrice ends -->
+              </div>
+
+              <!-- row8 - inner row ends -->
+            </div>
+            <!-- Sheet Price ends -->
+          </div>
+
+          <!-- Cut Plan starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">Cut Plan</p>
+            <hr />
+            <!-- row9 - inner row starts -->
+            <div class="row">
+              <!-- cutPlanWidth starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="cutPlanWidth">Width</label>
+                <div class="input-group">
+                  <input
+                    name="cutPlanWidth"
+                    id="cutPlanWidth"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="this.substrateCosting.dimensions.cutPlanWidth"
+                    (ngModelChange)="change()"
+                  />
+                </div>
+                <!-- cutPlanWidth ends -->
+              </div>
+
+              <!-- cutPlanLength starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="cutPlanLength">Length</label>
+                <div class="input-group">
+                  <input
+                    name="cutPlanLength"
+                    id="cutPlanLength"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="this.substrateCosting.dimensions.cutPlanLength"
+                    (ngModelChange)="change()"
+                  />
+                </div>
+                <!-- cutPlanLength ends -->
+              </div>
+
+              <!-- row9 - inner row ends -->
+            </div>
+            <!-- Cut Plan ends -->
+          </div>
+
+          <!-- IMP Sheet Size (Inch) starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">IMP Sheet Size (Inch)</p>
+            <hr />
+
+            <!-- row10 - inner row starts -->
+            <div class="row">
+              <!-- impSheetSizeInchWidth starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="impSheetSizeInchWidth">Width</label>
+                <div class="input-group">
+                  <input
+                    name="impSheetSizeInchWidth"
+                    id="impSheetSizeInchWidth"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="
+                      this.substrateCosting.dimensions.impSheetSizeInInchWidth
+                    "
+                    readonly
+                  />
+                </div>
+                <!-- impSheetSizeInchWidth ends -->
+              </div>
+
+              <!-- impSheetSizeInchLength starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="impSheetSizeInchLength">Length</label>
+                <div class="input-group">
+                  <input
+                    name="impSheetSizeInchLength"
+                    id="impSheetSizeInchLength"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="
+                      this.substrateCosting.dimensions.impSheetSizeInInchLength
+                    "
+                    readonly
+                  />
+                </div>
+                <!-- impSheetSizeInchLength ends -->
+              </div>
+
+              <!-- row10 - inner row ends -->
+            </div>
+            <!-- IMP Sheet Size (Inch) ends -->
+          </div>
+
+          <!-- IMP Sheet Size (MM) starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">IMP Sheet Size (MM)</p>
+            <hr />
+            <!-- row11 - inner row starts -->
+            <div class="row">
+              <!-- impSheetSizeMMWidth starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="impSheetSizeMMWidth">Width</label>
+                <div class="input-group">
+                  <input
+                    name="impSheetSizeMMWidth"
+                    id="impSheetSizeMMWidth"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="
+                      this.substrateCosting.dimensions.impSheetSizeInMMWidth
+                    "
+                    readonly
+                  />
+                </div>
+                <!-- impSheetSizeMMWidth ends -->
+              </div>
+
+              <!-- impSheetSizeMMLength starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="impSheetSizeMMLength">Length</label>
+                <div class="input-group">
+                  <input
+                    name="impSheetSizeMMLength"
+                    id="impSheetSizeMMLength"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="
+                      this.substrateCosting.dimensions.impSheetSizeInMMLength
+                    "
+                    readonly
+                  />
+                </div>
+                <!-- impSheetSizeMMLength ends -->
+              </div>
+
+              <!-- row11 - inner row ends -->
+            </div>
+            <!-- IMP Sheet Size (MM) ends -->
+          </div>
+
+          <!-- IMP Sheet Price starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">IMP Sheet Price</p>
+            <hr />
+            <!-- row12 - inner row ends -->
+            <div class="row">
+              <!-- impSheetPrice starts -->
+              <div class="form-group col-lg-6" style="margin: auto">
+                <label for="impSheetPrice">IMP Sheet Price</label>
+                <div class="input-group">
+                  <input
+                    name="impSheetPrice"
+                    id="impSheetPrice"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="this.substrateCosting.dimensions.impSheetPrice"
+                    readonly
+                  />
+                </div>
+                <!-- impSheetPrice ends -->
+              </div>
+
+              <!-- row12 - inner row ends -->
+            </div>
+            <!-- IMP Sheet Price ends -->
+          </div>
+
+          <!-- UPS starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">UPS</p>
+            <hr />
+            <!-- row13 - inner row starts -->
+            <div class="row">
+              <!-- upsWidth starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="upsWidth">Width</label>
+                <div class="input-group">
+                  <input
+                    name="upsWidth"
+                    id="upsWidth"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="this.substrateCosting.dimensions.upsWidth"
+                    readonly
+                  />
+                </div>
+                <!-- upsWidth ends -->
+              </div>
+
+              <!-- upsLength starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="upsLength">Length</label>
+                <div class="input-group">
+                  <input
+                    name="upsLength"
+                    id="upsLength"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="this.substrateCosting.dimensions.upsLength"
+                    readonly
+                  />
+                </div>
+                <!-- upsLength ends -->
+              </div>
+
+              <!-- row13 - inner row ends -->
+            </div>
+            <!-- UPS ends -->
+          </div>
+
+          <!-- UPS / Impression Sheet starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">UPS / Impression Sheet</p>
+            <hr />
+            <!-- row14 - inner row starts -->
+            <div class="row">
+              <!-- upsPerImpSheetCount starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="upsPerImpSheetCount">NOs</label>
+                <div class="input-group">
+                  <input
+                    name="upsPerImpSheetCount"
+                    id="upsPerImpSheetCount"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="this.substrateCosting.dimensions.upsPerImpSheet"
+                    (ngModelChange)="change()"
+                  />
+                </div>
+                <!-- upsPerImpSheetCount ends -->
+              </div>
+
+              <!-- upsPerImpSheetPercent starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="upsPerImpSheetPercent">Percent (%)</label>
+                <div class="input-group">
+                  <input
+                    name="upsPerImpSheetPercent"
+                    id="upsPerImpSheetPercent"
+                    type="number"
+                    class="form-control"
+
+                  />
+                </div>
+                <!-- upsPerImpSheetPercent ends -->
+              </div>
+
+              <!-- row14 - inner row ends -->
+            </div>
+            <!-- UPS / Impression Sheet ends -->
+          </div>
+
+          <!-- OUTS / Full Sheet starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">OUTS / Full Sheet</p>
+            <hr />
+            <!-- row15 - inner row starts -->
+            <div class="row">
+              <!-- outsPerFullSheetCount starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="outsPerFullSheetCount">NOs</label>
+                <div class="input-group">
+                  <input
+                    name="outsPerFullSheetCount"
+                    id="outsPerFullSheetCount"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="this.substrateCosting.dimensions.outsPerFullSheet"
+                    readonly
+                  />
+                </div>
+                <!-- outsPerFullSheetCount ends -->
+              </div>
+
+              <!-- outsPerFullSheetPercent starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="outsPerFullSheetPercent">Percent (%)</label>
+                <div class="input-group">
+                  <input
+                    name="outsPerFullSheetPercent"
+                    id="outsPerFullSheetPercent"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- outsPerFullSheetPercent ends -->
+              </div>
+
+              <!-- row15 - inner row ends -->
+            </div>
+            <!-- OUTS / Full Sheet ends -->
+          </div>
+
+          <!-- Offcut Size starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">Offcut Size</p>
+            <hr />
+            <!-- row16 - inner row starts -->
+            <div class="row">
+              <!-- offcutWidth starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="offcutWidth">Width</label>
+                <div class="input-group">
+                  <input
+                    name="offcutWidth"
+                    id="offcutWidth"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="this.substrateCosting.dimensions.offCutSizeWidth"
+                  />
+                </div>
+                <!-- offcutWidth ends -->
+              </div>
+
+              <!-- offcutLength starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="offcutLength">Length</label>
+                <div class="input-group">
+                  <input
+                    name="offcutLength"
+                    id="offcutLength"
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="this.substrateCosting.dimensions.offCutSizeLength"
+                  />
+                </div>
+                <!-- offcutLength ends -->
+              </div>
+
+              <!-- row16 - inner row ends -->
+            </div>
+            <!-- Offcut Size ends -->
+          </div>
+
+          <!-- row2 - Dimensions ends -->
+        </div>
+        <!-- Custom section - Dimensions ends -->
+      </div>
+
+      <!-- Custom section - Process details ends -->
+      <div class="col-lg-12 custom-section">
+        <p id="inputGroupHeading">Process Details</p>
+        <hr />
+
+        <!-- row3 - Process Details starts -->
+        <div class="row">
+          <!-- Offset Color starts -->
+          <div class="col-lg-6" style="margin-top: 15px">
+            <p id="inputGroupHeadingSmall">Offset Color</p>
+            <hr />
+
+            <!-- row1 - inner row starts -->
+            <div class="row">
+              <!-- offsetColorFront starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="offsetColorFront">Front</label>
+                <div class="input-group">
+                  <input
+                    name="offsetColorFront"
+                    id="offsetColorFront"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- offsetColorFront ends -->
+              </div>
+
+              <!-- offsetColorRear starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="offsetColorRear">Rear</label>
+                <div class="input-group">
+                  <input
+                    name="offsetColorRear"
+                    id="offsetColorRear"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- offsetColorRear ends -->
+              </div>
+
+              <!-- row1 - inner row ends -->
+            </div>
+
+            <!-- Offset Color ends -->
+          </div>
+
+          <!-- Variable Plate starts -->
+          <div class="col-lg-6" style="margin-top: 15px">
+            <p id="inputGroupHeadingSmall">Variable Plate</p>
+            <hr />
+
+            <!-- row2 - inner row starts -->
+            <div class="row">
+              <!-- variablePlate starts -->
+              <div class="form-group col-lg-6 col-md-6" style="margin: auto">
+                <label for="variablePlate">Variable Plate</label>
+                <div class="input-group">
+                  <input
+                    name="variablePlate"
+                    id="variablePlate"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- variablePlate ends -->
+              </div>
+
+              <!-- row2 - inner row ends -->
+            </div>
+            <!-- Variable Plate ends -->
+          </div>
+
+          <!-- Screen Color starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">Screen Color</p>
+            <hr />
+
+            <!-- row3 - inner row starts -->
+            <div class="row">
+              <!-- screenColorFront starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="screenColorFront">Front</label>
+                <div class="input-group">
+                  <input
+                    name="screenColorFront"
+                    id="screenColorFront"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- screenColorFront ends -->
+              </div>
+
+              <!-- screenColorRear starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="screenColorRear">Rear</label>
+                <div class="input-group">
+                  <input
+                    name="screenColorRear"
+                    id="screenColorRear"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- screenColorRear ends -->
+              </div>
+
+              <!-- row3 - inner row ends -->
+            </div>
+            <!-- Screen Color ends -->
+          </div>
+
+          <!-- Variable Screen starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">Variable Screen</p>
+            <hr />
+
+            <!-- row4 - inner row starts -->
+            <div class="row">
+              <!-- variableScreen starts -->
+              <div class="form-group col-lg-6 col-md-6" style="margin: auto">
+                <label for="variableScreen">Variable Screen</label>
+                <div class="input-group">
+                  <input
+                    name="variableScreen"
+                    id="variableScreen"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- variableScreen ends -->
+              </div>
+
+              <!-- row4 - inner row ends -->
+            </div>
+            <!-- Variable Screen ends -->
+          </div>
+
+          <!-- Digital Color starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">Digital Color</p>
+            <hr />
+
+            <!-- row5 - inner row starts -->
+            <div class="row">
+              <!-- digitalColorFront starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="digitalColorFront">Front</label>
+                <div class="input-group">
+                  <input
+                    name="digitalColorFront"
+                    id="digitalColorFront"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- digitalColorFront ends -->
+              </div>
+
+              <!-- digitalColorRear starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="digitalColorRear">Rear</label>
+                <div class="input-group">
+                  <input
+                    name="digitalColorRear"
+                    id="digitalColorRear"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- digitalColorRear ends -->
+              </div>
+
+              <!-- row5 - inner row ends -->
+            </div>
+            <!-- Digital Color ends -->
+          </div>
+
+          <!-- varnish starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">Varnish</p>
+            <hr />
+
+            <!-- row6 - inner row starts -->
+            <div class="row">
+              <!-- varnishFront starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="varnishFront">Front</label>
+                <div class="input-group">
+                  <input
+                    name="varnishFront"
+                    id="varnishFront"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- varnishFront ends -->
+              </div>
+
+              <!-- varnishRear starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="varnishRear">Rear</label>
+                <div class="input-group">
+                  <input
+                    name="varnishRear"
+                    id="varnishRear"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- varnishRear ends -->
+              </div>
+
+              <!-- row6 - inner row ends -->
+            </div>
+            <!-- Varnish ends -->
+          </div>
+
+          <!-- Lamination starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">Lamination</p>
+            <hr />
+
+            <!-- row7 - inner row starts -->
+            <div class="row">
+              <!-- laminationFront starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="laminationFront">Front</label>
+                <div class="input-group">
+                  <input
+                    name="laminationFront"
+                    id="laminationFront"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- laminationFront ends -->
+              </div>
+
+              <!-- laminationRear starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="laminationRear">Rear</label>
+                <div class="input-group">
+                  <input
+                    name="laminationRear"
+                    id="laminationRear"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- laminationRear ends -->
+              </div>
+
+              <!-- row7 - inner row ends -->
+            </div>
+            <!-- Lamination ends -->
+          </div>
+
+          <!-- Foil starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">Foil</p>
+            <hr />
+
+            <!-- row8 - inner row starts -->
+            <div class="row">
+              <!-- foilFront starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="foilFront">Front</label>
+                <div class="input-group">
+                  <input
+                    name="foilFront"
+                    id="foilFront"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- foilFront ends -->
+              </div>
+
+              <!-- foilRear starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="foilRear">Rear</label>
+                <div class="input-group">
+                  <input
+                    name="foilRear"
+                    id="foilRear"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- foilRear ends -->
+              </div>
+
+              <!-- row8 - inner row ends -->
+            </div>
+            <!-- Foil ends -->
+          </div>
+
+          <!-- UV starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">UV</p>
+            <hr />
+
+            <!-- row9 - inner row starts -->
+            <div class="row">
+              <!-- UVFront starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="UVFront">Front</label>
+                <div class="input-group">
+                  <input
+                    name="UVFront"
+                    id="UVFront"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- UVFront ends -->
+              </div>
+
+              <!-- UVRear starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="UVRear">Rear</label>
+                <div class="input-group">
+                  <input
+                    name="UVRear"
+                    id="UVRear"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- UVRear ends -->
+              </div>
+
+              <!-- row9 - inner row ends -->
+            </div>
+            <!-- UV ends -->
+          </div>
+
+          <!-- Embossing/Debossing and Pasting starts -->
+          <div class="col-lg-6">
+            <p id="inputGroupHeadingSmall">Other Processes</p>
+            <hr />
+
+            <!-- row10 - inner row starts -->
+            <div class="row">
+              <!-- Embossing/Debossing starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="embossingOrDebossing">Embossing/Debossing</label>
+                <div class="input-group">
+                  <input
+                    name="embossingOrDebossing"
+                    id="embossingOrDebossing"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- Embossing/Debossing ends -->
+              </div>
+
+              <!-- Pasting starts -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label for="pasting">Pasting</label>
+                <div class="input-group">
+                  <input
+                    name="pasting"
+                    id="pasting"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- Pasting ends -->
+              </div>
+
+              <!-- row10 - inner row ends -->
+            </div>
+            <!-- Pasting ends -->
+          </div>
+
+          <!-- Die Cutting & Manual Cutting Starts -->
+          <div class="col-lg-6">
+            <!-- row 11 - inner row starts -->
+            <div class="row">
+              <!-- Die Cutting starts -->
+              <div class="form-group col-lg-6">
+                <label for="dieCutting">Die Cutting</label>
+                <div class="input-group">
+                  <input
+                    name="dieCutting"
+                    id="dieCutting"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- Die Cutting ends -->
+              </div>
+
+              <!-- Manual Cutting starts -->
+              <div class="form-group col-lg-6">
+                <label for="manualCutting">Manual Cutting</label>
+                <div class="input-group">
+                  <input
+                    name="manualCutting"
+                    id="manualCutting"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- Manual Cutting ends -->
+              </div>
+              <!-- row 11 - inner row ends -->
+            </div>
+            <!-- Die Cutting & Manual Cutting Starts -->
+          </div>
+
+          <!-- Manual Punching & Board Graining Starts -->
+          <div class="col-lg-6">
+            <!-- row 12 - inner row starts -->
+            <div class="row">
+              <!-- Manual Punching starts -->
+              <div class="form-group col-lg-6">
+                <label for="manualPunching">Manual Punching</label>
+                <div class="input-group">
+                  <input
+                    name="manualPunching"
+                    id="manualPunching"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- Manual Punching ends -->
+              </div>
+
+              <!-- Board Graining starts -->
+              <div class="form-group col-lg-6">
+                <label for="boardGraining">Board Graining</label>
+                <div class="input-group">
+                  <input
+                    name="boardGraining"
+                    id="boardGraining"
+                    type="number"
+                    class="form-control"
+                  />
+                </div>
+                <!-- Board Graining ends -->
+              </div>
+
+              <!-- row 12 - inner row ends -->
+            </div>
+            <!-- Manual Punching & Board Graining ends -->
+          </div>
+
+          <!-- row3 - Process Details ends -->
+        </div>
+        <!-- custom section - Process details ends -->
+      </div>
+
+      <!-- Custom section - Order Slab starts -->
+      <div class="col-lg-12 custom-section">
+        <p id="inputGroupHeading">Order Slab</p>
+
+        <!-- Order Slab Table starts -->
+        <table class="table order-slab-table">
+          <tr>
+            <th width="22%">Order Quantity</th>
+            <th width="13%">1,00,000</th>
+            <th width="13%">2,500</th>
+            <th width="13%">5,000</th>
+            <th width="13%">7,500</th>
+            <th width="13%">10,000</th>
+            <th width="13%">15,000</th>
+          </tr>
+
+          <tr>
+            <td>Impression Sheets</td>
+            <td>
+              <input type="number" />
+            </td>
+            <td>
+              <input type="number" />
+            </td>
+            <td>
+              <input type="number" />
+            </td>
+            <td>
+              <input type="number" />
+            </td>
+            <td>
+              <input type="number" />
+            </td>
+            <td>
+              <input type="number" />
+            </td>
+          </tr>
+
+          <tr>
+            <td>Expected Spoil</td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Spoil Adjustment</td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Additional Impression Sheet</td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Additional Quantity</td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Additional Full Sheet</td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Total Impression Sheet</td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Total Production Quantity</td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Total Full Sheet</td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <!-- Order Slab Table ends -->
+        </table>
+
+        <!-- Custom section - Order Slab ends -->
+      </div>
+
+      <!-- Custom Section - Costing starts -->
+      <div class="col-lg-12 custom-section">
+        <p id="inputGroupHeading">Costing</p>
+
+        <table class="table costingTable">
+          <tr>
+            <th width="2%"></th>
+            <th width="15%">Particulars</th>
+            <th width="8%">UOM</th>
+            <th width="9%">Unit Price</th>
+            <th width="10%" style="border-right: 0px">1,00,000</th>
+            <th width="6%" style="border-left: 0px"></th>
+            <th width="10%">2,500</th>
+            <th width="10%">5,000</th>
+            <th width="10%">7,500</th>
+            <th width="10%">10,000</th>
+            <th width="10%">15,000</th>
+          </tr>
+          <tr>
+            <td rowspan="4" style="vertical-align: middle">
+              <span id="rotate">RM COST 1</span>
+            </td>
+            <td>Paper Board Cost</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Foil Cost (Front)</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Foil Cost (Rear)</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Board Graining</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td rowspan="4" style="vertical-align: middle">
+              <span id="rotate">RM COST 2</span>
+            </td>
+            <td>String Cost / PC</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>DS TAPTE</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>&nbsp;</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>&nbsp;</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td rowspan="9" style="vertical-align: middle">
+              <span id="rotate">FIXED COST</span>
+            </td>
+            <td>Plates</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Variable Plates</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Positive Cost</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Frame Exposing</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Variable Screen</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Emboss/Deboss <br />Block Cost</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Foil Block Cost (Front)</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Foil Block Cost (Rear)</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Die Cost</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td rowspan="19" style="vertical-align: middle">
+              <span id="rotate">PROCESS COST</span>
+            </td>
+            <td>Offset Printing</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Screen Printing</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Digital Printing (Front)</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Digital Printing (Rear)</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>UV Printing</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Varnish</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Lamination</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Embossing/Debossing</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Foiling</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Pasting</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Die Cutting</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Manual Cutting</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Manual Punching</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Threading</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Stripping & Sorting</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Packing</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>Special Packing</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>&nbsp;</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td>&nbsp;</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr style="border-top: 1px solid #333">
+            <td></td>
+            <td><b>Total</b></td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+          <tr style="border-bottom: 1px solid #333">
+            <td></td>
+            <td><b>Unit Price</b></td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+
+          <tr>
+            <td></td>
+            <td>&nbsp;</td>
+            <td><input type="text" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+            <td><input type="number" /></td>
+          </tr>
+        </table>
+
+        <!-- Custom Section - Costing ends -->
+      </div>
+
+      <!-- Custom Section - Cost Splitup starts -->
+      <div class="col-lg-12 custom-section">
+        <p id="inputGroupHeading">Cost Split-up</p>
+
+        <table class="table table-hover table-splitup">
+          <thead>
+            <tr>
+              <th>Split-up</th>
+              <th>Amount</th>
+              <th>Percent %</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>RM Cost</td>
+              <td></td>
+              <td></td>
+            </tr>
+
+            <tr>
+              <td>Fixed Cost</td>
+              <td></td>
+              <td></td>
+            </tr>
+
+            <tr>
+              <td>Process Cost</td>
+              <td></td>
+              <td></td>
+            </tr>
+
+            <tr>
+              <th>Total</th>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Custom Section - Cost Splitup ends -->
+      </div>
+
+      <!-- panel body ends -->
+    </div>
+    <!-- panel ends -->
+  </div>
+  <!-- main container ends -->
+</div>
+
+<!-- <button id="myBtn" title="Go to top">Top</button> -->

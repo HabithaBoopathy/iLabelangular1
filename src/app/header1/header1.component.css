@@ -1,0 +1,52 @@
+img{
+  width: 18px;
+  height: 18px;
+}
+.side-menu{
+  position: fixed;
+  right:70px;
+}
+.mobile-menu{
+  background-color: black;
+  display: block;
+  width: 100% !important;
+  position: fixed;
+  top: 0px;
+  padding: 25px 15px;
+}
+.bg-dark
+{
+  background-color: black !important;
+  font-size: 20px;
+}
+.mobile-menu a{
+  padding: 20px;
+  color: white;
+}
+.hide-sm{
+  display: none;
+}
+@media only screen and (min-width: 1024px) {
+  .hide-sm{
+    display: block;
+  }
+  .mobile-menu{
+    display: none;
+  }
+}
+@media only screen and (min-width: 768px ) and (max-width: 1024px) {
+  .tab-bar {
+    margin-right: 380px;
+  }
+}
+
+@media only screen and (max-width: 340px) {
+  .mobile-menu{
+    padding: 15px 15px;
+  }
+  .mobile-menu a{
+    padding: 10px;
+    color: white;
+  }
+}
+

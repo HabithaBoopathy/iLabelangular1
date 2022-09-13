@@ -1,0 +1,236 @@
+<!-- Paper Master - Main container starts -->
+<div class="col-lg-12 main-container">
+  <!-- panel-primary starts -->
+  <div class="panel panel-primary">
+    <!-- Panel heading with Create New Button -->
+    <div class="panel-heading">
+      <h2>
+        Paper Master List
+        <div style="float: right">
+          <button
+            class="btn btn-primary"
+            (click)="initializeCreate()"
+            (click)="open(paperModal)"
+          >
+            Create New Paper
+          </button>
+        </div>
+      </h2>
+      <!-- Panel heading ends -->
+    </div>
+
+    <!-- Search box starts -->
+    <input
+      class="form-control"
+      type="text"
+      name="search"
+      autocomplete="off"
+      placeholder="Search"
+      [(ngModel)]="searchText"
+    />
+    <!-- Search box ends -->
+    <br />
+
+    <!-- Panel body starts -->
+    <div class="panel-body">
+      <!-- Paper List table starts -->
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>S No</th>
+            <th>Paper Name</th>
+            <th>GSM</th>
+            <th>Length</th>
+            <th>Width</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let paper of papers | filter: searchText; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ paper.name }}</td>
+            <td>{{ paper.gsm }}</td>
+            <td>{{ paper.productLength }}</td>
+            <td>{{ paper.productWidth }}</td>
+            <td style="padding-top: 0.45rem; padding-bottom: 0.35rem">
+              <button
+                class="btn btn-sm btn-outline-primary smallBtn"
+                (click)="initializeEdit(paper.id)"
+                (click)="open(paperModal)"
+              >
+                Edit
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <!-- Paper List table ends -->
+      </table>
+      <!-- Panel body ends -->
+    </div>
+
+    <!-- panel-primary ends -->
+  </div>
+  <!-- Paper - Main container ends -->
+</div>
+
+<!-- PaperModal template starts -->
+<ng-template #paperModal let-modal>
+  <!-- modal header starts -->
+  <div class="modal-header">
+    <h3 class="modal-title" id="modal-basic-title">
+      {{ this.updateFlag ? "Update" : "Create" }} Paper
+    </h3>
+    <button
+      type="button"
+      class="close close-modal"
+      aria-label="Close"
+      id="modalCloseBtn"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <!-- modal header ends -->
+  </div>
+
+  <!-- modal-body starts -->
+  <div class="modal-body">
+    <!-- modal-col-lg-12 starts -->
+    <div class="col-lg-12">
+      <!-- modal-row starts -->
+      <div class="row">
+        <!-- paperName starts -->
+        <div class="form-group col-lg-6">
+          <label for="paperName">Paper Name *</label>
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              name="paperName"
+              id="paperName"
+              [(ngModel)]="this.paper.name"
+            />
+          </div>
+          <!-- paperName ends -->
+        </div>
+
+        <!-- paperGSM starts -->
+        <div class="form-group col-lg-6">
+          <label for="paperGSM">Paper GSM *</label>
+          <div class="input-group">
+            <input
+              type="number"
+              step="any"
+              class="form-control"
+              name="paperGSM"
+              id="paperGSM"
+              [(ngModel)]="this.paper.gsm"
+              (ngModelChange)="calcRatePerBoard()"
+            />
+          </div>
+          <!-- paperGSM ends -->
+        </div>
+
+        <!-- productLength starts -->
+        <div class="form-group col-lg-6">
+          <label for="productLength">Paper Length *</label>
+          <div class="input-group">
+            <input
+              type="number"
+              step="any"
+              class="form-control"
+              name="productLength"
+              id="productLength"
+              [(ngModel)]="this.paper.productLength"
+              (ngModelChange)="calcRatePerBoard()"
+            />
+          </div>
+          <!-- productLength ends -->
+        </div>
+
+        <!-- productWidth starts -->
+        <div class="form-group col-lg-6">
+          <label for="productWidth">Paper Width *</label>
+          <div class="input-group">
+            <input
+              type="number"
+              step="any"
+              class="form-control"
+              name="productWidth"
+              id="productWidth"
+              [(ngModel)]="this.paper.productWidth"
+              (ngModelChange)="calcRatePerBoard()"
+            />
+          </div>
+          <!-- productWidth ends -->
+        </div>
+
+        <!-- rate starts -->
+        <div class="form-group col-lg-6">
+          <label for="rate">Rate *</label>
+          <div class="input-group">
+            <input
+              type="number"
+              step="any"
+              class="form-control"
+              name="rate"
+              id="rate"
+              [(ngModel)]="this.paper.rate"
+              (ngModelChange)="calcRatePerBoard()"
+            />
+          </div>
+          <!-- rate ends -->
+        </div>
+
+        <!-- ratePerBoard starts -->
+        <div class="form-group col-lg-6">
+          <label for="ratePerBoard">Rate Per Board *</label>
+          <div
+            class="input-group"
+            title="{{
+              '( ( ' +
+                this.paper.productLength +
+                ' x ' +
+                this.paper.productWidth +
+                ' x ' +
+                this.paper.gsm +
+                ') / 1550000 ) x ' +
+                this.paper.rate
+            }}"
+          >
+            <input
+              type="number"
+              step="any"
+              class="form-control"
+              name="ratePerBoard"
+              id="ratePerBoard"
+              [(ngModel)]="this.paper.ratePerBoard"
+              readonly
+            />
+          </div>
+          <!-- ratePerBoard ends -->
+        </div>
+
+        <!-- create button -->
+        <div class="col-lg-12" id="btnContainer" *ngIf="!this.updateFlag">
+          <button class="btn btn-block btn-primary" (click)="onCreate()">
+            Create
+          </button>
+          <!-- create button ends -->
+        </div>
+
+        <!-- update button -->
+        <div class="col-lg-12" id="btnContainer" *ngIf="this.updateFlag">
+          <button class="btn btn-block btn-primary" (click)="onUpdate()">
+            Update
+          </button>
+          <!-- update button ends -->
+        </div>
+
+        <!-- row ends -->
+      </div>
+      <!-- col-lg-12 ends -->
+    </div>
+    <!-- modal body ends -->
+  </div>
+  <!-- paperModal template ends -->
+</ng-template>

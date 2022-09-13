@@ -1,0 +1,92 @@
+<head>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<div>
+  <div class="top-bar">
+    <img
+      src="./../../assets/arrow-left-solid.svg"
+      alt="Back-button"
+      class="back-img"
+      (click)="createRoute()"
+    />
+  </div>
+</div>
+
+<!-- Product executive List -->
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h2>Customer Profiles - Approval</h2>
+  </div>
+  <input
+    class="form-control test-check"
+    type="text"
+    name="search"
+    [(ngModel)]="searchText"
+    autocomplete="off"
+    placeholder="Search"
+  />
+  <div class="panel-body">
+    <table class="table table-striped executive-list">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Name</th>
+          <th>Code</th>
+          <th>E-Mail Id</th>
+          <th>Phone Number</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="
+            let i = index;
+            let memployee;
+            of: memployees | async | filter: searchText
+          "
+        >
+          <td style="width: 10%">{{ i + 1 }}</td>
+          <td style="width: 18%">{{ memployee.companyname }}</td>
+          <td style="width: 12%">{{ memployee.customerreference }}</td>
+          <td style="width: 26%">{{ memployee.emailId }}</td>
+          <td style="width: 14%">{{ memployee.phone }}</td>
+          <td style="width: 16%">
+            <button
+              class="btn btn-success btn-sm"
+              (click)="this.onAccept(memployee)"
+            >
+              Accept
+            </button>
+            <button
+              class="btn btn-danger btn-sm"
+              style="margin-left: 10px"
+              (click)="this.onReject(memployee.id, memployee.emailId)"
+            >
+              Reject
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!-- loadingModalTemplate Start -->
+<ng-template #loadingModalTemplate let-modal>
+  <!-- loading gif -->
+  <app-loading-gif
+    [progressValue]="this.progressValue"
+    [showProgress]="false"
+  ></app-loading-gif>
+
+  <!-- Close Button Hidden -->
+  <button
+    id="closeLoadingModal"
+    style="display: none"
+    type="button"
+    (click)="modal.dismiss('Cross click')"
+  ></button>
+</ng-template>
+<!-- loadingModalTemplate End -->

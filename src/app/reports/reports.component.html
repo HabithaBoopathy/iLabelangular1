@@ -1,0 +1,170 @@
+<!-- <div class="container" style="margin: 0px"> -->
+
+<div class="col-lg-12" style="padding: 15px; margin-top: 5px">
+  <div class="row">
+    <div class="col-lg-5">
+      <div class="row">
+        <div class="col-lg-6 form-group">
+          <div
+            style="
+              height: 8px;
+              font-weight: 500;
+              color: #666;
+              margin-bottom: 12px;
+            "
+          >
+            Start Date
+          </div>
+          <input
+            class="form-control"
+            [(ngModel)]="this.startDate"
+            type="date"
+            style="height: 32px"
+          />
+        </div>
+
+        <div class="col-lg-6 form-group">
+          <div
+            style="
+              height: 8px;
+              font-weight: 500;
+              color: #666;
+              margin-bottom: 12px;
+            "
+          >
+            End Date
+          </div>
+          <input
+            class="form-control"
+            [(ngModel)]="this.endDate"
+            type="date"
+            style="height: 32px"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-7">
+      <div class="row">
+        <div class="col-lg-4">
+          <mat-form-field appearance="fill">
+            <mat-label>Trim type filter</mat-label>
+            <mat-select multiple [(ngModel)]="this.reportInput.trimType">
+              <mat-option
+                *ngFor="let trimType of trimTypeList"
+                [value]="trimType"
+                >{{ trimType }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-lg-4">
+          <mat-form-field appearance="fill">
+            <mat-label>Transaction status filter</mat-label>
+            <mat-select
+              multiple
+              [(ngModel)]="this.reportInput.transactionStatus"
+            >
+              <mat-option
+                *ngFor="let transactionStatus of transactionStatusList"
+                [value]="transactionStatus"
+              >
+                {{ transactionStatus }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-lg-4">
+          <mat-form-field appearance="fill">
+            <mat-label>Territory filter</mat-label>
+            <mat-select multiple [(ngModel)]="this.reportInput.territory">
+              <mat-option
+                *ngFor="let territory of territories"
+                [value]="territory.id"
+              >
+                {{ territory.name }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-11">
+      <div class="row">
+        <div class="col-lg-5">
+          <button (click)="onView()" class="btn btn-outline-dark btn-block">
+            View
+          </button>
+        </div>
+        <div class="col-lg-5">
+          <button (click)="onExport()" class="btn btn-outline-dark btn-block">
+            Download
+          </button>
+        </div>
+        <div class="col-lg-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Sort by Date</mat-label>
+            <mat-select [(ngModel)]="this.sort">
+              <mat-option value="-1">Newest First</mat-option>
+              <mat-option value="1">Oldest First</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel-body" style="padding: 15px">
+  <table class="table table-striped order-list">
+    <thead>
+      <tr>
+        <th>S.No</th>
+        <th>Reference Number</th>
+        <th>Trim Type</th>
+        <th>Sample Name</th>
+        <th>Company Name</th>
+        <th>Entry Date</th>
+        <th>Transaction Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let i = index; let d; of: data">
+        <td>{{ i + 1 }}</td>
+        <td>{{ d.refNo }}</td>
+        <td
+          [ngClass]="{
+            'woven-color': d.sampleName === 'Woven',
+            'tag-color': d.sampleName === 'Tag',
+            'sticker-color': d.sampleName === 'Sticker',
+            'printed-color': d.sampleName === 'Printed'
+          }"
+        >
+          {{ d.sampleName }}
+        </td>
+        <td>{{ d.sampName }}</td>
+        <td>{{ d.name }}</td>
+        <td>{{ d.date }}</td>
+        <td>{{ d.transactionStatus }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- loadingModalTemplate Start -->
+<ng-template #loadingModalTemplate let-modal>
+  <!-- loading gif -->
+  <app-loading-gif [progressValue]="" [showProgress]="false"></app-loading-gif>
+
+  <!-- Close Button Hidden -->
+  <button
+    id="closeLoadingModal"
+    style="display: none"
+    type="button"
+    (click)="modal.dismiss('Cross click')"
+  ></button>
+</ng-template>
+<!-- loadingModalTemplate End -->
+<!-- </div> -->

@@ -1,0 +1,4941 @@
+<head>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet"
+  />
+</head>
+
+<!-- <button (click)="sendTestEmail()" class="ml-5">Email</button> -->
+
+<!-- STATUS BAR STARTS -->
+
+<div class="status-box">
+  <div>
+    <img
+      src="./../../assets/arrow-left-solid.svg"
+      alt="Back-button"
+      class="back-img"
+      (click)="createRoute()"
+    />
+  </div>
+  <ng-container *ngIf="showref">
+    <!-- <div class="refNum">
+    <p>{{referencenumber}}</p>
+  </div> -->
+  </ng-container>
+
+  <ng-container *ngIf="showSampleRequest">
+    <div class="q-box">
+      <p>Sample Request Initiated</p>
+    </div>
+  </ng-container>
+</div>
+
+<!-- STATUS BAR ENDS -->
+
+<!-- Common Fields Start -->
+<div class="banner">
+  <p>CUSTOMER DETAILS</p>
+</div>
+
+<div class="common-box">
+  <form>
+    <div class="row container-fluid">
+      <div class="col-md-6 col-lg-4">
+        <div class="form-group row">
+          <label for="date" class="col-sm-4 col-form-label"
+            >Sample Date<span class="text-danger">*</span></label
+          >
+          <div class="col-sm-8">
+            <input
+              class="form-control"
+              name="date"
+              value="{{ myDate | date: 'dd-MM-yyyy' }}"
+              readonly
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="form-group row">
+          <label for="sampName" class="col-sm-4 col-form-label"
+            >Sample Name <span class="text-danger">*</span></label
+          >
+          <div class="col-sm-8">
+            <input
+              type="text"
+              class="form-control"
+              name="sampName"
+              [(ngModel)]="everything.sampName"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="form-group row">
+          <mat-label class="col-sm-4 col-form-label"
+            >Sample Type <span class="text-danger">*</span></mat-label
+          >
+          <div class="col-sm-8">
+            <select
+              [(ngModel)]="everything.sampType"
+              name="samptype"
+              id="samptype"
+              class="form-control"
+            >
+              <option value="newsample">New Sample</option>
+              <option value="resample">Re Sample</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <input
+        [(ngModel)]="everything.orderCreatedBy"
+        name="orderCreatedBy"
+        hidden
+      />
+
+      <ng-container *ngIf="showAdmin">
+        <div class="col-md-6 col-lg-4">
+          <div class="form-group row">
+            <mat-label class="col-sm-4 col-form-label"
+              >Company Name<span class="text-danger">*</span></mat-label
+            >
+            <div class="col-sm-8">
+              <select
+                [(ngModel)]="everything.name"
+                (change)="employeeChgFn(everything.name)"
+                (change)="customerDetails()"
+                name="name"
+                class="form-control"
+              >
+                <option
+                  *ngFor="let employee of filteredCustomerObservable | async"
+                  value="{{ employee.customername }}"
+                >
+                  {{ employee.customername }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="showAdmin">
+        <div class="col-md-6 col-lg-4">
+          <div class="form-group row">
+            <mat-label class="col-sm-4 col-form-label"
+              >Company Name<span class="text-danger">*</span></mat-label
+            >
+            <div class="col-sm-8">
+              <select
+                  name="customerId"
+                  id="customerId"
+                  type="text"
+                  class="form-control"
+                  [ngStyle]="{
+                    padding: '0px',
+                    'pointer-events':
+                      generalDetailsReadOnly ||
+                      this.accessType == 'Administrator'
+                        ? 'none'
+                        : 'auto'
+                  }"
+                  [(ngModel)]="everything.customerId"
+                  (ngModelChange)="fetchCustomerName()"
+                >
+                  <option value="" disabled selected>
+                    Select the customer
+                  </option>
+                  <option
+                    *ngFor="let customer of customers"
+                    [value]="customer.id"
+                  >
+                    {{ employee.id}}
+                  </option>
+                </select>
+              </div>
+
+          </div>
+        </div>
+      </ng-container>
+      <input
+        type="text"
+        name="customerEmailRequired"
+        [(ngModel)]="everything.customerEmailRequired"
+        hidden
+      />
+
+      <ng-container *ngIf="showExecutiveDetails">
+        <input
+          type="text"
+          class="form-control"
+          name="executiveCode"
+          [(ngModel)]="everything.executiveCode"
+          hidden
+        />
+
+        <div class="col-md-6 col-lg-4">
+          <div class="form-group row">
+            <mat-label class="col-sm-4 col-form-label"
+              >Company Name<span class="text-danger">*</span></mat-label
+            >
+            <div class="col-sm-8">
+              <input
+                [(ngModel)]="everything.name"
+                (change)="getCustomerName()"
+                name="name"
+                class="form-control"
+                readonly
+              />
+              <!-- <select
+                [(ngModel)]="everything.customerReferenceNumber"
+                name="customerName"
+                class="form-control"
+                (change)="customerDetails()"
+              >
+                <ng-container
+                  *ngFor="
+                    let i = index;
+                    let munit;
+                    of: employeesExecutiveName | async
+                  "
+                >
+                  <option value="{{ munit.customerreference }}">
+                    {{ munit.customername }}
+                  </option>
+                </ng-container>
+              </select> -->
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="showCustomerDetails">
+        <input
+          type="text"
+          class="form-control"
+          name="executiveCode"
+          [(ngModel)]="everything.executiveCode"
+          hidden
+        />
+
+        <div class="col-md-6 col-lg-4">
+          <div class="form-group row">
+            <mat-label class="col-sm-4 col-form-label"
+              >Company Name<span class="text-danger">*</span></mat-label
+            >
+            <div class="col-sm-8">
+              <input
+                [(ngModel)]="everything.name"
+                (change)="getCustomerName()"
+                name="name"
+                class="form-control"
+                readonly
+              />
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Customer Name -->
+      <div class="col-md-6 col-lg-4" *ngIf="showCustomerDetails">
+        <div class="form-group row">
+          <label for="customerName" class="col-sm-4 col-form-label"
+            >Customer Name <span class="text-danger">*</span></label
+          >
+          <div class="col-sm-8">
+            <input
+              type="text"
+              class="form-control"
+              name="customerName"
+              [(ngModel)]="everything.customerName"
+              readonly
+            />
+          </div>
+        </div>
+      </div>
+      <!-- Customer Name Ends -->
+
+      <!-- Customer Name (Executive) -->
+      <div class="col-md-6 col-lg-4" *ngIf="showExecutiveDetails">
+        <div class="form-group row">
+          <label for="customerName" class="col-sm-4 col-form-label"
+            >Customer Name <span class="text-danger">*</span></label
+          >
+          <div class="col-sm-8">
+            <select
+              [(ngModel)]="everything.customerReferenceNumber"
+              name="customerName"
+              class="form-control"
+              (change)="customerDetails()"
+            >
+              <ng-container
+                *ngFor="let i = index; let munit; of: employeesListForExecutive"
+              >
+                <option value="{{ munit.customerreference }}">
+                  {{ munit.companyname }}
+                </option>
+              </ng-container>
+            </select>
+          </div>
+        </div>
+      </div>
+      <!-- Customer Name (Executive) Ends -->
+
+      <!-- Merchandiser -->
+      <!-- <div class="col-md-6 col-lg-4">
+        <div class="form-group row">
+          <label for="merchandiser" class="col-sm-4 col-form-label"
+            >Merchandiser <span class="text-danger">*</span></label
+          >
+          <div class="col-sm-8">
+            <input
+              type="text"
+              class="form-control"
+              name="merchandiser"
+              [(ngModel)]="everything.merchandiser"
+              readonly
+            />
+          </div>
+        </div>
+      </div> -->
+      <!-- Merchandiser Ends -->
+
+      <div class="col-md-6 col-lg-4">
+        <div class="form-group row">
+          <label for="oldRefNo" class="col-sm-4 col-form-label"
+            >Old Ref. No.
+          </label>
+          <div class="col-sm-8">
+            <input
+              type="text"
+              class="form-control"
+              name="oldRefNo"
+              [(ngModel)]="everything.oldRefNo"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="form-group row">
+          <label for="contactPerson" class="col-sm-4 col-form-label"
+            >Contact Person <span class="text-danger">*</span></label
+          >
+          <div class="col-sm-8" [formGroup]="intplusFloatGroup23">
+            <input
+              [class.is-invalid]="
+                intPlusFloat23.invalid && intPlusFloat23.touched
+              "
+              type="text"
+              class="form-control"
+              name="contactPerson"
+              [(ngModel)]="everything.contactPerson"
+              formControlName="intplusFloatControl23"
+            />
+          </div>
+        </div>
+      </div>
+
+      <ng-container *ngIf="showAdmin">
+        <input
+          type="text"
+          class="form-control"
+          name="executiveCode"
+          [(ngModel)]="everything.executiveCode"
+          hidden
+        />
+
+        <div class="col-md-6 col-lg-4">
+          <div class="form-group row">
+            <label for="phone" class="col-sm-4 col-form-label"
+              >Phone <span class="text-danger">*</span></label
+            >
+            <div class="col-sm-8">
+              <select
+                [(ngModel)]="everything.phone"
+                name="phone"
+                id="phone"
+                class="form-control"
+              >
+                <option
+                  *ngFor="let employee of employee_lt | async"
+                  value="{{ employee.phone }}"
+                >
+                  {{ employee.phone }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <input
+          [(ngModel)]="everything.customerStreet1"
+          name="customerStreet1"
+          id="customerStreet1"
+          class="form-control"
+          hidden
+        />
+        <input
+          [(ngModel)]="everything.customerStreet2"
+          name="customerStreet2"
+          id="customerStreet2"
+          class="form-control"
+          hidden
+        />
+        <input
+          [(ngModel)]="everything.customerCity"
+          name="customerCity"
+          id="customerCity"
+          class="form-control"
+          hidden
+        />
+        <input
+          [(ngModel)]="everything.customerState"
+          name="customerState"
+          id="customerState"
+          class="form-control"
+          hidden
+        />
+        <input
+          [(ngModel)]="everything.customerGst"
+          name="customerGst"
+          id="customerGst"
+          class="form-control"
+          hidden
+        />
+
+        <div class="col-md-6 col-lg-4">
+          <div class="form-group row">
+            <label for="staticEmail" class="col-sm-4 col-form-label"
+              >E-mail <span class="text-danger">*</span></label
+            >
+            <div class="col-sm-8">
+              <select
+                [(ngModel)]="everything.email"
+                name="inputEmail"
+                id="inputEmail"
+                class="form-control"
+                (change)="getCustomerEmailID()"
+              >
+                <option
+                  *ngFor="let employee of employee_lt | async"
+                  value="{{ employee.emailId }}"
+                >
+                  {{ employee.emailId }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+       
+        <div class="col-md-6 col-lg-4">
+          <div class="form-group row">
+            <label for="execName" class="col-sm-4 col-form-label"
+              >Exec. Name <span class="text-danger">*</span></label
+            >
+            <div class="col-sm-8">
+              <select
+                [(ngModel)]="employee.executiveName"
+                class="form-control control-width"
+                name="executiveName"
+                id="executiveName"
+                (click)="applyThatExecutiveIsFilled()"
+              >
+                <option
+                  *ngFor="let memployee of mexecutives1 | async"
+                  value="{{ memployee.name }}"
+                >
+                  {{ memployee.name }}-({{ memployee.code }})
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="showCustomerDetails">
+        <div class="col-md-6 col-lg-4">
+          <div class="form-group row">
+            <label for="phone" class="col-sm-4 col-form-label"
+              >Phone <span class="text-danger">*</span></label
+            >
+            <div class="col-sm-8">
+              <input
+                [(ngModel)]="everything.phone"
+                name="phone"
+                id="phone"
+                class="form-control"
+                readonly
+              />
+            </div>
+          </div>
+        </div>
+
+        <input
+          [(ngModel)]="everything.customerStreet1"
+          name="customerStreet1"
+          id="customerStreet1"
+          class="form-control"
+          hidden
+        />
+        <input
+          [(ngModel)]="everything.customerStreet2"
+          name="customerStreet2"
+          id="customerStreet2"
+          class="form-control"
+          hidden
+        />
+        <input
+          [(ngModel)]="everything.customerCity"
+          name="customerCity"
+          id="customerCity"
+          class="form-control"
+          hidden
+        />
+        <input
+          [(ngModel)]="everything.customerState"
+          name="customerState"
+          id="customerState"
+          class="form-control"
+          hidden
+        />
+        <input
+          [(ngModel)]="everything.customerGst"
+          name="customerGst"
+          id="customerGst"
+          class="form-control"
+          hidden
+        />
+
+        <div class="col-md-6 col-lg-4">
+          <div class="form-group row">
+            <label for="staticEmail" class="col-sm-4 col-form-label"
+              >E-mail <span class="text-danger">*</span></label
+            >
+            <div class="col-sm-8">
+              <input
+                [(ngModel)]="everything.email"
+                name="inputEmail"
+                id="inputEmail"
+                class="form-control"
+                (change)="getCustomerEmailID()"
+                readonly
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+          <div class="form-group row">
+            <label for="execName" class="col-sm-4 col-form-label"
+              >Exec. Name <span class="text-danger">*</span></label
+            >
+            <div class="col-sm-8">
+              <input
+                [(ngModel)]="everything.execName"
+                name="execName"
+                id="execName"
+                class="form-control"
+                readonly
+              />
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="showExecutiveDetails">
+        <div class="col-md-6 col-lg-4">
+          <div class="form-group row">
+            <label for="phone" class="col-sm-4 col-form-label"
+              >Phone <span class="text-danger">*</span></label
+            >
+            <div class="col-sm-8">
+              <input
+                [(ngModel)]="everything.phone"
+                name="phone"
+                id="phone"
+                class="form-control"
+                readonly
+              />
+            </div>
+          </div>
+        </div>
+
+        <input
+          [(ngModel)]="everything.customerStreet1"
+          name="customerStreet1"
+          id="customerStreet1"
+          class="form-control"
+          hidden
+        />
+        <input
+          [(ngModel)]="everything.customerStreet2"
+          name="customerStreet2"
+          id="customerStreet2"
+          class="form-control"
+          hidden
+        />
+        <input
+          [(ngModel)]="everything.customerCity"
+          name="customerCity"
+          id="customerCity"
+          class="form-control"
+          hidden
+        />
+        <input
+          [(ngModel)]="everything.customerState"
+          name="customerState"
+          id="customerState"
+          class="form-control"
+          hidden
+        />
+        <input
+          [(ngModel)]="everything.customerGst"
+          name="customerGst"
+          id="customerGst"
+          class="form-control"
+          hidden
+        />
+
+        <div class="col-md-6 col-lg-4">
+          <div class="form-group row">
+            <label for="staticEmail" class="col-sm-4 col-form-label"
+              >E-mail <span class="text-danger">*</span></label
+            >
+            <div class="col-sm-8">
+              <input
+                [(ngModel)]="everything.email"
+                name="inputEmail"
+                id="inputEmail"
+                class="form-control"
+                (change)="getCustomerEmailID()"
+                readonly
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+          <div class="form-group row">
+            <label for="execName" class="col-sm-4 col-form-label"
+              >Exec. Name <span class="text-danger">*</span></label
+            >
+            <div class="col-sm-8">
+              <!-- <select [(ngModel)] = "everything.execName" (change)="getExecutiveEmailID()" name="execName" id="execName" class="form-control">
+                <option *ngFor="let employee of employee_lt | async" value={{employee.executiveName}}> {{employee.executiveName}} </option>
+                </select> -->
+
+              <!-- <select [(ngModel)]="employee.executiveName" class="form-control control-width" name="executiveName" id="executiveName" readonly>
+                  <option *ngFor="let memployee of mexecutives1 | async" value={{memployee.name}}> {{memployee.name }}-({{memployee.code}}) </option>
+                </select> -->
+
+              <input
+                type="text"
+                [(ngModel)]="everything.execName"
+                name="everything.execName"
+                class="form-control"
+                readonly
+              />
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="form-group row">
+          <label for="territory" class="col-sm-4 col-form-label"
+            >Territory<span class="text-danger">*</span></label
+          >
+          <div class="col-sm-8">
+            <input
+              type="text"
+              class="form-control"
+              name="territory"
+              [(ngModel)]="this.territory"
+              disabled
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="form-group row">
+          <label for="expectedDate" class="col-sm-4 col-form-label"
+            >Expected Date <span class="text-danger">*</span></label
+          >
+          <div class="col-sm-8">
+            <input
+              type="date"
+              class="form-control"
+              name="expectedDate"
+              [(ngModel)]="everything.expectedDate"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="form-group row">
+          <mat-label class="col-sm-4 col-form-label"
+            >Order Type <span class="text-danger">*</span></mat-label
+          >
+          <div class="col-sm-8">
+            <select
+              [(ngModel)]="everything.orderType"
+              name="orderType"
+              id="orderType"
+              class="form-control"
+            >
+              <option value="Repeat">Repeat</option>
+              <option value="One Time">One Time</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="form-group row">
+          <mat-label class="col-sm-4 col-form-label"
+            >Approval Type <span class="text-danger">*</span></mat-label
+          >
+          <div class="col-sm-8">
+            <select
+              [(ngModel)]="everything.approvalType"
+              name="approvalType"
+              id="approvalType"
+              class="form-control"
+            >
+              <option value="General">General</option>
+              <option value="Buyer">Buyer</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Common Fields Ending -->
+
+<!-- Mini Banner Start -->
+<div class="mini-banner">
+  <p>TRIM TYPE</p>
+</div>
+<!-- Mini Banner Ending -->
+
+<!-- Checkboxes Start -->
+<div class="check-boxes">
+  <mat-radio-group
+    aria-label="Select an option"
+    [(ngModel)]="everything.sampleName"
+  >
+    <ng-container *ngIf="showWovenAccess">
+      <mat-radio-button class="d-item" (click)="wovenFunctions()" value="Woven"
+        >Woven</mat-radio-button
+      >
+    </ng-container>
+
+    <ng-container *ngIf="showTagAccess">
+      <mat-radio-button class="d-item" (click)="tagFunctions()" value="Tag"
+        >Tag</mat-radio-button
+      >
+    </ng-container>
+
+    <ng-container *ngIf="showStickerAccess">
+      <mat-radio-button
+        class="d-item"
+        (click)="stickerFunctions()"
+        value="Sticker"
+        >Sticker</mat-radio-button
+      >
+    </ng-container>
+
+    <ng-container *ngIf="showPrintAccess">
+      <mat-radio-button
+        class="d-item"
+        (click)="printedFunctions()"
+        value="Printed"
+        >Printed</mat-radio-button
+      >
+    </ng-container>
+  </mat-radio-group>
+</div>
+<!-- Checkboxes End -->
+
+<!-- Woven Form Start -->
+
+<ng-container *ngIf="showwoven">
+  <ng-container *ngIf="showCustomer">
+    <div class="banner">
+      <p>WOVEN</p>
+    </div>
+  </ng-container>
+
+  <div class="bg">
+    <ng-container *ngIf="showCustomer">
+      <!-- Mini Banner Start -->
+      <div class="gap"></div>
+      <div class="mini-banner">
+        <p>ORDER DETAILS</p>
+      </div>
+      <!-- Mini Banner Ending -->
+    </ng-container>
+
+    <ng-container *ngIf="showCustomer">
+      <div class="form-box">
+        <form>
+          <div class="row container-fluid">
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-label class="col-sm-4 col-form-label"
+                  >Label Type <span class="text-danger">*</span></mat-label
+                >
+                <div class="col-sm-8">
+                  <select
+                    [(ngModel)]="everything.labelType"
+                    name="labelType"
+                    id="labelType"
+                    class="form-control"
+                  >
+                    <ng-container
+                      *ngFor="
+                        let i = index;
+                        let munit;
+                        of: mlabeltypeValue | async
+                      "
+                    >
+                      <option value="{{ munit.labelname }}">
+                        {{ munit.labelname }}
+                      </option>
+                    </ng-container>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-label class="col-sm-4 col-form-label"
+                  >Unit <span class="text-danger">*</span></mat-label
+                >
+                <div class="col-sm-8">
+                  <select
+                    [(ngModel)]="everything.unit"
+                    name="unit"
+                    id="unit"
+                    class="form-control"
+                  >
+                    <ng-container
+                      *ngFor="let i = index; let munit; of: munitvalue | async"
+                    >
+                      <option value="{{ munit.productunit }}">
+                        {{ munit.productunit }}
+                      </option>
+                    </ng-container>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="unitHeight" class="col-sm-4 col-form-label"
+                  >Unit Height <span class="text-danger">*</span></label
+                >
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup">
+                  <input
+                    [class.is-invalid]="
+                      intPlusFloat.invalid && intPlusFloat.touched
+                    "
+                    type="text"
+                    class="form-control"
+                    name="unitHeight"
+                    [(ngModel)]="everything.unitHeight"
+                    formControlName="intplusFloatControl"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="unitWidth" class="col-sm-4 col-form-label"
+                  >Unit Width <span class="text-danger">*</span></label
+                >
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup1">
+                  <input
+                    [class.is-invalid]="
+                      intPlusFloat1.invalid && intPlusFloat1.touched
+                    "
+                    type="text"
+                    class="form-control"
+                    name="unitWidth"
+                    [(ngModel)]="everything.unitWidth"
+                    formControlName="intplusFloatControl1"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="expectedQuantity" class="col-sm-4 col-form-label"
+                  >Expected Quantity <span class="text-danger">*</span></label
+                >
+                <div class="col-sm-8" [formGroup]="onlyIntGroup">
+                  <input
+                    [class.is-invalid]="onlyInt.invalid && onlyInt.touched"
+                    type="text"
+                    class="form-control"
+                    name="expectedQuantity"
+                    [(ngModel)]="everything.expectedQuantity"
+                    formControlName="onlyIntControl"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="sInstruction" class="col-sm-4 col-form-label"
+                  >Special Instruction
+                </label>
+                <div class="col-sm-8">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="sInstruction"
+                    [(ngModel)]="everything.specialInstruction"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="remarks" class="col-sm-4 col-form-label"
+                  >Remarks
+                </label>
+                <div class="col-sm-8">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="remarks"
+                    [(ngModel)]="everything.remarks"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-label class="col-sm-4 col-form-label"
+                  >Color <span class="text-danger">*</span></mat-label
+                >
+                <div class="col-sm-8">
+                  <select
+                    [(ngModel)]="everything.color"
+                    name="color"
+                    id="color"
+                    class="form-control"
+                  >
+                    <ng-container
+                      *ngFor="let i = index; let munit; of: mcolorValue | async"
+                    >
+                      <option value="{{ munit.colorname }}">
+                        {{ munit.colorname }}
+                      </option>
+                    </ng-container>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="colorInformation" class="col-sm-4 col-form-label"
+                  >Color Information
+                </label>
+                <div class="col-sm-8">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="colorInformation"
+                    [(ngModel)]="everything.colorInfo"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-label class="col-sm-4 col-form-label"
+                  >Folding <span class="text-danger">*</span></mat-label
+                >
+                <div class="col-sm-8">
+                  <select
+                    [(ngModel)]="everything.folding"
+                    name="folding"
+                    id="folding"
+                    class="form-control"
+                  >
+                    <ng-container
+                      *ngFor="
+                        let i = index;
+                        let munit;
+                        of: motherdetailsvalueWovenFolding | async
+                      "
+                    >
+                      <option value="{{ munit.name }}">
+                        {{ munit.name }}
+                      </option>
+                    </ng-container>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-label class="col-sm-4 col-form-label"
+                  >Finishing <span class="text-danger">*</span>
+                </mat-label>
+                <div class="col-sm-8">
+                  <select
+                    [(ngModel)]="everything.finishing"
+                    name="finishing"
+                    id="finishing"
+                    class="form-control"
+                  >
+                    <ng-container
+                      *ngFor="
+                        let i = index;
+                        let munit;
+                        of: motherdetailsvalueWovenFinishing | async
+                      "
+                    >
+                      <option value="{{ munit.name }}">
+                        {{ munit.name }}
+                      </option>
+                    </ng-container>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="doctype" class="col-sm-4 col-form-label"
+                  >Doc Type</label
+                >
+                <div class="col-sm-8">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="doctype"
+                    [(ngModel)]="everything.doctype"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4"></div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="colorpicks" class="col-sm-4 col-form-label"
+                  >Color Picks</label
+                >
+                <div class="col-sm-8">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="doctype"
+                    [(ngModel)]="everything.colorpicks"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4"></div>
+
+            <br />
+            <br />
+            <br />
+
+            <div class="lineItemLabel">
+              <table>
+                <tbody *ngIf="everything.orderLineItem.length == 0">
+                  <tr>
+                    <div class="form-row mt-2">
+                      <div class="col">
+                        Variant Code
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="singleOrderLine.variantCode"
+                          name="variantCode1"
+                        />
+                      </div>
+                      <div class="col">
+                        Number of Pieces
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="singleOrderLine.noOfPieces"
+                          name="noOfPieces1"
+                        />
+                      </div>
+                      <div class="col">
+                        Action
+                        <button
+                          class="form-control btn btn-primary"
+                          (click)="addTable()"
+                        >
+                          Add Row
+                        </button>
+                      </div>
+                    </div>
+                  </tr>
+                </tbody>
+                <tbody *ngIf="everything.orderLineItem.length != 0">
+                  <tr
+                    *ngFor="let item of everything.orderLineItem; let i = index"
+                  >
+                    <div class="form-row mt-2">
+                      <div class="col">
+                        <div *ngIf="i == 0">Variant Code</div>
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="item.variantCode"
+                          [ngModelOptions]="{ standalone: true }"
+                        />
+                      </div>
+                      <div class="col">
+                        <div *ngIf="i == 0">Number of Pieces</div>
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="item.noOfPieces"
+                          [ngModelOptions]="{ standalone: true }"
+                        />
+                      </div>
+                      <div class="col">
+                        <div *ngIf="i == 0">Action</div>
+                        <button
+                          class="form-control btn btn-danger"
+                          (click)="deleteRow(i)"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </tr>
+                  <tr>
+                    <div class="form-row mt-2">
+                      <div class="col">
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="singleOrderLine.variantCode"
+                          name="variantCode3"
+                        />
+                      </div>
+                      <div class="col">
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="singleOrderLine.noOfPieces"
+                          name="noOfPieces3"
+                        />
+                      </div>
+                      <div class="col">
+                        <button
+                          class="form-control btn btn-primary"
+                          (click)="addTable()"
+                        >
+                          Add Row
+                        </button>
+                      </div>
+                    </div>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="showThis">
+      <ng-container *ngIf="showSalesTeam">
+        <!-- Mini Banner Start -->
+        <div class="gap"></div>
+        <div class="mini-banner">
+          <p>OFFICE USE ONLY</p>
+        </div>
+        <!-- Mini Banner Ending -->
+      </ng-container>
+
+      <ng-container *ngIf="showSalesTeam">
+        <div class="form-box">
+          <form>
+            <div class="row container-fluid">
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="incoming" class="col-sm-4 col-form-label"
+                    >Incoming Date <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8">
+                    <input
+                      type="text"
+                      class="form-control"
+                      value="{{ currentDate }}"
+                      name="incoming"
+                      readonly
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="dispatchDateTime" class="col-sm-4 col-form-label"
+                    >Commitment Date <span class="text-danger">*</span></label
+                  >
+                  <div class="col-sm-8">
+                    <input
+                      type="date"
+                      class="form-control"
+                      name="dispatchDateTime"
+                      [(ngModel)]="everything.dispatchDateTime"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-label  class="col-sm-4 col-form-label">Status <span class="text-danger">*</span></mat-label>
+                <div class="col-sm-8">
+                  <select (click)="reloadData()" [(ngModel)]="everything.status" name="status" id="status" class="form-control">
+                      <ng-container *ngFor="let i = index; let sUnit of mStatusArray">
+                        <option *ngIf="mStatusArray[i] != undefined" value = "mStatusArray[i]">
+                          {{mStatusArray[i]}}
+                        </option>
+                      </ng-container>
+                    </select>
+                </div>
+              </div>
+            </div> -->
+            </div>
+          </form>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="showSalesTeam">
+        <!-- Mini Banner Start -->
+        <div class="gap"></div>
+        <div class="mini-banner">
+          <p>CAD ENTRY</p>
+        </div>
+        <!-- Mini Banner Ending -->
+
+        <div class="form-box">
+          <form>
+            <div class="row container-fluid">
+              <!-- <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="SampleRecDateTime" class="col-sm-4 col-form-label">Sample Rec. Date/Time <span class="text-danger">*</span> </label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" placeholder="Order not Confirmed" name="SampleRecDateTime" [(ngModel)] = "everything.sampleRecDateTime" readonly>
+                </div>
+              </div>
+            </div> -->
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="PCM" class="col-sm-4 col-form-label"
+                    >P/CM <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup2">
+                    <input
+                      type="text"
+                      [class.is-invalid]="
+                        intPlusFloat2.invalid && intPlusFloat2.touched
+                      "
+                      class="form-control"
+                      name="PCM"
+                      [(ngModel)]="everything.pcm"
+                      formControlName="intplusFloatControl2"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="noOfRepeats" class="col-sm-4 col-form-label"
+                    >No. of Repeats <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup8">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat8.invalid && intPlusFloat8.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="noOfRepeats"
+                      [(ngModel)]="everything.noOfRepeats"
+                      formControlName="intplusFloatControl8"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="system" class="col-sm-4 col-form-label"
+                    >System <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup51">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat51.invalid && intPlusFloat51.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="system"
+                      [(ngModel)]="everything.system"
+                      formControlName="intplusFloatControl51"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="TP" class="col-sm-4 col-form-label">TP</label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup3">
+                  <input [class.is-invalid]="intPlusFloat3.invalid && intPlusFloat3.touched" type="text" class="form-control" name="TP" [(ngModel)] = "everything.tp" formControlName="intplusFloatControl3"/>
+                </div>
+              </div>
+            </div> -->
+
+              <!-- <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="samplingDate" class="col-sm-4 col-form-label">Sampling Date <span class="text-danger">*</span> </label>
+                <div class="col-sm-8">
+                  <input type="date" class="form-control" name="samplingDate" [(ngModel)] = "everything.samplingDate">
+                </div>
+              </div>
+            </div> -->
+
+              <!-- <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="CRLimitStatus" class="col-sm-4 col-form-label">C.R. Limit Status</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" name="CRLimitStatus" [(ngModel)] = "everything.crLimitStatus">
+                </div>
+              </div>
+            </div> -->
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="designer" class="col-sm-4 col-form-label"
+                    >Designer <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup52">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat52.invalid && intPlusFloat52.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="designer"
+                      [(ngModel)]="everything.designer"
+                      formControlName="intplusFloatControl52"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="machine" class="col-sm-4 col-form-label"
+                    >Machine <span class="text-danger">*</span></label
+                  >
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup53">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat53.invalid && intPlusFloat53.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="machine"
+                      [(ngModel)]="everything.machine"
+                      formControlName="intplusFloatControl53"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="widthPrinted" class="col-sm-4 col-form-label"
+                    >Width <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="width"
+                      [(ngModel)]="everything.width"
+                      readonly
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="length" class="col-sm-4 col-form-label"
+                    >Length <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="length"
+                      [(ngModel)]="everything.length"
+                      readonly
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="quality" class="col-sm-4 col-form-label"
+                    >Quality <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8">
+                    <select
+                      (click)="reloadData()"
+                      [(ngModel)]="everything.quality"
+                      name="quality"
+                      id="quality"
+                      class="form-control"
+                    >
+                      <ng-container
+                        *ngFor="let i = index; let munit; of: wovenqualityArray"
+                      >
+                        <option
+                          *ngIf="wovenqualityArray[i] != undefined"
+                          value="{{ wovenqualityArray[i] }}"
+                        >
+                          {{ wovenqualityArray[i] }}
+                        </option>
+                      </ng-container>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="x" class="col-sm-4 col-form-label"
+                    >X <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup6">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat6.invalid && intPlusFloat6.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="x"
+                      [(ngModel)]="everything.x"
+                      formControlName="intplusFloatControl6"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="y" class="col-sm-4 col-form-label"
+                    >Y <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup7">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat7.invalid && intPlusFloat7.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="y"
+                      [(ngModel)]="everything.y"
+                      formControlName="intplusFloatControl7"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label
+                    for="colorOptionToBeUsed"
+                    class="col-sm-4 col-form-label"
+                    >Color Option to be Used <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup54">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat54.invalid && intPlusFloat54.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="colorOptionToBeUsed"
+                      [(ngModel)]="everything.colorOptionToBeUsed"
+                      formControlName="intplusFloatControl54"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <mat-label class="col-sm-4 col-form-label"
+                    >Additional Work <span class="text-danger">*</span>
+                  </mat-label>
+                  <div class="col-sm-8">
+                    <select
+                      (click)="reloadData()"
+                      [(ngModel)]="everything.additionalWork"
+                      name="additionalWork"
+                      id="additionalWork"
+                      class="form-control"
+                    >
+                      <ng-container
+                        *ngFor="
+                          let i = index;
+                          let munit;
+                          of: additionalWorkArray
+                        "
+                      >
+                        <option
+                          *ngIf="additionalWorkArray[i] != undefined"
+                          value="additionalWorkArray[i]"
+                        >
+                          {{ additionalWorkArray[i] }}
+                        </option>
+                      </ng-container>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="wastage" class="col-sm-4 col-form-label"
+                    >Wastage <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup9">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat9.invalid && intPlusFloat9.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="wastage"
+                      [(ngModel)]="everything.wastage"
+                      formControlName="intplusFloatControl9"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="colorMatching" class="col-sm-4 col-form-label"
+                    >Color Matching <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup55">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat55.invalid && intPlusFloat55.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="colorMatching"
+                      [(ngModel)]="everything.colorMatching"
+                      formControlName="intplusFloatControl55"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="warpTension" class="col-sm-4 col-form-label"
+                    >Warp Tension <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup10">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat10.invalid && intPlusFloat10.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="warpTension"
+                      [(ngModel)]="everything.warpTension"
+                      formControlName="intplusFloatControl10"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="showSalesTeam">
+        <!-- Table -->
+        <div class="gap"></div>
+        <div class="mini-banner">
+          <p>COLOR OPTION TO BE USED</p>
+        </div>
+
+        <table class="table table-bordered woven-table">
+          <tr>
+            <th colspan="2">GROUND</th>
+            <th colspan="2">1</th>
+            <th colspan="2">2</th>
+            <th colspan="2">3</th>
+            <th colspan="2">4</th>
+            <th colspan="2">5</th>
+            <th colspan="2">6</th>
+            <th colspan="2">7</th>
+          </tr>
+          <tr>
+            <th style="width: 60px">80</th>
+            <th style="width: 60px">150</th>
+            <th style="width: 60px">80</th>
+            <th style="width: 60px">150</th>
+            <th style="width: 60px">80</th>
+            <th style="width: 60px">150</th>
+            <th style="width: 60px">80</th>
+            <th style="width: 60px">150</th>
+            <th style="width: 60px">80</th>
+            <th style="width: 60px">150</th>
+            <th style="width: 60px">80</th>
+            <th style="width: 60px">150</th>
+            <th style="width: 60px">80</th>
+            <th style="width: 60px">150</th>
+            <th style="width: 60px">80</th>
+            <th style="width: 60px">150</th>
+          </tr>
+          <tr>
+            <td>
+              <input type="text" [(ngModel)]="everything.colorOptionTable[0]" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="everything.colorOptionTable[1]" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="everything.colorOptionTable[2]" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="everything.colorOptionTable[3]" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="everything.colorOptionTable[4]" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="everything.colorOptionTable[5]" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="everything.colorOptionTable[6]" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="everything.colorOptionTable[7]" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="everything.colorOptionTable[8]" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="everything.colorOptionTable[9]" />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[10]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[11]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[12]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[13]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[14]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[15]"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[16]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[17]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[18]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[19]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[20]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[21]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[22]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[23]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[24]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[25]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[26]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[27]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[28]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[29]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[30]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[31]"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[32]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[33]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[34]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[35]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[36]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[37]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[38]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[39]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[40]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[41]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[42]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[43]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[44]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[45]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[46]"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                [(ngModel)]="everything.colorOptionTable[47]"
+              />
+            </td>
+          </tr>
+        </table>
+
+        <!-- <div class="img-holder">
+  <img src="../../assets/Woven Table.png" alt="Table">
+  </div> -->
+      </ng-container>
+    </ng-container>
+
+    <!-- Mini Banner Start -->
+    <div class="gap"></div>
+    <div class="mini-banner">
+      <p>ARTWORK FILE NAME</p>
+    </div>
+    <!-- Mini Banner Ending -->
+
+    <div class="form-box upload-box">
+      <div *ngIf="currentFile" class="progress">
+        <div
+          class="progress-bar progress-bar-info progress-bar-striped"
+          role="progressbar"
+          attr.aria-valuenow="{{ progress }}"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          [ngStyle]="{ width: progress + '%' }"
+        >
+          {{ progress }}%
+        </div>
+      </div>
+
+      <label class="btn btn-default">
+        <input
+          #artworkAttachment
+          type="file"
+          [(ngModel)]="uploadFileName"
+          (change)="checkUploadRegex($event)"
+          [disabled]="fileIsUploaded"
+        />
+        <!-- <button class="btn btn-success" [disabled]="!selectedFiles" (click)="upload1()">
+    Upload
+  </button> -->
+        <button (click)="resetArtworkAttachment()" class="btn btn-danger">
+          Reset
+        </button>
+        <br />
+        <br />
+      </label>
+    </div>
+
+    <div class="cent">
+      <button
+        type="submit"
+        (click)="checkWovenForm()"
+        class="btn btn-success pad-it"
+      >
+        Save
+      </button>
+
+      <ng-container *ngIf="showSampleRequest">
+        <button
+          type="submit"
+          (click)="checkWovenFormUpdate()"
+          (click)="orderConfirmation()"
+          class="btn btn-primary pad-it"
+        >
+          Place Order
+        </button>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
+<!-- Woven Form End -->
+
+<!-- Tag Form Start -->
+<ng-container *ngIf="showtag">
+  <ng-container *ngIf="showCustomer">
+    <div class="banner">
+      <p>TAG</p>
+    </div>
+  </ng-container>
+  <div class="bg">
+    <ng-container *ngIf="showCustomer">
+      <!-- Mini Banner Start -->
+      <div class="gap"></div>
+      <div class="mini-banner">
+        <p>ORDER DETAILS</p>
+      </div>
+      <!-- Mini Banner Ending -->
+    </ng-container>
+
+    <ng-container *ngIf="showCustomer">
+      <div class="form-box">
+        <form>
+          <div class="row container-fluid">
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="printType" class="col-sm-4 col-form-label"
+                  >Print Type <span class="text-danger">*</span></label
+                >
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup82">
+                  <input
+                    type="text"
+                    [class.is-invalid]="
+                      intPlusFloat82.invalid && intPlusFloat82.touched
+                    "
+                    class="form-control"
+                    name="printType"
+                    [(ngModel)]="everything.printTypeTag"
+                    formControlName="intplusFloatControl82"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-label  class="col-sm-4 col-form-label">Unit <span class="text-danger">*</span></mat-label>
+                <div class="col-sm-8">
+                    <select [(ngModel)]="everything.unitTag" name="unitTag" id="unitTag" class="form-control">
+                      <ng-container *ngFor="let i = index; let munit of munitvalue | async">
+                        <option value = "{{munit.productunit}}" >
+                          {{munit.productunit}}
+                        </option>
+                      </ng-container>
+                    </select>
+                </div>
+              </div>
+            </div> -->
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="unitHeight" class="col-sm-4 col-form-label"
+                  >Unit Height <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup11">
+                  <input
+                    [class.is-invalid]="
+                      intPlusFloat11.invalid && intPlusFloat11.touched
+                    "
+                    type="text"
+                    class="form-control"
+                    name="unitHeightTag"
+                    [(ngModel)]="everything.unitHeightTag"
+                    formControlName="intplusFloatControl11"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="unitWidth" class="col-sm-4 col-form-label"
+                  >Unit Width <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup12">
+                  <input
+                    [class.is-invalid]="
+                      intPlusFloat12.invalid && intPlusFloat12.touched
+                    "
+                    type="text"
+                    class="form-control"
+                    name="unitWidthTag"
+                    [(ngModel)]="everything.unitWidthTag"
+                    formControlName="intplusFloatControl12"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="tagDevType" class="col-sm-4 col-form-label"
+                  >Tag Dev Type <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup56">
+                  <input
+                    [class.is-invalid]="
+                      intPlusFloat56.invalid && intPlusFloat56.touched
+                    "
+                    type="text"
+                    class="form-control"
+                    name="tagDevType"
+                    [(ngModel)]="everything.tagDevType"
+                    formControlName="intplusFloatControl56"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-label class="col-sm-4 col-form-label"
+                  >Document Type
+                </mat-label>
+                <div class="col-sm-8">
+                  <select
+                    [(ngModel)]="everything.documentTypeTag"
+                    name="documentTypeTag"
+                    id="documentTypeTag"
+                    class="form-control"
+                  >
+                    <ng-container
+                      *ngFor="
+                        let i = index;
+                        let munit;
+                        of: mdocumenttypeValues | async
+                      "
+                    >
+                      <option value="{{ munit.doctype }}">
+                        {{ munit.doctype }}
+                      </option>
+                    </ng-container>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="colorInfo" class="col-sm-4 col-form-label"
+                  >Color Info
+                </label>
+                <div class="col-sm-8">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="colorInfoTag"
+                    [(ngModel)]="everything.colorInfoTag"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="nameOfTheBoard" class="col-sm-4 col-form-label"
+                  >Name of the Board <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup58">
+                  <input
+                    [class.is-invalid]="
+                      intPlusFloat58.invalid && intPlusFloat58.touched
+                    "
+                    type="text"
+                    class="form-control"
+                    name="nameOfTheBoard"
+                    [(ngModel)]="everything.nameOfTheBoard"
+                    formControlName="intplusFloatControl58"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="boardSpecification" class="col-sm-4 col-form-label"
+                  >Board Specification <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup59">
+                  <input
+                    [class.is-invalid]="
+                      intPlusFloat59.invalid && intPlusFloat59.touched
+                    "
+                    type="text"
+                    class="form-control"
+                    name="boardSpecification"
+                    [(ngModel)]="everything.boardSpecification"
+                    formControlName="intplusFloatControl59"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-label class="col-sm-4 col-form-label"
+                  >Quality <span class="text-danger">*</span>
+                </mat-label>
+                <div class="col-sm-8">
+                  <select
+                    [(ngModel)]="everything.qualityTag"
+                    name="qualityTag"
+                    id="qualityTag"
+                    class="form-control"
+                  >
+                    <ng-container
+                      *ngFor="
+                        let i = index;
+                        let munit;
+                        of: motherdetailsvalueTagQuality | async
+                      "
+                    >
+                      <option value="{{ munit.name }}">
+                        {{ munit.name }}
+                      </option>
+                    </ng-container>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="boardGSM" class="col-sm-4 col-form-label"
+                  >Board GSM <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup14">
+                  <input
+                    [class.is-invalid]="
+                      intPlusFloat14.invalid && intPlusFloat14.touched
+                    "
+                    type="text"
+                    class="form-control"
+                    name="boardGSM"
+                    [(ngModel)]="everything.boardGSM"
+                    formControlName="intplusFloatControl14"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-checkbox
+                  class="col-sm-4 col-form-label"
+                  name="fsc"
+                  value="fsc"
+                  (click)="togglefsc1()"
+                  >FSC</mat-checkbox
+                >
+                <ng-container *ngIf="showfsc1">
+                  <div class="col-sm-8">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="fsc"
+                      [(ngModel)]="everything.fsc"
+                    />
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-label class="col-sm-4 col-form-label"
+                  >Color <span class="text-danger">*</span>
+                </mat-label>
+                <div class="col-sm-8">
+                  <select
+                    [(ngModel)]="everything.colorTag"
+                    name="colorTag"
+                    id="colorTag"
+                    class="form-control"
+                  >
+                    <ng-container
+                      *ngFor="let i = index; let munit; of: mcolorValue | async"
+                    >
+                      <option value="{{ munit.colorname }}">
+                        {{ munit.colorname }}
+                      </option>
+                    </ng-container>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="expectedQuantity" class="col-sm-4 col-form-label"
+                  >Expected Quantity <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="onlyIntGroup1">
+                  <input
+                    [class.is-invalid]="onlyInt1.invalid && onlyInt1.touched"
+                    type="text"
+                    class="form-control"
+                    name="expectedQuantity"
+                    [(ngModel)]="everything.expectedQuantityTag"
+                    formControlName="onlyIntControl1"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-label  class="col-sm-4 col-form-label">Folding <span class="text-danger">*</span> </mat-label>
+                <div class="col-sm-8">
+                    <select [(ngModel)]="everything.foldingTag" name="foldingTag" id="foldingTag" class="form-control">
+                      <ng-container *ngFor="let i = index; let munit of motherdetailsvalueTagFolding | async">
+                        <option value = "{{munit.name}}" >
+                          {{munit.name}}
+                        </option>
+                      </ng-container>
+                    </select>
+                </div>
+              </div>
+            </div> -->
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-label class="col-sm-4 col-form-label"
+                  >Finishing <span class="text-danger">*</span>
+                </mat-label>
+                <div class="col-sm-8">
+                  <select
+                    [(ngModel)]="everything.finishingTag"
+                    name="finishingTag"
+                    id="finishingTag"
+                    class="form-control"
+                  >
+                    <ng-container
+                      *ngFor="
+                        let i = index;
+                        let munit;
+                        of: motherdetailsvalueTagFinishing | async
+                      "
+                    >
+                      <option value="{{ munit.name }}">
+                        {{ munit.name }}
+                      </option>
+                    </ng-container>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="comments" class="col-sm-4 col-form-label"
+                  >Comments to Follow <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup60">
+                  <input
+                    [class.is-invalid]="
+                      intPlusFloat60.invalid && intPlusFloat60.touched
+                    "
+                    type="text"
+                    class="form-control"
+                    name="comments"
+                    [(ngModel)]="everything.comments"
+                    formControlName="intplusFloatControl60"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <br />
+            <br />
+            <br />
+
+            <div class="lineItemLabel">
+              <table>
+                <tbody *ngIf="everything.orderLineItem.length == 0">
+                  <tr>
+                    <div class="form-row mt-2">
+                      <div class="col">
+                        Variant Code
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="singleOrderLine.variantCode"
+                          name="variantCode1"
+                        />
+                      </div>
+                      <div class="col">
+                        Number of Pieces
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="singleOrderLine.noOfPieces"
+                          name="noOfPieces1"
+                        />
+                      </div>
+                      <div class="col">
+                        Action
+                        <button
+                          class="form-control btn btn-primary"
+                          (click)="addTable()"
+                        >
+                          Add Row
+                        </button>
+                      </div>
+                    </div>
+                  </tr>
+                </tbody>
+                <tbody *ngIf="everything.orderLineItem.length != 0">
+                  <tr
+                    *ngFor="let item of everything.orderLineItem; let i = index"
+                  >
+                    <div class="form-row mt-2">
+                      <div class="col">
+                        <div *ngIf="i == 0">Variant Code</div>
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="item.variantCode"
+                          [ngModelOptions]="{ standalone: true }"
+                        />
+                      </div>
+                      <div class="col">
+                        <div *ngIf="i == 0">Number of Pieces</div>
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="item.noOfPieces"
+                          [ngModelOptions]="{ standalone: true }"
+                        />
+                      </div>
+                      <div class="col">
+                        <div *ngIf="i == 0">Action</div>
+                        <button
+                          class="form-control btn btn-danger"
+                          (click)="deleteRow(i)"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </tr>
+                  <tr>
+                    <div class="form-row mt-2">
+                      <div class="col">
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="singleOrderLine.variantCode"
+                          name="variantCode3"
+                        />
+                      </div>
+                      <div class="col">
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="singleOrderLine.noOfPieces"
+                          name="noOfPieces3"
+                        />
+                      </div>
+                      <div class="col">
+                        <button
+                          class="form-control btn btn-primary"
+                          (click)="addTable()"
+                        >
+                          Add Row
+                        </button>
+                      </div>
+                    </div>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="showThis">
+      <ng-container *ngIf="showSalesTeam">
+        <!-- Mini Banner Start -->
+        <div class="gap"></div>
+        <div class="mini-banner">
+          <p>PRE-PRESS</p>
+        </div>
+        <!-- Mini Banner Ending -->
+      </ng-container>
+
+      <ng-container *ngIf="showSalesTeam">
+        <div class="form-box">
+          <form>
+            <div class="row container-fluid">
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="noOfPlates" class="col-sm-4 col-form-label"
+                    >No of Plates <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup15">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat15.invalid && intPlusFloat15.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="noOfPlates"
+                      [(ngModel)]="everything.noOfPlates"
+                      formControlName="intplusFloatControl15"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="negativePositive" class="col-sm-4 col-form-label"
+                    >Negative/Positive <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup61">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat61.invalid && intPlusFloat61.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="negativePositive"
+                      [(ngModel)]="everything.negativePositive"
+                      formControlName="intplusFloatControl61"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="FoilEmbossScreen" class="col-sm-4 col-form-label"
+                    >Foil/Emboss/Screen <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="FoilEmbossScreen"
+                      [(ngModel)]="everything.foilEmbossScreen"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="die" class="col-sm-4 col-form-label"
+                    >Die <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup16">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat16.invalid && intPlusFloat16.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="die"
+                      [(ngModel)]="everything.die"
+                      formControlName="intplusFloatControl16"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="die" class="col-sm-4 col-form-label"
+                    >Plate Size <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup16">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat16.invalid && intPlusFloat16.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="platesize"
+                      [(ngModel)]="everything.platesize"
+                      formControlName="intplusFloatControl16"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label
+                    for="printColorMatching"
+                    class="col-sm-4 col-form-label"
+                    >Print Color Matching <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup62">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat62.invalid && intPlusFloat62.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="printColorMatching"
+                      [(ngModel)]="everything.printColorMatching"
+                      formControlName="intplusFloatControl62"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="showSalesTeam">
+        <!-- Mini Banner Start -->
+        <div class="gap"></div>
+        <div class="mini-banner">
+          <p>POST-PRESS</p>
+        </div>
+        <!-- Mini Banner Ending -->
+
+        <div class="form-box">
+          <form>
+            <!-- Mini Banner Start -->
+            <!-- <div class="mini-banner-2">
+            <p>Foil</p>
+          </div> -->
+            <!-- Mini Banner Ending -->
+            <div class="flex-it">
+              <div class="check-control">
+                <section class="example-section">
+                  <mat-checkbox
+                    class="example-margin c-item"
+                    name="foilFace"
+                    value="Face"
+                    [(ngModel)]="everything.foilFace"
+                    >Face</mat-checkbox
+                  >
+                  <mat-checkbox
+                    class="example-margin c-item"
+                    name="foilReverse"
+                    value="Reverse"
+                    [(ngModel)]="everything.foilReverse"
+                    >Reverse</mat-checkbox
+                  >
+                  <label for="foilColor" class="c-item">Foil Color</label>
+                  <input
+                    class="c-item"
+                    name="foilcolor"
+                    type="text"
+                    [(ngModel)]="everything.foilColor"
+                  />
+                </section>
+              </div>
+            </div>
+
+            <!-- Mini Banner Start -->
+            <div class="mini-banner-2">
+              <p>UV</p>
+            </div>
+            <!-- Mini Banner Ending -->
+
+            <div class="check-control">
+              <section class="example-section">
+                <mat-checkbox
+                  class="example-margin c-item"
+                  name="uvFace"
+                  value="Face"
+                  [(ngModel)]="everything.uvFace"
+                  >Face</mat-checkbox
+                >
+                <mat-checkbox
+                  class="example-margin c-item"
+                  name="uvReverse"
+                  value="Reverse"
+                  [(ngModel)]="everything.uvReverse"
+                  >Reverse</mat-checkbox
+                >
+                <label for="noOfScreens" class="c-item">No. of Screens</label>
+                <input
+                  class="c-item"
+                  name="uvNoOfScreens"
+                  type="text"
+                  [(ngModel)]="everything.uvNoOfScreens"
+                />
+              </section>
+            </div>
+
+            <!-- Mini Banner Start -->
+            <div class="mini-banner-1">
+              <p>EMBOSS</p>
+            </div>
+            <!-- Mini Banner Ending -->
+
+            <!-- Mini Banner Start -->
+            <div class="mini-banner-2">
+              <p>Varnish</p>
+            </div>
+            <!-- Mini Banner Ending -->
+
+            <div class="sm-gap"></div>
+
+            <div class="check-control">
+              <section class="example-section">
+                <mat-checkbox
+                  class="example-margin c-item"
+                  name="vMatt"
+                  value="Matt"
+                  [(ngModel)]="everything.vMatt"
+                  >Matt</mat-checkbox
+                >
+                <mat-checkbox
+                  class="example-margin c-item"
+                  name="vGloss"
+                  value="Gloss"
+                  [(ngModel)]="everything.vGloss"
+                  >Gloss</mat-checkbox
+                >
+                <mat-checkbox
+                  class="example-margin c-item"
+                  name="vFace"
+                  value="Face"
+                  [(ngModel)]="everything.vFace"
+                  >Face</mat-checkbox
+                >
+                <mat-checkbox
+                  class="example-margin c-item"
+                  name="vReverse"
+                  value="Reverse"
+                  [(ngModel)]="everything.vReverse"
+                  >Reverse</mat-checkbox
+                >
+                <mat-checkbox
+                  class="example-margin c-item"
+                  name="others"
+                  value="othersCheck1"
+                  (click)="toggleothers1()"
+                  >Others</mat-checkbox
+                >
+                <ng-container *ngIf="showothers1">
+                  <input
+                    class="c-item"
+                    name="vOthers"
+                    type="text"
+                    [(ngModel)]="everything.vOthers"
+                  />
+                </ng-container>
+              </section>
+            </div>
+
+            <div class="sm-gap"></div>
+
+            <!-- Mini Banner Start -->
+            <div class="mini-banner-2">
+              <p>Lamination</p>
+            </div>
+            <!-- Mini Banner Ending -->
+
+            <div class="sm-gap"></div>
+
+            <div class="check-control">
+              <section class="example-section">
+                <mat-checkbox
+                  class="example-margin c-item"
+                  name="lMatt"
+                  value="Matt"
+                  [(ngModel)]="everything.lMatt"
+                  >Matt</mat-checkbox
+                >
+                <mat-checkbox
+                  class="example-margin c-item"
+                  name="lGloss"
+                  value="Gloss"
+                  [(ngModel)]="everything.lGloss"
+                  >Gloss</mat-checkbox
+                >
+                <mat-checkbox
+                  class="example-margin c-item"
+                  name="lFace"
+                  value="Face"
+                  [(ngModel)]="everything.lFace"
+                  >Face</mat-checkbox
+                >
+                <mat-checkbox
+                  class="example-margin c-item"
+                  name="lReverse"
+                  value="Reverse"
+                  [(ngModel)]="everything.lReverse"
+                  >Reverse</mat-checkbox
+                >
+                <mat-checkbox
+                  class="example-margin c-item"
+                  name="lothers2"
+                  value="othersCheck2"
+                  (click)="toggleothers2()"
+                  >Others</mat-checkbox
+                >
+                <ng-container *ngIf="showothers2">
+                  <input
+                    class="c-item"
+                    name="lOthers"
+                    type="text"
+                    [(ngModel)]="everything.lOthers"
+                  />
+                </ng-container>
+              </section>
+            </div>
+
+            <div class="check-control">
+              <section class="example-section">
+                <mat-checkbox
+                  class="example-margin c-item"
+                  name="straightCut"
+                  value="Straight Cut"
+                  [(ngModel)]="everything.straightCut"
+                  >Straight Cut</mat-checkbox
+                >
+                <mat-checkbox
+                  class="example-margin c-item"
+                  name="holesCheck"
+                  (click)="toggleholes()"
+                  value="holesCheck"
+                  >Holes</mat-checkbox
+                >
+                <ng-container *ngIf="showholes">
+                  <input
+                    class="c-item"
+                    name="holes"
+                    placeholder="Hole Size"
+                    type="text"
+                    [(ngModel)]="everything.holeSize"
+                  />
+                </ng-container>
+                <mat-checkbox
+                  class="example-margin c-item"
+                  name="perforation"
+                  value="Perforation"
+                  [(ngModel)]="everything.perforation"
+                  >Perforation</mat-checkbox
+                >
+                <mat-checkbox
+                  class="example-margin c-item"
+                  name="creasing"
+                  value="Creasing"
+                  [(ngModel)]="everything.creasing"
+                  >Creasing</mat-checkbox
+                >
+                <mat-checkbox
+                  class="example-margin c-item"
+                  name="designCut"
+                  value="Design Cut"
+                  [(ngModel)]="everything.designCut"
+                  >Design Cut</mat-checkbox
+                >
+                <input class="c-item" type="text" name="designCut" />
+              </section>
+            </div>
+          </form>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="showSalesTeam">
+        <!-- Mini Banner Start -->
+        <div class="gap"></div>
+        <div class="mini-banner">
+          <p>FINISHING</p>
+        </div>
+        <!-- Mini Banner Ending -->
+
+        <div class="form-box">
+          <form>
+            <div class="check-control">
+              <section class="example-section">
+                <mat-checkbox
+                  class="example-margin c-item"
+                  value="String"
+                  (click)="togglestring()"
+                  >String</mat-checkbox
+                >
+                <ng-container *ngIf="showstring">
+                  <input
+                    class="c-item"
+                    name="stringColorAndLength"
+                    placeholder="String Color and Length"
+                    type="text"
+                    [(ngModel)]="everything.string"
+                  />
+                </ng-container>
+                <label for="EyeletColorAndLength" class="c-item"
+                  >Eyelet Color and Length</label
+                >
+                <input
+                  class="c-item"
+                  name="EyeletColorAndLength"
+                  type="text"
+                  [(ngModel)]="everything.eyeletColorAndLength"
+                />
+              </section>
+            </div>
+
+            <div class="check-control">
+              <section class="example-section">
+                <label for="ifOthers" class="c-item">If Others</label>
+                <input
+                  class="c-item"
+                  name="ifOthers"
+                  type="text"
+                  [(ngModel)]="everything.ifOthers"
+                />
+                <label for="ifOthers" class="c-item"
+                  >Hook Color and Length</label
+                >
+                <input
+                  class="c-item"
+                  name="hookColorAndLength"
+                  type="text"
+                  [(ngModel)]="everything.hookColorAndLength"
+                />
+              </section>
+            </div>
+          </form>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="showSalesTeam">
+        <!-- Mini Banner Start -->
+        <div class="gap"></div>
+        <div class="mini-banner">
+          <p>OFFICE USE ONLY</p>
+        </div>
+        <!-- Mini Banner Ending -->
+
+        <div class="form-box">
+          <form>
+            <div class="check-control">
+              <section class="example-section">
+                <label for="boardCost" class="c-item"
+                  >Board Cost <span class="text-danger">*</span>
+                </label>
+                <input
+                  class="c-item"
+                  name="boardCost"
+                  type="text"
+                  [(ngModel)]="everything.boardCost"
+                />
+                <label for="boardWastage" class="c-item">Board Wastage</label>
+                <input
+                  class="c-item"
+                  name="boardWastage"
+                  type="text"
+                  [(ngModel)]="everything.boardWastage"
+                />
+                <label for="DesignFileName" class="c-item"
+                  >Design File Name <span class="text-danger">*</span>
+                </label>
+                <input
+                  class="c-item"
+                  name="designFileName"
+                  type="text"
+                  [(ngModel)]="everything.designFileName"
+                />
+                <label for="runningBoardSize" class="c-item"
+                  >Running Board Size <span class="text-danger">*</span>
+                </label>
+                <input
+                  class="c-item"
+                  name="runningBoardSize"
+                  type="text"
+                  [(ngModel)]="everything.runningBoardSize"
+                />
+
+                <br />
+
+                <label for="noofups" class="c-item">No Of Ups </label>
+                <input
+                  class="c-item"
+                  name="noofups"
+                  type="text"
+                  [(ngModel)]="everything.noofups"
+                />
+
+                <div class="col-md-6 col-lg-4">
+                  <div class="form-group row">
+                    <mat-label class="col-sm-4 col-form-label"
+                      >Status <span class="text-danger">*</span>
+                    </mat-label>
+                    <div class="col-sm-8">
+                      <select
+                        (click)="reloadData()"
+                        [(ngModel)]="everything.statusTag"
+                        name="statusTag"
+                        id="statusTag"
+                        class="form-control"
+                      >
+                        <ng-container
+                          *ngFor="let i = index; let sUnit; of: mStatusTagArray"
+                        >
+                          <option
+                            *ngIf="mStatusTagArray[i] != undefined"
+                            value="{{ mStatusTagArray[i] }}"
+                          >
+                            {{ mStatusTagArray[i] }}
+                          </option>
+                        </ng-container>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <table class="table-push">
+              <tr>
+                <td>
+                  <mat-checkbox
+                    class="c-item"
+                    name="digitalPrint"
+                    value="Digital Print"
+                    [(ngModel)]="everything.digitalPrint"
+                    >Digital Print</mat-checkbox
+                  >
+                </td>
+                <td>
+                  <mat-checkbox
+                    class="c-item"
+                    name="offsetPrint"
+                    value="Offset Print"
+                    [(ngModel)]="everything.offsetPrintTag"
+                    >Offset Print</mat-checkbox
+                  >
+                </td>
+                <td>
+                  <mat-checkbox
+                    class="c-item"
+                    name="foil"
+                    value="Foil"
+                    [(ngModel)]="everything.foil"
+                    >Foil</mat-checkbox
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-checkbox
+                    class="c-item"
+                    name="uv"
+                    value="UV"
+                    [(ngModel)]="everything.uv"
+                    >UV</mat-checkbox
+                  >
+                </td>
+                <td>
+                  <mat-checkbox
+                    class="c-item"
+                    name="emboss"
+                    value="Emboss"
+                    [(ngModel)]="everything.emboss"
+                    >Emboss</mat-checkbox
+                  >
+                </td>
+                <td>
+                  <mat-checkbox
+                    class="c-item"
+                    name="varnish"
+                    value="Varnish"
+                    [(ngModel)]="everything.varnish"
+                    >Varnish</mat-checkbox
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <mat-checkbox
+                    class="c-item"
+                    name="lamination"
+                    value="Lamination"
+                    [(ngModel)]="everything.lamination"
+                    >Lamination</mat-checkbox
+                  >
+                </td>
+                <td>
+                  <mat-checkbox
+                    class="c-item"
+                    name="pasting"
+                    value="Pasting"
+                    [(ngModel)]="everything.pasting"
+                    >Pasting</mat-checkbox
+                  >
+                </td>
+                <td>
+                  <mat-checkbox
+                    class="c-item"
+                    name="die"
+                    value="Die"
+                    [(ngModel)]="everything.die2"
+                    >Die</mat-checkbox
+                  >
+                </td>
+              </tr>
+            </table>
+          </form>
+        </div>
+      </ng-container>
+    </ng-container>
+
+    <!-- Mini Banner Start -->
+    <div class="gap"></div>
+    <div class="mini-banner">
+      <p>ARTWORK FILE NAME</p>
+    </div>
+    <!-- Mini Banner Ending -->
+
+    <div class="form-box upload-box">
+      <div *ngIf="currentFile" class="progress">
+        <div
+          class="progress-bar progress-bar-info progress-bar-striped"
+          role="progressbar"
+          attr.aria-valuenow="{{ progress }}"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          [ngStyle]="{ width: progress + '%' }"
+        >
+          {{ progress }}%
+        </div>
+      </div>
+
+      <label class="btn btn-default">
+        <input
+          #artworkAttachment
+          type="file"
+          (change)="checkUploadRegex($event)"
+          [disabled]="fileIsUploaded"
+        />
+        <!-- <button class="btn btn-success" [disabled]="!selectedFiles" (click)="upload1()">
+    Upload
+  </button> -->
+        <button (click)="resetArtworkAttachment()" class="btn btn-danger">
+          Reset
+        </button>
+        <br />
+        <br />
+      </label>
+    </div>
+
+    <div class="cent">
+      <button
+        type="submit"
+        (click)="checkTagForm()"
+        class="btn btn-success pad-it"
+      >
+        Save
+      </button>
+
+      <ng-container *ngIf="showSampleRequest">
+        <button
+          type="submit"
+          (click)="checkTagFormUpdate()"
+          (click)="orderConfirmation()"
+          class="btn btn-primary pad-it"
+        >
+          Place Order
+        </button>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
+<!-- Tag Form End -->
+
+<!-- Sticker Form Start -->
+<ng-container *ngIf="showsticker">
+  <ng-container *ngIf="showCustomer">
+    <div class="banner">
+      <p>STICKER</p>
+    </div>
+  </ng-container>
+  <div class="bg">
+    <ng-container *ngIf="showCustomer">
+      <!-- Mini Banner Start -->
+      <div class="gap"></div>
+      <div class="mini-banner">
+        <p>ORDER DETAILS</p>
+      </div>
+      <!-- Mini Banner Ending -->
+    </ng-container>
+
+    <ng-container *ngIf="showCustomer">
+      <div class="form-box">
+        <form>
+          <div class="row container-fluid">
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="printType" class="col-sm-4 col-form-label"
+                  >Print Type <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup83">
+                  <input
+                    type="text"
+                    [class.is-invalid]="
+                      intPlusFloat83.invalid && intPlusFloat83.touched
+                    "
+                    class="form-control"
+                    name="printType"
+                    [(ngModel)]="everything.printType"
+                    formControlName="intplusFloatControl83"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-label  class="col-sm-4 col-form-label">Unit <span class="text-danger">*</span></mat-label>
+                <div class="col-sm-8">
+                    <select [(ngModel)]="everything.unitSticker" name="unitSticker" id="unitSticker" class="form-control">
+                      <ng-container *ngFor="let i = index; let munit of munitvalue | async">
+                        <option value = "{{munit.productunit}}" >
+                          {{munit.productunit}}
+                        </option>
+                      </ng-container>
+                    </select>
+                </div>
+              </div>
+            </div> -->
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="unitHeight" class="col-sm-4 col-form-label"
+                  >Unit Height <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup50">
+                  <input
+                    [class.is-invalid]="
+                      intPlusFloat50.invalid && intPlusFloat50.touched
+                    "
+                    type="text"
+                    class="form-control"
+                    name="unitheight"
+                    [(ngModel)]="everything.unitHeightSticker"
+                    formControlName="intplusFloatControl50"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="unitWidth" class="col-sm-4 col-form-label"
+                  >Unit Width <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup49">
+                  <input
+                    [class.is-invalid]="
+                      intPlusFloat49.invalid && intPlusFloat49.touched
+                    "
+                    type="text"
+                    class="form-control"
+                    name="unitWidth"
+                    [(ngModel)]="everything.unitWidthSticker"
+                    formControlName="intplusFloatControl49"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="diameter" class="col-sm-4 col-form-label"
+                  >Diameter <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup48">
+                  <input
+                    [class.is-invalid]="
+                      intPlusFloat48.invalid && intPlusFloat48.touched
+                    "
+                    type="text"
+                    class="form-control"
+                    name="diameter"
+                    [(ngModel)]="everything.diameter"
+                    formControlName="intplusFloatControl48"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-label class="col-sm-4 col-form-label"
+                  >Document Type
+                </mat-label>
+                <div class="col-sm-8">
+                  <select
+                    [(ngModel)]="everything.documentType"
+                    name="documentType"
+                    id="documentType"
+                    class="form-control"
+                  >
+                    <ng-container
+                      *ngFor="
+                        let i = index;
+                        let munit;
+                        of: mdocumenttypeValues | async
+                      "
+                    >
+                      <option value="{{ munit.doctype }}">
+                        {{ munit.doctype }}
+                      </option>
+                    </ng-container>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="colorInfo" class="col-sm-4 col-form-label"
+                  >Color Info
+                </label>
+                <div class="col-sm-8">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="colorInfo"
+                    [(ngModel)]="everything.colorInfoSticker"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="stickerType" class="col-sm-4 col-form-label"
+                  >Sticker Type <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup84">
+                  <input
+                    [class.is-invalid]="
+                      intPlusFloat84.invalid && intPlusFloat84.touched
+                    "
+                    type="text"
+                    class="form-control"
+                    name="stickerType"
+                    [(ngModel)]="everything.stickerType"
+                    formControlName="intplusFloatControl84"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="rollColor" class="col-sm-4 col-form-label"
+                  >Roll Color <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup72">
+                  <input
+                    [class.is-invalid]="
+                      intPlusFloat72.invalid && intPlusFloat72.touched
+                    "
+                    type="text"
+                    class="form-control"
+                    name="rollColor"
+                    [(ngModel)]="everything.rollColor"
+                    formControlName="intplusFloatControl72"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="rollSpecification" class="col-sm-4 col-form-label"
+                  >Roll Specification <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup73">
+                  <input
+                    [class.is-invalid]="
+                      intPlusFloat73.invalid && intPlusFloat73.touched
+                    "
+                    type="text"
+                    class="form-control"
+                    name="rollSpecification"
+                    [(ngModel)]="everything.rollSpecification"
+                    formControlName="intplusFloatControl73"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="rollSize" class="col-sm-4 col-form-label"
+                  >Roll Size <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup47">
+                  <input
+                    [class.is-invalid]="
+                      intPlusFloat47.invalid && intPlusFloat47.touched
+                    "
+                    type="text"
+                    class="form-control"
+                    name="rollSize"
+                    [(ngModel)]="everything.rollSize"
+                    formControlName="intplusFloatControl47"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="sampleCharge" class="col-sm-4 col-form-label">Sample Charge  </label>
+                <div class="check-control">
+            <input type="radio" [(ngModel)]="everything.sampleCharge"  value="yes" name="sampleCharge" id="yes">
+                  <label for="yes"> Yes </label>
+                  </div>
+              </div>
+            </div> -->
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-checkbox
+                  class="col-sm-4 col-form-label"
+                  name="sampleCharge"
+                  value="sampleCharge"
+                  (click)="togglesamplecharge()"
+                  >Sample Charge</mat-checkbox
+                >
+                <ng-container *ngIf="showsamplecharge">
+                  <div class="col-sm-8">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="sampleCharge"
+                      [(ngModel)]="everything.sampleCharge"
+                    />
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="comments" class="col-sm-4 col-form-label"
+                  >Comments to Follow <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup74">
+                  <input
+                    [class.is-invalid]="
+                      intPlusFloat74.invalid && intPlusFloat74.touched
+                    "
+                    type="text"
+                    class="form-control"
+                    name="comments"
+                    [(ngModel)]="everything.comments"
+                    formControlName="intplusFloatControl74"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="expectedQuantity" class="col-sm-4 col-form-label"
+                  >Expected Quantity <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup46">
+                  <input
+                    [class.is-invalid]="
+                      intPlusFloat46.invalid && intPlusFloat46.touched
+                    "
+                    type="text"
+                    class="form-control"
+                    name="expectedQuantity"
+                    [(ngModel)]="everything.expectedQuantitySticker"
+                    formControlName="intplusFloatControl46"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="sampleRequest" class="col-sm-4 col-form-label"
+                  >Sample Request on <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8">
+                  <input
+                    type="date"
+                    class="form-control"
+                    name="sampleRequest"
+                    [(ngModel)]="everything.sampleRequest"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="" class="col-sm-4 col-form-label"></label>
+                <div class="col-sm-8"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mini Banner Start -->
+          <div class="mini-banner-2">
+            <p>Print Details</p>
+          </div>
+          <!-- Mini Banner Ending -->
+
+          <div class="check-control">
+            <section class="example-section">
+              <mat-checkbox
+                class="example-margin c-item"
+                name="flex"
+                value="flex"
+                [(ngModel)]="everything.flex"
+                >Flex</mat-checkbox
+              >
+              <mat-checkbox
+                class="example-margin c-item"
+                name="offset"
+                value="offset"
+                [(ngModel)]="everything.offset"
+                >Offset</mat-checkbox
+              >
+            </section>
+          </div>
+
+          <div class="sm-gap"></div>
+
+          <div class="row container-fluid">
+            <br />
+            <br />
+            <br />
+
+            <div class="lineItemLabel">
+              <table>
+                <tbody *ngIf="everything.orderLineItem.length == 0">
+                  <tr>
+                    <div class="form-row mt-2">
+                      <div class="col">
+                        Variant Code
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="singleOrderLine.variantCode"
+                          name="variantCode1"
+                        />
+                      </div>
+                      <div class="col">
+                        Number of Pieces
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="singleOrderLine.noOfPieces"
+                          name="noOfPieces1"
+                        />
+                      </div>
+                      <div class="col">
+                        Action
+                        <button
+                          class="form-control btn btn-primary"
+                          (click)="addTable()"
+                        >
+                          Add Row
+                        </button>
+                      </div>
+                    </div>
+                  </tr>
+                </tbody>
+                <tbody *ngIf="everything.orderLineItem.length != 0">
+                  <tr
+                    *ngFor="let item of everything.orderLineItem; let i = index"
+                  >
+                    <div class="form-row mt-2">
+                      <div class="col">
+                        <div *ngIf="i == 0">Variant Code</div>
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="item.variantCode"
+                          [ngModelOptions]="{ standalone: true }"
+                        />
+                      </div>
+                      <div class="col">
+                        <div *ngIf="i == 0">Number of Pieces</div>
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="item.noOfPieces"
+                          [ngModelOptions]="{ standalone: true }"
+                        />
+                      </div>
+                      <div class="col">
+                        <div *ngIf="i == 0">Action</div>
+                        <button
+                          class="form-control btn btn-danger"
+                          (click)="deleteRow(i)"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </tr>
+                  <tr>
+                    <div class="form-row mt-2">
+                      <div class="col">
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="singleOrderLine.variantCode"
+                          name="variantCode3"
+                        />
+                      </div>
+                      <div class="col">
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="singleOrderLine.noOfPieces"
+                          name="noOfPieces3"
+                        />
+                      </div>
+                      <div class="col">
+                        <button
+                          class="form-control btn btn-primary"
+                          (click)="addTable()"
+                        >
+                          Add Row
+                        </button>
+                      </div>
+                    </div>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- <div class="form-check form-check-inline d-item">
+              <label for="printDetails">Print Details </label>
+              <input class="form-check-input f-item" type="checkbox" name="inlineCheckbox1" [(ngModel)]="everything.flex">
+              <label class="form-check-label f-item" for="inlineCheckbox1">Flex</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input f-item" type="checkbox" name="inlineCheckbox2" [(ngModel)]="everything.offset">
+              <label class="form-check-label f-item" for="inlineCheckbox2">Offset</label>
+            </div> -->
+        </form>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="showThis">
+      <ng-container *ngIf="showSalesTeam">
+        <!-- Mini Banner Start -->
+        <div class="gap"></div>
+        <div class="mini-banner">
+          <p>OFFICE USE ONLY</p>
+        </div>
+      </ng-container>
+      <!-- Mini Banner Ending -->
+      <ng-container *ngIf="showSalesTeam">
+        <div class="form-box">
+          <form>
+            <div class="row container-fluid">
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="incoming" class="col-sm-4 col-form-label"
+                    >Incoming Date <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="incoming"
+                      value="{{ myDate | date: 'dd-MM-yyyy' }}"
+                      readonly
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="samplePDate" class="col-sm-4 col-form-label">Sample P Date</label>
+                <div class="col-sm-8">
+                  <input type="date" class="form-control" name="samplePDate" [(ngModel)]="everything.samplePDate">
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="executiveCode" class="col-sm-4 col-form-label">Executive Code</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" name="executiveCode" [(ngModel)]="everything.executiveCode">
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="manager" class="col-sm-4 col-form-label">Manager</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" name="manager" [(ngModel)]="everything.manager">
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="date/time" class="col-sm-4 col-form-label">Date/Time</label>
+                <div class="col-sm-8">
+                  <input type="datetime-local" class="form-control" name="datetime" [(ngModel)]="everything.dateTimeSticker">
+                </div>
+              </div>
+            </div> -->
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="dispatch" class="col-sm-4 col-form-label"
+                    >Commitment Date <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8">
+                    <input
+                      type="date"
+                      class="form-control"
+                      name="dispatch"
+                      [(ngModel)]="everything.dispatch"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="runningBoardSize" class="col-sm-4 col-form-label">Running Board Size</label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup13">
+                    <input [class.is-invalid]="intPlusFloat13.invalid && intPlusFloat13.touched" type="text" class="form-control" name="runningBoardSize" [(ngModel)] = "everything.runningBoardSize" formControlName="intplusFloatControl13"/>
+                  </div>
+                </div>
+              </div> -->
+
+              <!-- <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="rollCost" class="col-sm-4 col-form-label">Sticker Roll <span class="text-danger">*</span> </label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup75" >
+                  <input [class.is-invalid]="intPlusFloat75.invalid && intPlusFloat75.touched"   type="text" class="form-control" name="rollCost" [(ngModel)]="everything.rollCost" formControlName="intplusFloatControl75"/>
+                </div>
+              </div>
+            </div> -->
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="rollWastage" class="col-sm-4 col-form-label"
+                    >Roll Wastage
+                  </label>
+                  <div class="col-sm-8">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="rollWastage"
+                      [(ngModel)]="everything.rollWastage"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="stickerPrint" class="col-sm-4 col-form-label"
+                    >Sticker Print <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup77">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat77.invalid && intPlusFloat77.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="stickerPrint"
+                      [(ngModel)]="everything.stickerPrint"
+                      formControlName="intplusFloatControl77"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="digitalPrint" class="col-sm-4 col-form-label"
+                    >Digital Print <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup78">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat78.invalid && intPlusFloat78.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="digitalPrint"
+                      [(ngModel)]="everything.digitalPrint"
+                      formControlName="intplusFloatControl78"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="foil" class="col-sm-4 col-form-label"
+                    >Foil <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup79">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat79.invalid && intPlusFloat79.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="foil"
+                      [(ngModel)]="everything.foil"
+                      formControlName="intplusFloatControl79"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="die" class="col-sm-4 col-form-label"
+                    >Die <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup80">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat80.invalid && intPlusFloat80.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="die"
+                      [(ngModel)]="everything.die"
+                      formControlName="intplusFloatControl80"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="platesizeSticker" class="col-sm-4 col-form-label"
+                    >Plate Size <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup81">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat81.invalid && intPlusFloat81.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="platesizeSticker"
+                      [(ngModel)]="everything.platesizeSticker"
+                      formControlName="intplusFloatControl81"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="fwdandPacking" class="col-sm-4 col-form-label">FWD & Packing</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" name="fwdandPacking" [(ngModel)]="everything.fwdandPacking">
+                </div>
+              </div>
+            </div> -->
+
+              <!-- <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="total" class="col-sm-4 col-form-label">Total</label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup45">
+                  <input [class.is-invalid]="intPlusFloat45.invalid && intPlusFloat45.touched" type="text" class="form-control" name="total" [(ngModel)]="everything.total" formControlName="intplusFloatControl45"/>
+                </div>
+              </div>
+            </div> -->
+
+              <!-- <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="margin" class="col-sm-4 col-form-label">Margin</label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup44">
+                  <input [class.is-invalid]="intPlusFloat44.invalid && intPlusFloat44.touched"  type="text" class="form-control" name="margin" [(ngModel)]="everything.margin" formControlName="intplusFloatControl44"/>
+                </div>
+              </div>
+            </div> -->
+
+              <!-- <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="finalCost" class="col-sm-4 col-form-label">Final Cost</label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup43">
+                  <input [class.is-invalid]="intPlusFloat43.invalid && intPlusFloat43.touched" type="text" class="form-control" name="finalCost" [(ngModel)]="everything.finalCost" formControlName="intplusFloatControl43"/>
+                </div>
+              </div>
+            </div> -->
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label
+                    for="staticEmail"
+                    class="col-sm-4 col-form-label"
+                  ></label>
+                  <div class="col-sm-8"></div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="showSalesTeam">
+        <!-- Mini Banner Start -->
+        <div class="gap"></div>
+        <div class="mini-banner">
+          <p>INK NAME TABLE</p>
+        </div>
+
+        <!-- Table -->
+
+        <table class="table table-bordered sticker-table">
+          <tr>
+            <th style="width: 60px">Ink Name</th>
+            <th style="width: 60px">Ist Color gms</th>
+            <th style="width: 60px">Ink Name</th>
+            <th style="width: 60px">2nd Color gms</th>
+            <th style="width: 60px">Ink Name</th>
+            <th style="width: 60px">3rd Color gms</th>
+            <th style="width: 60px">Ink Name</th>
+            <th style="width: 60px">4th Color gms</th>
+            <th style="width: 60px">Ink Name</th>
+            <th style="width: 60px">5th Color gms</th>
+            <th style="width: 60px">Ink Name</th>
+            <th style="width: 60px">6th Color gms</th>
+          </tr>
+          <tr>
+            <td>
+              <input type="text" [(ngModel)]="everything.inkNameTable[0]" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="everything.inkNameTable[1]" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="everything.inkNameTable[2]" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="everything.inkNameTable[3]" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="everything.inkNameTable[4]" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="everything.inkNameTable[5]" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="everything.inkNameTable[6]" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="everything.inkNameTable[7]" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="everything.inkNameTable[8]" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="everything.inkNameTable[9]" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="everything.inkNameTable[10]" />
+            </td>
+            <td>
+              <input type="text" [(ngModel)]="everything.inkNameTable[11]" />
+            </td>
+          </tr>
+        </table>
+
+        <!-- Mini Banner Ending -->
+
+        <!-- <div class="img-holder">
+  <img src="../../assets/Sticker Table.png" alt="Table">
+  </div> -->
+      </ng-container>
+    </ng-container>
+
+    <!-- Mini Banner Start -->
+    <div class="gap"></div>
+    <div class="mini-banner">
+      <p>ARTWORK FILE NAME</p>
+    </div>
+    <!-- Mini Banner Ending -->
+
+    <div class="form-box upload-box">
+      <div *ngIf="currentFile" class="progress">
+        <div
+          class="progress-bar progress-bar-info progress-bar-striped"
+          role="progressbar"
+          attr.aria-valuenow="{{ progress }}"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          [ngStyle]="{ width: progress + '%' }"
+        >
+          {{ progress }}%
+        </div>
+      </div>
+
+      <label class="btn btn-default">
+        <input
+          #artworkAttachment
+          type="file"
+          (change)="checkUploadRegex($event)"
+          [disabled]="fileIsUploaded"
+        />
+        <!-- <button class="btn btn-success" [disabled]="!selectedFiles" (click)="upload1()">
+    Upload
+  </button> -->
+        <button (click)="resetArtworkAttachment()" class="btn btn-danger">
+          Reset
+        </button>
+        <br />
+        <br />
+      </label>
+    </div>
+
+    <div class="cent">
+      <button
+        type="submit"
+        (click)="checkStickerForm()"
+        class="btn btn-success pad-it"
+      >
+        Save
+      </button>
+
+      <ng-container *ngIf="showSampleRequest">
+        <button
+          type="submit"
+          (click)="checkStickerFormUpdate()"
+          (click)="orderConfirmation()"
+          class="btn btn-primary pad-it"
+        >
+          Place Order
+        </button>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
+<!-- Sticker Form End -->
+
+<!-- Printed Form Start -->
+<ng-container *ngIf="showprint">
+  <ng-container *ngIf="showCustomer">
+    <div class="banner">
+      <p>PRINTED</p>
+    </div>
+  </ng-container>
+  <div class="bg">
+    <ng-container *ngIf="showCustomer">
+      <!-- Mini Banner Start -->
+      <div class="gap"></div>
+      <div class="mini-banner">
+        <p>ORDER DETAILS</p>
+      </div>
+      <!-- Mini Banner Ending -->
+    </ng-container>
+    <ng-container *ngIf="showCustomer">
+      <div class="form-box">
+        <form>
+          <div class="row container-fluid">
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-label class="col-sm-4 col-form-label"
+                  >Label Type <span class="text-danger">*</span>
+                </mat-label>
+                <div class="col-sm-8">
+                  <select
+                    [(ngModel)]="everything.labelTypePrinted"
+                    name="labelTypePrinted"
+                    id="labelTypePrinted"
+                    class="form-control"
+                  >
+                    <ng-container
+                      *ngFor="
+                        let i = index;
+                        let munit;
+                        of: mlabeltypeValue | async
+                      "
+                    >
+                      <option value="{{ munit.labelname }}">
+                        {{ munit.labelname }}
+                      </option>
+                    </ng-container>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-label class="col-sm-4 col-form-label"
+                  >Unit <span class="text-danger">*</span>
+                </mat-label>
+                <div class="col-sm-8">
+                  <select
+                    [(ngModel)]="everything.unitPrinted"
+                    name="unitPrinted"
+                    id="unitPrinted"
+                    class="form-control"
+                  >
+                    <ng-container
+                      *ngFor="let i = index; let munit; of: munitvalue | async"
+                    >
+                      <option value="{{ munit.productunit }}">
+                        {{ munit.productunit }}
+                      </option>
+                    </ng-container>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="unitHeight" class="col-sm-4 col-form-label"
+                  >Unit Height <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup41">
+                  <input
+                    [class.is-invalid]="
+                      intPlusFloat41.invalid && intPlusFloat41.touched
+                    "
+                    type="text"
+                    class="form-control"
+                    name="unitHeight"
+                    [(ngModel)]="everything.unitHeightPrinted"
+                    formControlName="intplusFloatControl41"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="unitWidth" class="col-sm-4 col-form-label"
+                  >Unit Width <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="intplusFloatGroup40">
+                  <input
+                    [class.is-invalid]="
+                      intPlusFloat40.invalid && intPlusFloat40.touched
+                    "
+                    type="text"
+                    class="form-control"
+                    name="unitWidth"
+                    [(ngModel)]="everything.unitWidthPrinted"
+                    formControlName="intplusFloatControl40"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="expectedQuantity" class="col-sm-4 col-form-label"
+                  >Expected Quantity <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-8" [formGroup]="onlyIntGroup2">
+                  <input
+                    [class.is-invalid]="onlyInt2.invalid && onlyInt2.touched"
+                    type="text"
+                    class="form-control"
+                    name="expectedQuantity"
+                    [(ngModel)]="everything.expectedQuantityPrinted"
+                    formControlName="onlyIntControl2"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="specialInstruction" class="col-sm-4 col-form-label"
+                  >Special Instruction
+                </label>
+                <div class="col-sm-8">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="specialInstruction"
+                    [(ngModel)]="everything.specialInstructionPrinted"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="remarks" class="col-sm-4 col-form-label"
+                  >Remarks
+                </label>
+                <div class="col-sm-8">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="remarks"
+                    [(ngModel)]="everything.remarksPrinted"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-label class="col-sm-4 col-form-label"
+                  >Color <span class="text-danger">*</span>
+                </mat-label>
+                <div class="col-sm-8">
+                  <select
+                    [(ngModel)]="everything.colorPrinted"
+                    name="colorPrinted"
+                    id="colorPrinted"
+                    class="form-control"
+                  >
+                    <ng-container
+                      *ngFor="let i = index; let munit; of: mcolorValue | async"
+                    >
+                      <option value="{{ munit.colorname }}">
+                        {{ munit.colorname }}
+                      </option>
+                    </ng-container>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="colorInformation" class="col-sm-4 col-form-label"
+                  >Color Information
+                </label>
+                <div class="col-sm-8">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="colorInformation"
+                    [(ngModel)]="everything.colorInformation"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-label class="col-sm-4 col-form-label"
+                  >Folding <span class="text-danger">*</span>
+                </mat-label>
+                <div class="col-sm-8">
+                  <select
+                    [(ngModel)]="everything.foldingPrinted"
+                    name="foldingPrinted"
+                    id="foldingPrinted"
+                    class="form-control"
+                  >
+                    <ng-container
+                      *ngFor="
+                        let i = index;
+                        let munit;
+                        of: motherdetailsvaluePrintedFolding | async
+                      "
+                    >
+                      <option value="{{ munit.name }}">
+                        {{ munit.name }}
+                      </option>
+                    </ng-container>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-label class="col-sm-4 col-form-label"
+                  >Finishing <span class="text-danger">*</span>
+                </mat-label>
+                <div class="col-sm-8">
+                  <select
+                    [(ngModel)]="everything.finishingPrinted"
+                    name="finishingPrinted"
+                    id="finishingPrinted"
+                    class="form-control"
+                  >
+                    <ng-container
+                      *ngFor="
+                        let i = index;
+                        let munit;
+                        of: motherdetailsvaluePrintedFinishing | async
+                      "
+                    >
+                      <option value="{{ munit.name }}">
+                        {{ munit.name }}
+                      </option>
+                    </ng-container>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <br />
+            <br />
+            <br />
+
+            <div class="lineItemLabel">
+              <table>
+                <tbody *ngIf="everything.orderLineItem.length == 0">
+                  <tr>
+                    <div class="form-row mt-2">
+                      <div class="col">
+                        Variant Code
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="singleOrderLine.variantCode"
+                          name="variantCode1"
+                        />
+                      </div>
+                      <div class="col">
+                        Number of Pieces
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="singleOrderLine.noOfPieces"
+                          name="noOfPieces1"
+                        />
+                      </div>
+                      <div class="col">
+                        Action
+                        <button
+                          class="form-control btn btn-primary"
+                          (click)="addTable()"
+                        >
+                          Add Row
+                        </button>
+                      </div>
+                    </div>
+                  </tr>
+                </tbody>
+                <tbody *ngIf="everything.orderLineItem.length != 0">
+                  <tr
+                    *ngFor="let item of everything.orderLineItem; let i = index"
+                  >
+                    <div class="form-row mt-2">
+                      <div class="col">
+                        <div *ngIf="i == 0">Variant Code</div>
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="item.variantCode"
+                          [ngModelOptions]="{ standalone: true }"
+                        />
+                      </div>
+                      <div class="col">
+                        <div *ngIf="i == 0">Number of Pieces</div>
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="item.noOfPieces"
+                          [ngModelOptions]="{ standalone: true }"
+                        />
+                      </div>
+                      <div class="col">
+                        <div *ngIf="i == 0">Action</div>
+                        <button
+                          class="form-control btn btn-danger"
+                          (click)="deleteRow(i)"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </tr>
+                  <tr>
+                    <div class="form-row mt-2">
+                      <div class="col">
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="singleOrderLine.variantCode"
+                          name="variantCode3"
+                        />
+                      </div>
+                      <div class="col">
+                        <input
+                          class="form-control"
+                          type="text"
+                          [(ngModel)]="singleOrderLine.noOfPieces"
+                          name="noOfPieces3"
+                        />
+                      </div>
+                      <div class="col">
+                        <button
+                          class="form-control btn btn-primary"
+                          (click)="addTable()"
+                        >
+                          Add Row
+                        </button>
+                      </div>
+                    </div>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="showThis">
+      <ng-container *ngIf="showSalesTeam">
+        <!-- Mini Banner Start -->
+        <div class="gap"></div>
+        <div class="mini-banner">
+          <p>OFFICE USE ONLY</p>
+        </div>
+        <!-- Mini Banner Ending -->
+
+        <div class="form-box">
+          <form>
+            <div class="row container-fluid">
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="incomingPrinted" class="col-sm-4 col-form-label"
+                    >Incoming Date <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="incomingPrinted"
+                      value="{{ myDate | date: 'dd-MM-yyyy' }}"
+                      readonly
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="samplePDate" class="col-sm-4 col-form-label">Sample P Date</label>
+                <div class="col-sm-8">
+                  <input type="date" class="form-control" name="samplePDate" [(ngModel)]="everything.samplePDate">
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="executiveCode" class="col-sm-4 col-form-label">Executive Code</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" name="executiveCode" [(ngModel)]="everything.executiveCode">
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="manager" class="col-sm-4 col-form-label">Manager</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" name="manager" [(ngModel)]="everything.manager">
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="datetime" class="col-sm-4 col-form-label">Date/Time</label>
+                <div class="col-sm-8">
+                  <input type="datetime-local" class="form-control" name="datetime" [(ngModel)]="everything.dateTime">
+                </div>
+              </div>
+            </div> -->
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="dispatchPrinted" class="col-sm-4 col-form-label"
+                    >Commitment Date <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8">
+                    <input
+                      type="date"
+                      class="form-control"
+                      name="dispatchPrinted"
+                      [(ngModel)]="everything.dispatchPrinted"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <mat-label  class="col-sm-4 col-form-label">Status <span class="text-danger">*</span> </mat-label>
+                <div class="col-sm-8">
+                  <select (click)="reloadData()" [(ngModel)]="everything.statusPrinted" name="statusPrinted" id="statusPrinted" class="form-control">
+                    <ng-container *ngFor="let i = index; let sUnit of mStatusPrintedArray">
+                      <option *ngIf="mStatusPrintedArray[i] != undefined" value = "{{mStatusPrintedArray[i]}}">
+                        {{mStatusPrintedArray[i]}}
+                      </option>
+                    </ng-container>
+                  </select>
+                </div>
+              </div>
+            </div> -->
+            </div>
+          </form>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="showSalesTeam">
+        <!-- Mini Banner Start -->
+        <div class="gap"></div>
+        <div class="mini-banner">
+          <p>CAD ENTRY</p>
+        </div>
+        <!-- Mini Banner Ending -->
+
+        <div class="form-box">
+          <form>
+            <div class="row container-fluid">
+              <!-- <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="sampleReceived" class="col-sm-4 col-form-label">Sample Rec. Date/Time <span class="text-danger">*</span> </label>
+                <div class="col-sm-8">
+                  <input type="datetime-local" class="form-control" name="sampleReceived" [(ngModel)]="everything.sampleReceived">
+                </div>
+              </div>
+            </div> -->
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="pm" class="col-sm-4 col-form-label"
+                    >Pieces/Meter<span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup39">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat39.invalid && intPlusFloat39.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="pm"
+                      [(ngModel)]="everything.pm"
+                      formControlName="intplusFloatControl39"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="systemPrinted" class="col-sm-4 col-form-label"
+                    >System <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup66">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat66.invalid && intPlusFloat66.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="system"
+                      [(ngModel)]="everything.systemPrinted"
+                      formControlName="intplusFloatControl66"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Do -->
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="sampleBlock" class="col-sm-4 col-form-label"
+                    >Sample Block/Native Ref. No.
+                    <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8">
+                    <input
+                      type="text"
+                      class="form-control"
+                      value="{{ referencenumber }}"
+                      name="referencenumber"
+                      readonly
+                    />
+                    <!-- {{referencenumber}} -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="col-md-6 col-lg-4">
+              <div class="form-group row">
+                <label for="samplingDatePrinted" class="col-sm-4 col-form-label">Sampling Date <span class="text-danger">*</span> </label>
+                <div class="col-sm-8">
+                  <input type="date" class="form-control" name="samplingDatePrinted" [(ngModel)]="everything.samplingDatePrinted">
+                </div>
+              </div>
+            </div> -->
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="designFilename" class="col-sm-4 col-form-label"
+                    >Design File Name <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup67">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat67.invalid && intPlusFloat67.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="designFilename"
+                      [(ngModel)]="everything.designFileName"
+                      formControlName="intplusFloatControl67"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="machine" class="col-sm-4 col-form-label"
+                    >Machine <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup68">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat68.invalid && intPlusFloat68.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="machine"
+                      [(ngModel)]="everything.machine"
+                      formControlName="intplusFloatControl68"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="width" class="col-sm-4 col-form-label"
+                    >Width <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="width"
+                      [(ngModel)]="everything.widthPrinted"
+                      readonly
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="length" class="col-sm-4 col-form-label"
+                    >Length <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="length"
+                      [(ngModel)]="everything.lengthPrinted"
+                      readonly
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="quality" class="col-sm-4 col-form-label"
+                    >Quality <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8">
+                    <select
+                      (click)="reloadData()"
+                      [(ngModel)]="everything.qualityPrinted"
+                      name="qualityPrinted"
+                      id="qualityPrinted"
+                      class="form-control"
+                    >
+                      <ng-container
+                        *ngFor="
+                          let i = index;
+                          let munit;
+                          of: printedqualityArray
+                        "
+                      >
+                        <option
+                          *ngIf="printedqualityArray[i] != undefined"
+                          value="{{ printedqualityArray[i] }}"
+                        >
+                          {{ printedqualityArray[i] }}
+                        </option>
+                      </ng-container>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <mat-checkbox
+                    class="col-sm-4 col-form-label"
+                    name="singlePrinting"
+                    value="singlePrinting"
+                    (click)="togglesingleprint()"
+                    >Single Side Printing</mat-checkbox
+                  >
+                  <ng-container *ngIf="showsingleprint">
+                    <div class="col-sm-8">
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="singlePrinting"
+                        [(ngModel)]="everything.singlePrinting"
+                      />
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <mat-checkbox
+                    class="col-sm-4 col-form-label"
+                    name="doublePrinting"
+                    value="singlePrinting"
+                    (click)="toggledoubleprint()"
+                    >Double Side Printing</mat-checkbox
+                  >
+                  <ng-container *ngIf="showdoubleprint">
+                    <div class="col-sm-8">
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="doublePrinting"
+                        [(ngModel)]="everything.doublePrinting"
+                      />
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="colorOption" class="col-sm-4 col-form-label"
+                    >Color Option to be Used <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup69">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat69.invalid && intPlusFloat69.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="colorOption"
+                      [(ngModel)]="everything.colorOptionToBeUsedPrinted"
+                      formControlName="intplusFloatControl69"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label for="noOfcolors" class="col-sm-4 col-form-label"
+                    >No. of Colors <span class="text-danger">*</span>
+                  </label>
+                  <div class="col-sm-8" [formGroup]="intplusFloatGroup36">
+                    <input
+                      [class.is-invalid]="
+                        intPlusFloat36.invalid && intPlusFloat36.touched
+                      "
+                      type="text"
+                      class="form-control"
+                      name="noOfcolors"
+                      [(ngModel)]="everything.noOfcolors"
+                      formControlName="intplusFloatControl36"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <mat-label class="col-sm-4 col-form-label"
+                    >Additional Work <span class="text-danger">*</span>
+                  </mat-label>
+                  <div class="col-sm-8">
+                    <select
+                      (click)="reloadData()"
+                      [(ngModel)]="everything.additionalWorkPrinted"
+                      name="additionalWorkPrinted"
+                      id="additionalWorkPrinted"
+                      class="form-control"
+                    >
+                      <ng-container
+                        *ngFor="
+                          let i = index;
+                          let munit;
+                          of: printedadditionalWorkArray
+                        "
+                      >
+                        <option
+                          *ngIf="printedadditionalWorkArray[i] != undefined"
+                          value="{{ printedadditionalWorkArray[i] }}"
+                        >
+                          {{ printedadditionalWorkArray[i] }}
+                        </option>
+                      </ng-container>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group row">
+                  <label
+                    for="staticEmail"
+                    class="col-sm-4 col-form-label"
+                  ></label>
+                  <div class="col-sm-8"></div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="showSalesTeam">
+        <div class="gap"></div>
+        <div class="mini-banner">
+          <p>COLOR OPTION TO BE USED</p>
+        </div>
+
+        <!-- Table -->
+
+        <table class="table table-bordered printed-table">
+          <tr>
+            <th>FRONT</th>
+            <th>BACK</th>
+          </tr>
+          <tr>
+            <td>
+              <textarea
+                name=""
+                id=""
+                cols="30"
+                rows="10"
+                [(ngModel)]="everything.colorOptionFront"
+              ></textarea>
+            </td>
+            <td>
+              <textarea
+                name=""
+                id=""
+                cols="30"
+                rows="10"
+                [(ngModel)]="everything.colorOptionBack"
+              ></textarea>
+            </td>
+          </tr>
+        </table>
+      </ng-container>
+    </ng-container>
+
+    <!-- <div class="img-holder">
+  <img src="../../assets/Table.jpg" alt="Table">
+  </div> -->
+
+    <!-- Mini Banner Start -->
+    <div class="gap"></div>
+    <div class="mini-banner">
+      <p>ARTWORK FILE NAME</p>
+    </div>
+    <!-- Mini Banner Ending -->
+
+    <div class="form-box upload-box">
+      <div *ngIf="currentFile" class="progress">
+        <div
+          class="progress-bar progress-bar-info progress-bar-striped"
+          role="progressbar"
+          attr.aria-valuenow="{{ progress }}"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          [ngStyle]="{ width: progress + '%' }"
+        >
+          {{ progress }}%
+        </div>
+      </div>
+
+      <label class="btn btn-default">
+        <input
+          #artworkAttachment
+          type="file"
+          (change)="checkUploadRegex($event)"
+          [disabled]="fileIsUploaded"
+        />
+        <!-- <button class="btn btn-success" [disabled]="!selectedFiles" (click)="upload1()">
+    Upload
+  </button> -->
+        <button (click)="resetArtworkAttachment()" class="btn btn-danger">
+          Reset
+        </button>
+        <br />
+        <br />
+      </label>
+    </div>
+
+    <div class="cent">
+      <button
+        type="submit"
+        (click)="checkPrintedForm()"
+        class="btn btn-success pad-it"
+      >
+        Save
+      </button>
+
+      <ng-container *ngIf="showSampleRequest">
+        <button
+          type="submit"
+          (click)="checkPrintedFormUpdate()"
+          (click)="orderConfirmation()"
+          class="btn btn-primary pad-it"
+        >
+          Place Order
+        </button>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
+
+<!-- Printed Form End -->
+
+<input
+  type="text"
+  class="form-control"
+  name="rejectedReason"
+  [(ngModel)]="everything.rejectedReason"
+  hidden
+/>

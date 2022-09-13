@@ -1,0 +1,611 @@
+<!-- <div class="top-bar">
+  <img
+    src="./../../assets/arrow-left-solid.svg"
+    alt="Back-button"
+    class="back-img"
+    (click)="createRoute()"
+  />
+</div>
+
+<div class="top-bar open-modal">
+  <button class="btn btn-primary" (click)="resetForm()" (click)="open(content)">
+    Create New User Profile
+  </button>
+</div> -->
+
+<div class="col-lg-12" style="padding: 15px; margin-top: 5px">
+  <div class="panel panel-primary">
+    <!-- Header with Title and Create New Button -->
+    <div class="panel-heading">
+      <h2>
+        User Profile List
+        <div style="float: right">
+          <!-- <button
+            (click)="resetForm()"
+            (click)="open(content)"
+            class="btn btn-primary"
+          >
+            Create New User Profile
+          </button> -->
+          <button
+            (click)="initializeCreate()"
+            (click)="open(userProfile)"
+            class="btn btn-primary"
+          >
+            Create New User Profile
+          </button>
+        </div>
+      </h2>
+    </div>
+    <!-- Panel heading ends -->
+
+    <!-- Search Box -->
+    <input
+      class="form-control test-check"
+      type="text"
+      name="search"
+      [(ngModel)]="searchText"
+      autocomplete="off"
+      placeholder="Search"
+    />
+    <br />
+
+    <div class="panel-body">
+      <table class="table table-striped profile-list">
+        <thead>
+          <tr>
+            <th>S.No</th>
+            <th>Username</th>
+            <th>Login ID</th>
+            <!-- <th>Password</th> -->
+            <th>Access Rights</th>
+            <th>Trim Types</th>
+            <th>Actions</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="
+              let i = index;
+              let user;
+              of: users
+                | filter: searchText
+                | paginate: { itemsPerPage: 10, currentPage: p }
+            "
+          >
+            <td>{{ (p - 1) * 10 + (i + 1) }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.loginId }}</td>
+            <!-- <td>{{ user.password }}</td> -->
+            <td>{{ user.accessRights }}</td>
+            <td>{{ user.trimTypes }}</td>
+            <td>
+              <img
+                src="./../../assets/edit.svg"
+                (click)="initializeEdit(user.id)"
+                (click)="open(userProfile)"
+                alt="Edit-icon"
+              />
+              <img
+                *ngIf="this.userToken == 'IndsysTesting'"
+                src="./../../assets/Delete.svg"
+                (click)="deleteUser(user.id)"
+                style="margin-left: 10px"
+                alt="Delete-icon"
+              />
+            </td>
+            <td>
+              <button
+                *ngIf="user.status != 'deactivated'"
+                class="btn btn-sm btn-outline-success"
+                (click)="deactivateUser(user.id)"
+              >
+                Active
+              </button>
+              <button
+                *ngIf="user.status == 'deactivated'"
+                class="btn btn-sm btn-outline-danger"
+                (click)="activateUser(user.id)"
+              >
+                Deactive
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div id="pagination">
+        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+      </div>
+      <!-- Panel body ends -->
+    </div>
+    <!-- Panel ends -->
+  </div>
+  <!-- col-lg-12 ends -->
+</div>
+
+<!-- userProfile modal starts -->
+<ng-template #userProfile let-modal>
+  <div class="modal-header" id="userProfileHeader">
+    <h3 class="modal-title" id="modal-basic-title">
+      {{ updateFlag ? "Update" : "Create" }} User Profile
+    </h3>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      id="close-userProfile"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <!-- user name -->
+    <div class="form-group">
+      <label for="userName" style="font-weight: 500; color: #333"
+        >User Name *</label
+      >
+      <div class="input-group">
+        <input
+          [(ngModel)]="user.username"
+          name="userName"
+          id="userName"
+          class="form-control"
+        />
+      </div>
+    </div>
+    <!-- user name ends -->
+
+    <!-- login Id -->
+    <div class="form-group">
+      <label for="loginId" style="font-weight: 500; color: #333"
+        >Login ID *</label
+      >
+      <div class="input-group">
+        <input
+          [(ngModel)]="user.loginId"
+          name="loginId"
+          id="loginId"
+          class="form-control"
+          type="email"
+          autocomplete="new-loginId"
+        />
+      </div>
+    </div>
+    <!-- login Id ends -->
+
+    <!-- pwd -->
+    <div class="form-group">
+      <label for="password" style="font-weight: 500; color: #333"
+        >Password *</label
+      >
+      <div class="input-group">
+        <input
+          [(ngModel)]="user.password"
+          name="password"
+          id="password"
+          class="form-control"
+          [type]="showPwd ? 'text' : 'password'"
+          autocomplete="new-password"
+        />
+        <div class="input-group-addon show-pwd" (click)="showPwd = !showPwd">
+          <i [ngClass]="showPwd ? 'fas fa-eye' : 'fas fa-eye-slash'"></i>
+        </div>
+      </div>
+    </div>
+    <!-- pwd ends -->
+
+    <!-- Access Rights -->
+    <mat-form-field
+      appearance="fill"
+      style="width: 100%"
+      *ngIf="
+        user.accessRights != 'Customer' && user.accessRights != 'Sales Team'
+      "
+    >
+      <mat-label>Access Rights</mat-label>
+      <mat-select
+        [(ngModel)]="user.accessRights"
+        (ngModelChange)="onAccessRightsInput($event)"
+      >
+        <mat-option value="Sample Head">Sample Head</mat-option>
+        <mat-option value="TManager">Territory Manager</mat-option>
+        <mat-option value="Administrator">Administrator</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <!-- Access Rights ends -->
+
+    <!-- Access Rights(Customer/Sales Team) -->
+    <div
+      class="form-group"
+      *ngIf="
+        user.accessRights == 'Customer' || user.accessRights == 'Sales Team'
+      "
+    >
+      <label for="accessRights" style="font-weight: 500; color: #333"
+        >Access Rights *</label
+      >
+      <div class="input-group">
+        <input
+          [(ngModel)]="user.accessRights"
+          name="accessRights"
+          id="accessRights"
+          class="form-control"
+          type="text"
+          disabled="true"
+        />
+      </div>
+    </div>
+    <!--Access Rights(Customer/Sales Team) ends -->
+
+    <!-- Access Rights(Customer/Sales Team) -->
+    <div
+      class="form-group"
+      *ngIf="this.updateFlag && user.accessRights == 'Administrator'"
+    >
+      <div class="input-group">
+        <mat-checkbox
+          class="mat-checkbox-label"
+          name="superUser"
+          value="superUser"
+          [(ngModel)]="user.superUser"
+          >Super User</mat-checkbox
+        >
+      </div>
+    </div>
+
+    <!-- Territory -->
+    <mat-form-field
+      appearance="fill"
+      style="width: 100%"
+      *ngIf="this.user.accessRights == 'TManager'"
+    >
+      <mat-label>Territory</mat-label>
+      <mat-select [(ngModel)]="user.territoryId" multiple>
+        <mat-option
+          *ngFor="let territory of territories"
+          [value]="territory.id"
+          >{{ territory.name }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+    <!-- Territory ends -->
+
+    <!-- Trim Type -->
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>Trim Types</mat-label>
+      <mat-select multiple [(ngModel)]="user.trimTypes" id="trim-type">
+        <mat-option value="Print">Print</mat-option>
+        <mat-option value="Tag">Tag</mat-option>
+        <mat-option value="Woven">Woven</mat-option>
+        <mat-option value="Sticker">Sticker</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <!-- Trim Type ends -->
+
+    <!-- Save Button -->
+    <div class="form-group" *ngIf="!this.updateFlag">
+      <button
+        type="button"
+        class="btn btn-block btn-primary"
+        (click)="onCreateUser()"
+      >
+        Save
+      </button>
+    </div>
+    <!-- Save Button Ends -->
+
+    <!-- info -->
+    <div class="form-group" *ngIf="!this.updateFlag">
+      <p style="font-style: italic; font-family: 'Source Sans Pro'">
+        ℹ️ - use the master to create the customer & sales team user profile
+      </p>
+    </div>
+    <!-- info ends -->
+
+    <!-- Update Button -->
+    <div class="form-group" *ngIf="this.updateFlag">
+      <button
+        type="button"
+        class="btn btn-block btn-primary"
+        (click)="onUpdateUser()"
+      >
+        Update
+      </button>
+    </div>
+    <!-- Update Button Ends -->
+  </div>
+</ng-template>
+<!-- userProfile modal template ends -->
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <form>
+    <div class="customer-form">
+      <h1>Create User Profile</h1>
+      <div class="form-data customer-left">
+        <div class="form-input" [formGroup]="intplusFloatGroup">
+          <label for="name">Username</label>
+          <input
+            [class.is-invalid]="intPlusFloat.invalid && intPlusFloat.touched"
+            type="text"
+            class="form-control"
+            [(ngModel)]="user.username"
+            name="username"
+            formControlName="intplusFloatControl"
+          />
+        </div>
+
+        <div class="form-input" [formGroup]="userEmail">
+          <label for="name">Login ID</label>
+          <input
+            [class.is-invalid]="primEmail.invalid && primEmail.touched"
+            class="form-control"
+            type="email"
+            id="loginId"
+            [(ngModel)]="user.loginId"
+            (change)="emailCheck()"
+            name="loginId"
+            formControlName="primaryEmail"
+          />
+        </div>
+
+        <div class="form-input small-gap">
+          <label for="name">Password</label>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            required
+            [(ngModel)]="user.password"
+            name="password"
+          />
+        </div>
+
+        <div class="form-input">
+          <mat-form-field appearance="fill">
+            <mat-label for="access rights">Access Rights</mat-label>
+            <mat-select
+              [(ngModel)]="user.accessRights"
+              name="accessRights"
+              id="accessRights"
+            >
+              <mat-option
+                value="Administrator"
+                (click)="toggleSelected()"
+                (click)="untoggleCustomer()"
+                >Administrator</mat-option
+              >
+              <mat-option
+                value="Sample Head"
+                (click)="toggleSampleHead()"
+                (click)="untoggleCustomer()"
+                >Sample Head</mat-option
+              >
+              <mat-option
+                value="Customer Service Team"
+                (click)="toggleSelected()"
+                (click)="untoggleCustomer()"
+                >Customer Service Team</mat-option
+              >
+              <mat-option
+                value="Sales Team"
+                (click)="toggleSelected()"
+                (click)="untoggleCustomer()"
+                >Sales Team/Executive</mat-option
+              >
+              <mat-option
+                value="Customer"
+                (click)="toggleCustomer()"
+                (click)="toggleSelected()"
+                >Customer</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-input">
+          <ng-container *ngIf="showCustomer">
+            <!-- <input type="text" placeholder="Customer Name" name="customerName" id="customerName" [(ngModel)]="user.customerName"> -->
+            <select
+              [(ngModel)]="user.customerName"
+              (change)="employeeChgFn(user.customerName)"
+              (change)="getCustomerName()"
+              name="name"
+              class="form-control"
+            >
+              <option
+                *ngFor="let employee of employees | async"
+                value="{{ employee.customername }}"
+              >
+                {{ employee.customername }}
+              </option>
+            </select>
+          </ng-container>
+        </div>
+
+        <div class="form-input">
+          <mat-form-field appearance="fill" class="form-type">
+            <mat-label>Trim Types</mat-label>
+            <mat-select
+              [(ngModel)]="user.trimTypes"
+              name="trimtypes"
+              id="trimTypes"
+              multiple
+            >
+              <mat-option value="Print">Print</mat-option>
+              <mat-option value="Tag">Tag</mat-option>
+              <mat-option value="Woven">Woven</mat-option>
+              <mat-option value="Sticker">Sticker</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="customer-btn-box">
+        <button
+          ngbAutofocus
+          type="submit"
+          class="btn btn-success"
+          (click)="onSubmit()"
+        >
+          Submit
+        </button>
+      </div>
+      <br />
+    </div>
+  </form>
+</ng-template>
+
+<!-- Update -->
+<ng-template #updateModal let-modal>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <form>
+    <div class="customer-form">
+      <h1>Update User Profile</h1>
+      <div class="form-data customer-left">
+        <div class="form-input" [formGroup]="intplusFloatGroup">
+          <label for="name">Username</label>
+          <input
+            [class.is-invalid]="intPlusFloat.invalid && intPlusFloat.touched"
+            type="text"
+            class="form-control"
+            [(ngModel)]="user.username"
+            name="username"
+            formControlName="intplusFloatControl"
+            readonly
+          />
+        </div>
+
+        <div class="form-input" [formGroup]="userEmail">
+          <label for="name">Login ID</label>
+          <input
+            [class.is-invalid]="primEmail.invalid && primEmail.touched"
+            class="form-control"
+            type="email"
+            id="loginId"
+            [(ngModel)]="user.loginId"
+            name="loginId"
+            formControlName="primaryEmail"
+            readonly
+          />
+        </div>
+
+        <div class="form-input small-gap">
+          <label for="name">Password</label>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            required
+            [(ngModel)]="user.password"
+            name="password"
+            readonly
+          />
+        </div>
+
+        <div class="form-input">
+          <mat-form-field appearance="fill">
+            <mat-label for="access rights">Access Rights</mat-label>
+            <mat-select
+              [(ngModel)]="user.accessRights"
+              name="accessRights"
+              id="accessRights"
+            >
+              <mat-option
+                value="Administrator"
+                (click)="toggleSelected()"
+                (click)="untoggleCustomer()"
+                >Administrator</mat-option
+              >
+              <mat-option
+                value="Sample Head"
+                (click)="toggleSampleHead()"
+                (click)="untoggleCustomer()"
+                >Sample Head</mat-option
+              >
+              <mat-option
+                value="Customer Service Team"
+                (click)="toggleSelected()"
+                (click)="untoggleCustomer()"
+                >Customer Service Team</mat-option
+              >
+              <mat-option
+                value="Sales Team"
+                (click)="toggleSelected()"
+                (click)="untoggleCustomer()"
+                >Sales Team/Executive</mat-option
+              >
+              <mat-option
+                value="Customer"
+                (click)="toggleCustomer()"
+                (click)="toggleSelected()"
+                >Customer</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-input small-gap">
+          <input
+            type="text"
+            placeholder="No Company Name"
+            [(ngModel)]="user.customerName"
+            name="customerName"
+            id="customerName"
+            class="form-control"
+            readonly
+          />
+          <!-- <select [(ngModel)]="user.customerName" (change)="employeeChgFn(user.customerName)" (change)="getCustomerName()" name="name" class="form-control">
+        <option *ngFor="let employee of employees | async" value={{employee.customername}} > {{employee.customername}} </option>
+        </select> -->
+        </div>
+
+        <div class="form-input">
+          <mat-form-field appearance="fill" class="form-type">
+            <mat-label>Trim Types</mat-label>
+            <mat-select
+              [(ngModel)]="user.trimTypes"
+              name="trimtypes"
+              id="trimTypes"
+              multiple
+            >
+              <mat-option value="Print">Print</mat-option>
+              <mat-option value="Tag">Tag</mat-option>
+              <mat-option value="Woven">Woven</mat-option>
+              <mat-option value="Sticker">Sticker</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="customer-btn-box">
+        <button type="submit" (click)="checkUpdate()" class="btn btn-success">
+          Submit
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<router-outlet></router-outlet>

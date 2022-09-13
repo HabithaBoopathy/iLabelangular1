@@ -1,0 +1,112 @@
+<div id="top"></div>
+<!-- Costing Rejected - Main container starts -->
+<div class="col-lg-12 main-container">
+  <!-- panel-primary starts -->
+  <div class="panel panel-primary">
+    <!-- Panel heading starts -->
+    <div class="panel-heading custom-section">
+      <div class="row">
+        <div class="col-lg-3">
+          <h2>Rejected Costing</h2>
+        </div>
+
+        <div class="col-lg-9">
+          <input
+            class="form-control"
+            type="text"
+            name="search"
+            autocomplete="off"
+            placeholder="Search"
+            [(ngModel)]="searchText"
+          />
+          <!-- Search box ends -->
+        </div>
+      </div>
+
+      <!-- Panel heading ends -->
+    </div>
+
+    <!-- costingList section starts -->
+    <div class="custom-section" #fullScreen style="padding: 15px">
+      <div style="width: 100%">
+        <!-- <div style="float: right; cursor: pointer" (click)="openFullscreen()">
+          <i class="fas fa-expand"></i>
+        </div> -->
+      </div>
+      <table class="table table-striped">
+        <thead>
+          <tr style="font-weight: 500">
+            <th width="5%">S.No</th>
+            <th width="10%">Date</th>
+            <th width="10%">Ref No</th>
+            <th width="15%">Product</th>
+            <th width="20%">Company</th>
+            <th width="10%">Trim Type</th>
+            <th width="5%">Quantity</th>
+            <th width="20%">Status</th>
+            <th width="5%">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="commonDetails">
+            <tr *ngIf="commonDetails.length < 1">
+              <td colspan="9" style="text-align: center">
+                No Rejected Costing Present
+              </td>
+            </tr>
+          </ng-container>
+          <tr
+            *ngFor="
+              let costing of commonDetails
+                | filter: searchText
+                | paginate: { itemsPerPage: 10, currentPage: currentPage };
+              let i = index
+            "
+          >
+            <td>{{ i + 1 }}</td>
+            <td>{{ costing["entryDate"] }}</td>
+            <td
+              [ngStyle]="{
+                color: costing['status'] == 6 ? '#B4161B' : '',
+                'font-weight': costing['status'] == 6 ? 500 : ''
+              }"
+            >
+              {{ costing["refNo"] }}
+            </td>
+            <td>{{ costing["productName"] }}</td>
+            <td>{{ costing["customerName"] }}</td>
+            <td>
+              {{
+                costing["trimType"].split("-")[0] == "Sticker"
+                  ? costing["trimType"].split("-")[1]
+                  : costing["trimType"]
+              }}
+            </td>
+            <td>{{ costing["orderQuantity"] }}</td>
+            <td>Customer Rejected</td>
+            <td style="padding: 5px">
+              <button
+                class="btn btn-primary btn-sm"
+                (click)="
+                  redirect(costing['trimType'], costing['totalDetailsId'])
+                "
+              >
+                Open
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div id="pagination">
+        <pagination-controls
+          (pageChange)="currentPage = $event"
+        ></pagination-controls>
+      </div>
+      <!-- costing list section ends -->
+    </div>
+
+    <!-- panel-primary ends -->
+  </div>
+
+  <!-- Costing Rejected - Main container starts -->
+</div>

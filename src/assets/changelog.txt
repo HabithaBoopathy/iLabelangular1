@@ -1,0 +1,11 @@
+15-11-2021
+-----------
+1. territory field included in orders master
+2. territory filter functionality optimized
+3. User master - remove all verification methods when created by admin
+4. Resend email button in customer master
+5. Corrected table UI issues in Customer and user master
+6. delete user profile when deleting customer from customer master
+7. get a confirmation before deleting any record in customer, user executive and company master
+
+--------------------------------------------------------------------------------------
